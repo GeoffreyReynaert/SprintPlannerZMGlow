@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]ADMIN AREA BETA</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/bootstrap-extensions.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
 </head>
@@ -18,7 +19,7 @@
                     <a class="fas" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a>
                 </li>
                 <li>
-                    <a class="fas" asp-area="" asp-controller="Home" asp-action="Index">Leerling overzicht</a>
+                    <a class="fas" asp-area="Admin" asp-controller="Home" asp-action="LeerlingOverzicht">Leerling overzicht</a>
                 </li>
                 <li>
                     <a class="fas" asp-area="Admin" asp-controller="Home" asp-action="Index">Klasverdeling sprint</a>

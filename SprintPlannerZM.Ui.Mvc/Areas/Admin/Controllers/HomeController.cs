@@ -12,5 +12,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
         {
             return View();
         }
+
+        public IActionResult LeerlingOverzicht()
+        {
+            return View();
+        }
     }
 }
