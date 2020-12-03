@@ -54,18 +54,21 @@ button.accept-policy {
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
+
 }
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    background: rgb(134, 17, 80);
+    border-top: thick solid #e06c02;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+ 
+    padding-top: 20px;
 }
