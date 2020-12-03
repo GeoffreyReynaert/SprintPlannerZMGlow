@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Beheerder\Controllers\" />
+    <Folder Include="Areas\Beheerder\Models\" />
+    <Folder Include="Areas\Beheerder\Views\" />
+    <Folder Include="Areas\Leerling\Controllers\" />
+    <Folder Include="Areas\Leerling\Models\" />
+    <Folder Include="Areas\Leerling\Views\" />
+    <Folder Include="Areas\Leerkracht\Controllers\" />
+    <Folder Include="Areas\Leerkracht\Models\" />
+    <Folder Include="Areas\Leerkracht\Views\" />
+    <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Views\" />
+  </ItemGroup>
+
+</Project>
