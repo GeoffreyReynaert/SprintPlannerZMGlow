@@ -59,16 +59,15 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-
+    background: rgb(250, 151, 95);
+    background: linear-gradient(0deg, rgba(250, 151, 95,1) 0%, rgba(0,155,168,1) 100%);
 }
 .footer {
-    background: rgb(134, 17, 80);
-    border-top: thick solid #e06c02;
+    background: rgb(0,155,168);
+    border-top: thick solid rgb(250, 151, 95);
     position: fixed;
     bottom: 0;
     width: 100%;
     white-space: nowrap;
- 
     padding-top: 20px;
 }

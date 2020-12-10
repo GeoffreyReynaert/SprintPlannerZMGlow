@@ -16,13 +16,14 @@ body {
     position: relative;
 }
 
-.wrapper .sidebar {
-    width: 250px;
-    height: 100%;
-    background: rgb(134, 17, 80);
-    padding: 30px 0px;
-    position: fixed;
-}
+    .wrapper .sidebar {
+        width: 250px;
+        height: 100%;
+        background: rgb(0,155,168);
+        padding: 30px 0px;
+        position: fixed;
+        border-right: thick solid rgb(250, 151, 95);
+    }
 
 .wrapper .sidebar h2 {
     color: #fff;
@@ -31,14 +32,14 @@ body {
     margin-bottom: 30px;
 }
 
-.wrapper .sidebar ul li {
-        padding: 15px;
-        border-bottom: 1px solid rgba(60,65,71,0.50);
-        border-top: 1px solid rgba(60,65,71,0.50);
-}
+        .wrapper .sidebar ul li {
+            padding: 15px;
+            border-bottom: 1px solid rgb(250, 151, 95);
+            border-top: 1px solid rgb(250, 151, 95);
+        }
 
 .wrapper .sidebar ul li a {
-    color: #bdb8d7;
+    color: #ffffff;
     display: block;
 }
 
@@ -46,9 +47,9 @@ body {
     width: 25px;
 }
 
-    .wrapper .sidebar ul li:hover {
-        background-color: rgb(164, 17, 80);
-    }
+            .wrapper .sidebar ul li:hover {
+                background-color: rgb(0, 137, 168);
+            }
 
 
 .wrapper .sidebar ul li:hover a {
@@ -96,4 +97,9 @@ body {
 
 .wrapper .main_content .info div {
     margin-bottom: 20px;
+}
+
+
+.marginToNav {
+    
 }

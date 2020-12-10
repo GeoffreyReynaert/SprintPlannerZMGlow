@@ -9,13 +9,13 @@ button.bg-dark:focus {
 }
 
 .bg-info {
-    background-color: #e06c02 !important;
+    background-color: rgb(250, 151, 95) !important;
 }
 
 a.bg-info:hover, a.bg-info:focus,
 button.bg-info:hover,
 button.bg-info:focus {
-    background-color: rgb(164, 17, 80) !important;
+    background-color: rgb(250, 151, 95) !important;
 }
 
 .select2-container .select2-selection--single {
@@ -29,7 +29,7 @@ button.bg-info:focus {
 
 .left-allign {
     position: relative;
-    float: left;
+    left: 150px
 }
 .right-allign {
     position: relative;
@@ -38,5 +38,6 @@ button.bg-info:focus {
 
 .card-position {
     position: relative;
-    top: 150px;
+    top: 50px;
+    left: 160px
 }
