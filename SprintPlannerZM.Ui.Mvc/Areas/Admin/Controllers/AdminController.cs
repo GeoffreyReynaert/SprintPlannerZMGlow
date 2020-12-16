@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class HomeController: Controller
+    public class AdminController: Controller
     {
 
 
@@ -14,6 +14,21 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
         }
 
         public IActionResult LeerlingOverzicht()
+        {
+            return View();
+        }
+
+        public IActionResult Klasverdeling()
+        {
+            return View();
+        }
+
+        public IActionResult Overzichten()
+        {
+            return View();
+        }
+
+        public IActionResult Toezichters()
         {
             return View();
         }

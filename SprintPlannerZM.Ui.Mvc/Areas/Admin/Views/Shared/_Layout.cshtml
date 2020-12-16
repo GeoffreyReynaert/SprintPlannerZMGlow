@@ -10,26 +10,27 @@
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
 </head>
 <body>
-    <img class="float-right img-thumbnail" src="~/img/tihf.png" alt="Logo TIHF" />
+<img class="float-right img-thumbnail" src="~/img/tihf.png" alt="Logo TIHF"/>
+
 <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3"> -->
 <nav class="wrapper">
     <div class="sidebar">
         <img src="~/img/tihf goede start.jpg" width="245" height="245" alt="Navigatie achtergrond"/>
         <ul>
             <li>
-                <a class="fas" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a>
+                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Index">Home</a>
             </li>
             <li>
-                <a class="fas" asp-area="Admin" asp-controller="Home" asp-action="LeerlingOverzicht">Leerling overzicht</a>
+                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="LeerlingOverzicht">Leerling overzicht</a>
             </li>
             <li>
-                <a class="fas" asp-area="Admin" asp-controller="Home" asp-action="Index">Klasverdeling sprint</a>
+                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Klasverdeling">Klasverdeling sprint</a>
             </li>
             <li>
-                <a class="fas" asp-area="" asp-controller="Home" asp-action="Index">Toezichters</a>
+                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Toezichters">Toezichters toekennen</a>
             </li>
             <li>
-                <a class="fas" asp-area="Admin" asp-controller="Home" asp-action="Index">Overzichten</a>
+                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Overzichten">Overzichten</a>
             </li>
             <li>
                 <!--class="nav-link text-light"-->
