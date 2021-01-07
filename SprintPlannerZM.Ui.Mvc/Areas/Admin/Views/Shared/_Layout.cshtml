@@ -10,53 +10,68 @@
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
 </head>
 <body>
-<img class="float-right img-thumbnail" src="~/img/tihf.png" alt="Logo TIHF"/>
+    <img class="float-right img-thumbnail" src="~/img/tihf.png" alt="Logo TIHF" />
 
-<!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3"> -->
-<nav class="wrapper">
-    <div class="sidebar">
-        <img src="~/img/tihf goede start.jpg" width="245" height="245" alt="Navigatie achtergrond"/>
-        <ul>
-            <li>
-                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Index">Home</a>
-            </li>
-            <li>
-                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="LeerlingOverzicht">Leerling overzicht</a>
-            </li>
-            <li>
-                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Klasverdeling">Klasverdeling sprint</a>
-            </li>
-            <li>
-                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Toezichters">Toezichters toekennen</a>
-            </li>
-            <li>
-                <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Overzichten">Overzichten</a>
-            </li>
-            <li>
-                <!--class="nav-link text-light"-->
-                <a class="fas" asp-area="" asp-controller="Home" asp-action="Index">Log Out</a>
-            </li>
-        </ul>
+    <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3"> -->
+    <nav class="wrapper navbar-expand-sm navbar-toggleable-sm">
+
+        <div class="sidebar containerNav ">
+
+            <div class="navbar-collapse collapse justify-content-between">
+                <ul>
+                    <li>
+                        <img src="~/img/tihf goede start.jpg" width="200" height="200" alt="Navigatie achtergrond" />
+                    </li>
+                    <li>
+                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Index">Home</a>
+                    </li>
+                    <li>
+                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="LeerlingenOverzicht">Leerling overzicht</a>
+                    </li>
+                    <li>
+                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Klasverdeling">Klasverdeling sprint</a>
+                    </li>
+                    <li>
+                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Toezichters">Toezichters toekennen</a>
+                    </li>
+                    <li>
+                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Overzichten">Overzichten</a>
+                    </li>
+                    <li>
+                        <!--class="nav-link text-light"-->
+                        <a class="fas" asp-area="" asp-controller="Home" asp-action="Index">Log Out</a>
+
+                    </li>
+
+                </ul>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="">
+                    <img alt="Test" src="~/img/toggle.png" />
+                </span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
 
-</nav>
-
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
-
-<footer class=" footer">
-    <div class="container text-light ">
-        <p>
-            Technisch Instituut Heilige Familie | Oude Zak 38 | 8000 Brugge | info@tihf.be | Tel. 050 44 59 59 <br/> vzw Karel de Goede
-        </p>
-    </div>
-</footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+    <footer class=" footer">
+        <div class="container text-light ">
+            <p>
+                Technisch Instituut Heilige Familie | Oude Zak 38 | 8000 Brugge | info@tihf.be | Tel. 050 44 59 59 <br /> vzw Karel de Goede
+            </p>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -13,20 +13,30 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
             return View();
         }
 
+
+        //Alle leerlingen overzicht
+        public IActionResult LeerlingenOverzicht()
+        {
+            return View();
+        }
+
+
+        //Detail alle leerlingen naar leerling uit lijst
         public IActionResult LeerlingOverzicht()
         {
             return View();
         }
+
+
+
+
 
         public IActionResult Klasverdeling()
         {
             return View();
         }
 
-        public IActionResult Overzichten()
-        {
-            return View();
-        }
+
 
         public IActionResult Toezichters()
         {
