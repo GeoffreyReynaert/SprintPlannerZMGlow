@@ -1,0 +1,94 @@
+﻿/* Made with love by Mutiullah Samim*/
+
+body {
+    background-image: url('../img/tihf-login.jpg');
+    background-repeat: repeat;
+    background-size: cover;
+    font-family: 'Trebuchet MS', sans-serif;
+    height: 100%;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.card {
+    background-color: rgba(0,155,168, 0.5) !important;
+    height: 370px;
+    margin-bottom: auto;
+    margin-top: auto;
+    width: 400px;
+}
+
+.social_icon span {
+    color: rgb(250, 151, 95);
+    font-size: 60px;
+    margin-left: 10px;
+}
+
+.social_icon span:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.card-header h3 { color: white; }
+
+.social_icon {
+    position: absolute;
+    right: 20px;
+    top: -45px;
+}
+
+.input-group-prepend span {
+    background-color: rgb(250, 151, 95);
+    border: 0 !important;
+    color: black;
+    width: 50px;
+}
+
+input:focus { box-shadow: 0 0 0 0 !important; }
+
+.remember { color: white; }
+
+.remember input {
+    height: 20px;
+    margin-left: 15px;
+    margin-right: 5px;
+    width: 20px;
+}
+
+.login_btn {
+    background-color: rgb(250, 151, 95);
+    color: black;
+    width: 100px;
+}
+
+.login_btn:hover {
+    background-color: white;
+    color: black;
+}
+
+.links {
+     color: white;
+}
+
+.links a {
+     margin-left: 4px;
+}
+
+.btn-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -15%);
+}
+
+.card {
+    height: auto;
+}
