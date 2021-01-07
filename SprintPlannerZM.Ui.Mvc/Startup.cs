@@ -32,6 +32,7 @@ namespace SprintPlannerZM.Ui.Mvc
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
             }
             else
             {

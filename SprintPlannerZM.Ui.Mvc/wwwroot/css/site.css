@@ -51,11 +51,6 @@ button.accept-policy {
 }
 
 
-.btnCenterwrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -64,11 +59,11 @@ html {
 }
 
 body {
-    background: rgb(250, 151, 95);
+    background: #fa975f;
     background: linear-gradient(0deg, rgba(250, 151, 95,1) 0%, rgba(0,155,168,1) 100%);
 }
 .footer {
-    background: rgb(0,155,168);
+    background: #009ba8;
     border-top: thick solid rgb(250, 151, 95);
     position: fixed;
     bottom: 0;
@@ -76,3 +71,119 @@ body {
     white-space: nowrap;
     padding-top: 20px;
 }
+
+
+
+
+
+/* ons containers in flex
+-------------------------------------------------- */
+
+/*container buttons*/
+.containerCenterHor {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+.containerRadioButton {
+    background-color: #0c747d;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 1rem;
+    align-content: center;
+    padding-right: 40px;
+    padding-left: 40px;
+    border: #bf6b3c solid 2px;
+}
+
+/*container dropdowns*/
+.containerDropdowns {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/*container navbar*/
+.containerNav {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+
+
+
+
+
+
+
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #fa975f;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #fa975f;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 28px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+} 
+

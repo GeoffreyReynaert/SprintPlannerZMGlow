@@ -4248,7 +4248,7 @@ input[type="button"].btn-block {
   }
 }
 
-@media (min-width: 576px) {
+@media (min-width: 665px) {
   .navbar-expand-sm {
     -ms-flex-flow: row nowrap;
     flex-flow: row nowrap;
