@@ -3,6 +3,7 @@ using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
+using SoapSSMvc.Model;
 
 namespace SprintPlannerZM.Services
 {
@@ -30,6 +31,7 @@ namespace SprintPlannerZM.Services
             _database.SaveChanges();
             return leerkracht;
         }
+
 
         public Leerkracht Update(int id, Leerkracht leerkracht)
         {

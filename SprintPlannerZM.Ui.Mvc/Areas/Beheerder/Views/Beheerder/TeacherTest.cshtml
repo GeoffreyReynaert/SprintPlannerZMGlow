@@ -1,0 +1,13 @@
+﻿@model IList<SoapSSMvc.Model.LeerkrachtSsSoap>
+
+
+@foreach (var leerkracht in Model)
+{
+<div class="container border-primary">
+    <h5>Naam @leerkracht.naam @leerkracht.voornaam</h5>
+    Nummer @leerkracht.internummer<br />
+    Administratieve groep @leerkracht.administratievegroep<br />
+    Klasnaam en id @leerkracht.klasnaam @leerkracht.klasid<br />
+    klas omschr. @leerkracht.klasomschrijving<br /><br />
+</div>
+}

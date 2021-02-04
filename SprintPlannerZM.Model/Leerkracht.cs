@@ -4,7 +4,7 @@ namespace SprintPlannerZM.Model
 {
     public class Leerkracht
     {
-        public int leerkrachtID { get; set; }
+        public long leerkrachtID { get; set; }
         public string voornaam { get; set; }
         public string achternaam { get; set; }
         public string email { get; set; }

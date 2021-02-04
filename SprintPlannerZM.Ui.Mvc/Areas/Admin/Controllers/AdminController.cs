@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,8 +32,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var vakResult = _vakService.Find();
-            return View("Index", vakResult);
+           
+            return View();
         }
 
 
@@ -41,7 +42,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
         {
 
             var klasResult = _klasService.Find();
-            return View("LeerlingenOverzicht", klasResult);
+            return View(klasResult);
         }
 
         public IActionResult DropDownKeuze(int id)
@@ -68,7 +69,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
 
         public IActionResult Toezichters()
         {
-            return View();
+            IList<Leerkracht> leerkrachten = new List<Leerkracht>();
+            leerkrachten = _leerkrachtService.Find();
+            return View(leerkrachten);
         }
 
         public IActionResult Overzichten()

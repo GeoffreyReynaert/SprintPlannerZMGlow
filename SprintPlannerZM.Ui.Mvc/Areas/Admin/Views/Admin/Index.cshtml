@@ -1,29 +1,2 @@
 ﻿@model IList<SprintPlannerZM.Model.Vak>
 
-<h1>Leerkrachten</h1>
-
-
-<table class="styled-table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Vaknaam</th>
-        </tr>
-    </thead>
-    <tbody class="scroll-style">
-        @if (Model != null)
-        {
-            foreach (var leerkracht in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => leerkracht.VakID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => leerkracht.vaknaam)
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>

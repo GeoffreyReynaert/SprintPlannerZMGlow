@@ -1,4 +1,4 @@
-﻿
+﻿@model IList<SprintPlannerZM.Model.Leerkracht>
 
 <head>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -8,7 +8,7 @@
     <script src="~/js/site.js"></script>
 </head>
 
-<br/>
+<br />
 <div class="containerRadioButton left-allignToNav">
     <input type="radio" id="isGeenToez" class="mt-1" name="keuzeToez" value="False">
     <label class="ml-n5" for="isGeenToez">Geen toezichter</label><br>
@@ -21,216 +21,48 @@
     <div class="tbl-header">
         <table>
             <thead>
-            <tr>
-                <th class="h6" rowspan="4">
-                    <div class="containerDropdowns ">
-                        <form class="col-4">
-                            <select class="form-control select2 ">
-                                <option>Leerkracht 1 </option>
-                                <option>Leerkracht 2</option>
-                                <option>Leerkracht 3</option>
-                                <option>Leerkracht 4</option>
-                                <option>Leerkracht 5</option>
-                                <option>Leerkracht 6</option>
-                            </select>
-                        </form>
-                    </div>
-                </th>
-            </tr>
+                <tr>
+                    <th class="h6" rowspan="4">
+                        <div class="containerDropdowns ">
+                            <form class="col-4">
+                                <select class="form-control select2 ">
+                                    <option>--Kies een leeraar--</option>
+                                    @foreach (var leeraar in Model)
+                                    {
+                                        <option>@leeraar.achternaam @leeraar.voornaam</option>
+                                    }
+
+                                </select>
+                            </form>
+                        </div>
+                    </th>
+                </tr>
             </thead>
         </table>
     </div>
     <div class="tbl-content">
         <table>
             <tbody>
-            <tr class="trBordercolor">
-                <td>Mark Otto  <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label></td>
-
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>Mark Otto  <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label></td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    Mark Otto  <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-            </tr>
+                <section>
+                    <div class="">
+                        <div class="containerLeerkrachten">
+                            @foreach (var leerkracht in @Model)
+                            {
+                                <div class=" card p-1 m-2" style="width: 15rem;">
+                                    <div>
+                                        @leerkracht.achternaam @leerkracht.voornaam
+                                        <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </section>
             </tbody>
         </table>
-
     </div>
 </section>
 <script>

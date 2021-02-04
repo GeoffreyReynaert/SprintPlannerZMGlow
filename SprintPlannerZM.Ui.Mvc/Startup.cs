@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services;
 using SprintPlannerZM.Services.Abstractions;
+using SprintPlannerZM.Ui.Mvc.Settings;
 
 namespace SprintPlannerZM.Ui.Mvc
 {
@@ -22,10 +23,21 @@ namespace SprintPlannerZM.Ui.Mvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //registreren van de Settings.AppSettings
+            var appSettings = new AppSettings();
+            Configuration.Bind("AppSettings", appSettings);
+            services.AddSingleton(appSettings);
+
+
             services.AddControllersWithViews();
+            var connectionString = Configuration.GetConnectionString("TIHFDbContext");
             services.AddDbContext<TihfDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("TIHFDbContext")));
+            {
+                options.UseSqlServer(connectionString);
+            }, ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+
+
+
             services.AddScoped<ILeerlingService, LeerlingService>();
             services.AddScoped<IKlasService, KlasService>();
             services.AddScoped<ILeerkrachtService, LeerkrachtService>();
@@ -48,16 +60,21 @@ namespace SprintPlannerZM.Ui.Mvc
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+
+
                 endpoints.MapControllerRoute(
                     name: "areas",
-                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Beheerder}/{action=Index}/{id?}");
 
                 endpoints.MapControllerRoute(
                     name: "default",

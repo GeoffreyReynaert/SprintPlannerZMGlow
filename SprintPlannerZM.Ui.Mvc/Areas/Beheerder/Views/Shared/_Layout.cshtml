@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]ADMIN AREA BETA</title>
+    <title>@ViewData["Title"]Beheerder AREA BETA</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/bootstrap-extensions.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -24,25 +24,21 @@
                         <img src="~/img/tihf goede start.jpg" width="200" height="200" alt="Navigatie achtergrond"/>
                     </li>
                     <li>
-                        <a id="Index" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Index">Home</a>
+                        <a id="AdminIndex" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Index">Admin Home</a>
                     </li>
                     <li>
-                        <a id="LeerlingenOverzicht" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="LeerlingenOverzicht">Leerling overzicht</a>
+                        <a id="BeheerderIndex" class="fas" asp-area="Beheerder" asp-controller="Beheerder" asp-action="Index">Beheerder Home</a>
                     </li>
                     <li>
-                        <a id="Klasverdeling" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Klasverdeling">Klasverdeling sprint</a>
+                        <a id="BeheerderLeerkrachten" class="fas" asp-area="Beheerder" asp-controller="Beheerder" asp-action="TeacherTest">Leerkrachten Test</a>
                     </li>
                     <li>
-                        <a id="Toezichters" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Toezichters">Toezichters toekennen</a>
+                        <a id="ImportTeachers" class="fas" asp-area="Beheerder" asp-controller="Beheerder" asp-action="ImportTeachers">Leerkrachten import</a>
                     </li>
                     <li>
-                        <a id="Overzichten" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Overzichten">Overzichten</a>
-                    </li>
-                    <li>
+                        <!--class="nav-link text-light"-->
                         <a class="fas" asp-area="" asp-controller="Home" asp-action="Index">Log Out</a>
-                    </li>
-                    <li>
-                        <a id="BeheerderIndex" class="fas" asp-area="Beheerder" asp-controller="Beheerder" asp-action="Index">Beheerder Index</a>
+
                     </li>
 
                 </ul>

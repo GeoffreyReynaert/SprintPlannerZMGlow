@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using System;
 using SprintPlannerZM.Model;
+
 
 namespace SprintPlannerZM.Repository.Extensions
 {
@@ -38,7 +38,7 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Klas>()
                 .HasOne(a => a.Leerkracht)
                 .WithMany(u => u.Klassen)
-                .HasForeignKey(a => a.klasID);
+                .HasForeignKey(a => a.titularisID);
         }
 
         private static void ConfigureVak(this ModelBuilder builder)
@@ -46,12 +46,12 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Vak>()
                 .HasOne(a => a.Leerkracht)
                 .WithMany(u => u.Vakken)
-                .HasForeignKey(a => a.VakID);
+                .HasForeignKey(a => a.leerkrachtID);
             builder.Entity<Vak>()
                 .HasOne(a => a.Klas)
                 .WithMany(u => u.Vakken)
-                .HasForeignKey(a => a.VakID);
-            //vak is enkel 1 leerkracht
+                .HasForeignKey(a => a.klasID);
+        
         }
     }
 }
