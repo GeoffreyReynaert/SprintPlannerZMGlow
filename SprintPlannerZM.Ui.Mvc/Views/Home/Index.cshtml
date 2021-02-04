@@ -2,7 +2,6 @@
     ViewData["Title"] = "Home Page";
 }
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link href="~/css/bootstrap-extensions.css" rel="stylesheet" />
 <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -49,11 +48,6 @@
                                 <span class="input-group-text"><i class="fas fa-key"></i></span>
                             </div>
                             <input type="password" class="form-control" placeholder="password">
-                        </div>
-                        <div class="row align-items-center remember">
-                            <asp:CheckBox ID="chkPassport" Text="Do you have Passport?" runat="server" />
-                            <asp:Checkbox id="chkTest" runat="server" oncheckchanged="RememberCheck" autopostback="true"></asp:Checkbox>
-                            <input type="checkbox" name="Remember" id="Remember">Remember Me
                         </div>
                     </form>
                 </div>

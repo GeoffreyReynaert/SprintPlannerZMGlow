@@ -1,0 +1,26 @@
+﻿using Microsoft.EntityFrameworkCore;
+using SprintPlannerZM.Model;
+using SprintPlannerZM.Repository.Extensions;
+
+namespace SprintPlannerZM.Repository
+{
+    public class TihfDbContext : DbContext
+    {
+        public TihfDbContext(DbContextOptions<TihfDbContext> options) : base(options)
+        {
+
+        }
+
+        public DbSet<Leerling> Leerling { get; set; }
+        public DbSet<Klas> Klas { get; set; }
+        public DbSet<Leerkracht> Leerkracht { get; set; }
+        public DbSet<Vak> Vak { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ConfigureRelationships();
+            modelBuilder.RemovePluralizingTableNameConvention();
+            base.OnModelCreating(modelBuilder);
+        }
+    }
+}

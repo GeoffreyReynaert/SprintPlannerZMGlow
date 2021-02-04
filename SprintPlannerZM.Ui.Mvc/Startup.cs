@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SprintPlannerZM.Repository;
+using SprintPlannerZM.Services;
+using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Ui.Mvc
 {
@@ -24,6 +23,13 @@ namespace SprintPlannerZM.Ui.Mvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<TihfDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("TIHFDbContext")));
+            services.AddScoped<ILeerlingService, LeerlingService>();
+            services.AddScoped<IKlasService, KlasService>();
+            services.AddScoped<ILeerkrachtService, LeerkrachtService>();
+            services.AddScoped<IVakService, VakService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
