@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SprintPlannerZM.Model", "SprintPlannerZM.Model\SprintPlannerZM.Model.csproj", "{C765C85A-FFBE-4476-B545-77A4589F5BCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SprintPlannerZM.Model", "SprintPlannerZM.Model\SprintPlannerZM.Model.csproj", "{C765C85A-FFBE-4476-B545-77A4589F5BCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SprintPlannerZM.Repository", "SprintPlannerZM.Repository\SprintPlannerZM.Repository.csproj", "{396D2E79-8A87-4D88-BA5D-A3CC778BA488}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SprintPlannerZM.Repository", "SprintPlannerZM.Repository\SprintPlannerZM.Repository.csproj", "{396D2E79-8A87-4D88-BA5D-A3CC778BA488}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SprintPlannerZM.Services", "SprintPlannerZM.Services\SprintPlannerZM.Services.csproj", "{85FF21EC-A169-4D4D-9AF9-F1FE767A300B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SprintPlannerZM.Services", "SprintPlannerZM.Services\SprintPlannerZM.Services.csproj", "{85FF21EC-A169-4D4D-9AF9-F1FE767A300B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SprintPlannerZM.Ui.Mvc", "SprintPlannerZM.Ui.Mvc\SprintPlannerZM.Ui.Mvc.csproj", "{EEAA5B3E-095B-40C6-BD88-A80FF0E1B514}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SprintPlannerZM.Ui.Mvc", "SprintPlannerZM.Ui.Mvc\SprintPlannerZM.Ui.Mvc.csproj", "{EEAA5B3E-095B-40C6-BD88-A80FF0E1B514}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SprintPlannerZM.Services.Abstractions", "SprintPlannerZM.Services.Abstractions\SprintPlannerZM.Services.Abstractions.csproj", "{256783A6-807B-441B-83F6-D6B5811EEC7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{EEAA5B3E-095B-40C6-BD88-A80FF0E1B514}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEAA5B3E-095B-40C6-BD88-A80FF0E1B514}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEAA5B3E-095B-40C6-BD88-A80FF0E1B514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{256783A6-807B-441B-83F6-D6B5811EEC7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{256783A6-807B-441B-83F6-D6B5811EEC7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{256783A6-807B-441B-83F6-D6B5811EEC7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{256783A6-807B-441B-83F6-D6B5811EEC7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,7 +17,7 @@ body {
 
     .wrapper .sidebar {
         height: 100%;
-        background: rgb(0,155,168);
+        background: rgba(0, 157, 168, 0.5);
         padding: 30px 0px;
         position: fixed;
         border-right: thick solid rgb(250, 151, 95);
@@ -111,4 +111,9 @@ body {
     background: darkred;
     height: 50px;
     width: 50px;
+}
+
+.sidebar-nav {
+    background: #0c747d;
+    box-shadow: 0 0 5px 15px #0c747d;
 }

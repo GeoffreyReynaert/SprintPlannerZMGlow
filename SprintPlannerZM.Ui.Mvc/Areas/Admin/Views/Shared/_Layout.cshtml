@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/css/bootstrap-extensions.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicon-32x32.png">
 </head>
 <body>
     <img class="float-right img-thumbnail" src="~/img/tihf.png" alt="Logo TIHF" />
@@ -15,27 +16,27 @@
     <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3"> -->
     <nav class="wrapper navbar-expand-sm navbar-toggleable-sm">
 
-        <div class="sidebar containerNav ">
+        <div class="sidebar">
 
             <div class="navbar-collapse collapse justify-content-between">
                 <ul>
                     <li>
-                        <img src="~/img/tihf goede start.jpg" width="200" height="200" alt="Navigatie achtergrond" />
+                        <img src="~/img/tihf goede start.jpg" width="200" height="200" alt="Navigatie achtergrond"/>
                     </li>
                     <li>
-                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Index">Home</a>
+                        <a id="Index" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Index">Home</a>
                     </li>
                     <li>
-                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="LeerlingenOverzicht">Leerling overzicht</a>
+                        <a id="LeerlingenOverzicht" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="LeerlingenOverzicht">Leerling overzicht</a>
                     </li>
                     <li>
-                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Klasverdeling">Klasverdeling sprint</a>
+                        <a id="Klasverdeling" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Klasverdeling">Klasverdeling sprint</a>
                     </li>
                     <li>
-                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Toezichters">Toezichters toekennen</a>
+                        <a id="Toezichters" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Toezichters">Toezichters toekennen</a>
                     </li>
                     <li>
-                        <a class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Overzichten">Overzichten</a>
+                        <a id="Overzichten" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Overzichten">Overzichten</a>
                     </li>
                     <li>
                         <!--class="nav-link text-light"-->
@@ -45,16 +46,9 @@
 
                 </ul>
             </div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="">
-                    <img alt="Test" src="~/img/toggle.png" />
-                </span>
-            </button>
         </div>
     </nav>
-
-    <div class="container">
+<div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

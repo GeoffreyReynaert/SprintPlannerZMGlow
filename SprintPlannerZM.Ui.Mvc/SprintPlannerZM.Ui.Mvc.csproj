@@ -20,7 +20,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SprintPlannerZM.Repository\SprintPlannerZM.Repository.csproj" />
+    <ProjectReference Include="..\SprintPlannerZM.Services.Abstractions\SprintPlannerZM.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\SprintPlannerZM.Services\SprintPlannerZM.Services.csproj" />
   </ItemGroup>
 
 </Project>
