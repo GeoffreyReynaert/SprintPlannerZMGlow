@@ -40,7 +40,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
         //Alle leerlingen overzicht
         public IActionResult LeerlingenOverzicht()
         {
-
             var klasResult = _klasService.Find();
             return View(klasResult);
         }

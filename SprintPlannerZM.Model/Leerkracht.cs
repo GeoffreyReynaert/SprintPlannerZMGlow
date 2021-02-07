@@ -15,5 +15,24 @@ namespace SprintPlannerZM.Model
         public int rol { get; set; }
         public IList<Klas> Klassen { get; set; }
         public IList<Vak> Vakken { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            Leerkracht objAsPart = obj as Leerkracht;
+            if (objAsPart == null) return false;
+            else return Equals(objAsPart);
+        }
+
+        public override int GetHashCode()
+        {
+            return (int) leerkrachtID;
+        }
+
+        public bool Equals(Leerkracht other)
+        {
+            if (other == null) return false;
+            return (this.leerkrachtID.Equals(other.leerkrachtID));
+        }
     }
 }

@@ -23,6 +23,11 @@ namespace SprintPlannerZM.Services
             return _database.Klas.SingleOrDefault(l => l.klasID == id);
         }
 
+        public Klas Get(string name)
+        {
+            return _database.Klas.SingleOrDefault(l => l.klasnaam == name);
+        }
+
         public IList<Klas> Find()
         {
             return _database.Klas.ToList();
@@ -30,8 +35,12 @@ namespace SprintPlannerZM.Services
 
         public Klas Create(Klas klas)
         {
-            _database.Klas.Add(klas);
-            _database.SaveChanges();
+            var dbLeerkracht = _database.Klas.SingleOrDefault(l => l.klasID == klas.klasID);
+            if (dbLeerkracht == null)
+            {
+                _database.Klas.Add(klas);
+                _database.SaveChanges();
+            }
             return klas;
         }
 
