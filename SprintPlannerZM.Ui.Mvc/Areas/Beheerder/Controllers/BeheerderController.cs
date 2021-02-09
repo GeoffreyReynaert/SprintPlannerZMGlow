@@ -165,7 +165,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                         achternaam = element.Element("naam").Value,
                         voornaam = element.Element("voornaam").Value,
                         email = element.Element("gebruikersnaam").Value,
-                        sprinttoezichter = false,
+                        sprintToezichter = false,
                         status = true,
                         rol = 2};
 

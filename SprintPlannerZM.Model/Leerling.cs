@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SprintPlannerZM.Model
 {
@@ -10,6 +11,8 @@ namespace SprintPlannerZM.Model
         public string email { get; set; }
         public int KlasID { get; set; }
         public Klas Klas { get; set; }
+
+        public IList<Hulpleerling> Hulpleerlingen { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -31,7 +34,6 @@ namespace SprintPlannerZM.Model
         }
 
     }
-        public IList<Hulpleerling> Hulpleerlingen { get; set; }
-    }
+    
 }
 
