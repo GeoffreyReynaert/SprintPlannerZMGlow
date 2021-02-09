@@ -151,6 +151,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                 {
                     var dbKlas = _klasService.Get(element.Element("klasnaam").Value);
 
+
                     var soapVak = new Vak()
                     {
                         leerkrachtID = long.Parse(element.Element("stamboeknummer").Value),
