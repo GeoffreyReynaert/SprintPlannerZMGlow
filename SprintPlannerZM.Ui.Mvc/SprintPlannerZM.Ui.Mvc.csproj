@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Beheerder\Controllers\" />
     <Folder Include="Areas\Beheerder\Models\" />
-    <Folder Include="Areas\Beheerder\Views\" />
     <Folder Include="Areas\Leerling\Controllers\" />
     <Folder Include="Areas\Leerling\Models\" />
     <Folder Include="Areas\Leerling\Views\" />
@@ -19,15 +17,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="SoapCore" Version="1.1.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SprintPlannerZM.Repository\SprintPlannerZM.Repository.csproj" />
     <ProjectReference Include="..\SprintPlannerZM.Services.Abstractions\SprintPlannerZM.Services.Abstractions.csproj" />
     <ProjectReference Include="..\SprintPlannerZM.Services\SprintPlannerZM.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
 </Project>

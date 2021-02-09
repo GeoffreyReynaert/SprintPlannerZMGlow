@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SprintPlannerZM.Model;
+using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
@@ -64,9 +69,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
         //Alle leerlingen overzicht
         public IActionResult LeerlingenOverzicht()
         {
-
             var klasResult = _klasService.Find();
-            return View("LeerlingenOverzicht", klasResult);
+            return View(klasResult);
         }
 
         public IActionResult DropDownKeuze(int id)
@@ -89,7 +93,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
 
         public IActionResult Toezichters()
         {
-            return View();
+            IList<Leerkracht> leerkrachten = new List<Leerkracht>();
+            leerkrachten = _leerkrachtService.Find();
+            return View(leerkrachten);
         }
 
         public IActionResult Overzichten()

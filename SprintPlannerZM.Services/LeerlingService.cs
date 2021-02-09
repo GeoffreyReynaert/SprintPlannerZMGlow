@@ -27,8 +27,12 @@ namespace SprintPlannerZM.Services
 
         public Leerling Create(Leerling leerling)
         {
-            _database.Leerling.Add(leerling);
-            _database.SaveChanges();
+            var dbLeerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == leerling.leerlingID);
+            if (dbLeerling == null)
+            {
+                _database.Leerling.Add(leerling);
+                _database.SaveChanges();
+            }
             return leerling;
         }
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using SprintPlannerZM.Model;
 
+
 namespace SprintPlannerZM.Repository.Extensions
 {
     public static class RelationshipsExtension
@@ -34,7 +35,7 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Leerling>()
                 .HasOne(a => a.Klas)
                 .WithMany(u => u.Leerlingen)
-                .HasForeignKey(a => a.leerlingID);
+                .HasForeignKey(a => a.KlasID);
         }
 
         private static void ConfigureKlas(this ModelBuilder builder)
@@ -43,6 +44,7 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.Leerkracht)
                 .WithMany(u => u.Klassen)
                 .HasForeignKey(a => a.titularisID);
+
         }
 
         private static void ConfigureVak(this ModelBuilder builder)
@@ -55,7 +57,7 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.Klas)
                 .WithMany(u => u.Vakken)
                 .HasForeignKey(a => a.klasID);
-            //vak is enkel 1 leerkracht
+        
         }
 
         private static void ConfigureExamenrooster(this ModelBuilder builder)
