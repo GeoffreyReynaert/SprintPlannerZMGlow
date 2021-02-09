@@ -30,10 +30,14 @@ namespace SprintPlannerZM.Ui.Mvc
 
 
             services.AddControllersWithViews();
+
             var connectionString = Configuration.GetConnectionString("TIHFDbContext");
             services.AddDbContext<TihfDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("TIHFDbContext")));
+            {
+                options.UseSqlServer(connectionString);
+            }, ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+
+
             services.AddScoped<IDeadlineService, DeadlineService>();
             services.AddScoped<IBeheerderService, BeheerderService>();
             services.AddScoped<IDagdeelService, DagdeelService>();

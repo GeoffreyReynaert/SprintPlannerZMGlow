@@ -62,8 +62,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var vakResult = _beheerderService.Find();
-            return View("Index", vakResult);
+            //var vakResult = _beheerderService.Find();
+            return View("Index");
         }
 
 

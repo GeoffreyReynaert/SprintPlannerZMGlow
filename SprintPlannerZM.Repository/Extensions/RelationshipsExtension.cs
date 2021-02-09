@@ -102,11 +102,11 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Sprintlokaal>()
                 .HasOne(a => a.Leerkracht)
                 .WithMany(u => u.Sprintlokalen)
-                .HasForeignKey(a => a.sprintlokaalID);
+                .HasForeignKey(a => a.leerkrachtID);
             builder.Entity<Sprintlokaal>()
                 .HasOne(a => a.Lokaal)
                 .WithMany(u => u.Sprintlokalen)
-                .HasForeignKey(a => a.sprintlokaalID);
+                .HasForeignKey(a => a.lokaalID);
             builder.Entity<Sprintlokaal>()
                 .HasOne(a => a.Dagdeel)
                 .WithMany(u => u.Sprintlokalen)

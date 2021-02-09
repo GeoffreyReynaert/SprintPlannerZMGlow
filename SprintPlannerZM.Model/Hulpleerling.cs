@@ -9,7 +9,7 @@ namespace SprintPlannerZM.Model
         public bool sprint { get; set; }
         public bool typer { get; set; }
         public bool mklas { get; set; }
-        public int leerlingID { get; set; }
+        public long leerlingID { get; set; }
         public Klas Klas { get; set; }
         public Leerling Leerling { get; set; }
         public IList<Sprintvak> Sprintvakken { get; set; }
