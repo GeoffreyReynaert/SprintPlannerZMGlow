@@ -9,11 +9,12 @@ namespace SprintPlannerZM.Model
         public string achternaam { get; set; }
         public string email { get; set; }
         public string telefoonNr { get; set; }
-        public int kluisnr { get; set; }
-        public bool sprinttoezichter { get; set; }
+        public int kluisNr { get; set; }
+        public bool sprintToezichter { get; set; }
         public bool status { get; set; }
         public int rol { get; set; }
         public IList<Klas> Klassen { get; set; }
         public IList<Vak> Vakken { get; set; }
+        public IList<Sprintlokaal> Sprintlokalen { get; set; }
     }
 }

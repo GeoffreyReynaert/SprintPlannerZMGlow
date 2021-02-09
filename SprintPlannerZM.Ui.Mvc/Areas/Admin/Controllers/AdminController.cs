@@ -1,9 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SprintPlannerZM.Model;
-using SprintPlannerZM.Repository;
+﻿using Microsoft.AspNetCore.Mvc;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
@@ -11,27 +6,57 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
     [Area("Admin")]
     public class AdminController: Controller
     {
-
+        public readonly IDeadlineService _deadlineService;
+        public readonly IBeheerderService _beheerderService;
+        private readonly IDagdeelService _dagdeelService;
+        private readonly IExamentijdspanneService _examentijdspanneService;
         private readonly ILeerlingService _leerlingService;
+        private readonly ILokaalService _lokaalService;
         private readonly IKlasService _klasService;
         private readonly ILeerkrachtService _leerkrachtService;
         private readonly IVakService _vakService;
+        private readonly IExamenroosterService _examenroosterService;
+        private readonly IHulpleerlingService _hulpleerlingService;
+        private readonly ISprintvakService _sprintvakService;
+        private readonly ISprintlokaalService _sprintlokaalService;
+        private readonly ILeerlingverdelingService _leerlingverdelingService;
 
         public AdminController(
+            IDeadlineService deadlineService,
+            IBeheerderService beheerderService,
+            IDagdeelService dagdeelService,
+            IExamentijdspanneService examentijdspanneService,
             ILeerlingService leerlingService,
+            ILokaalService lokaalService,
             IKlasService klasService,
             ILeerkrachtService leerkrachtService,
-            IVakService vakservice)
+            IVakService vakService,
+            IExamenroosterService examenroosterService,
+            IHulpleerlingService hulpleerlingService,
+            ISprintvakService sprintvakService,
+            ISprintlokaalService sprintlokaalService,
+            ILeerlingverdelingService leerlingverdelingService
+        )
         {
+            _deadlineService = deadlineService;
+            _beheerderService = beheerderService;
+            _dagdeelService = dagdeelService;
+            _examentijdspanneService = examentijdspanneService;
             _leerlingService = leerlingService;
+            _lokaalService = lokaalService;
             _klasService = klasService;
             _leerkrachtService = leerkrachtService;
-            _vakService = vakservice;
+            _vakService = vakService;
+            _examenroosterService = examenroosterService;
+            _hulpleerlingService = hulpleerlingService;
+            _sprintvakService = sprintvakService;
+            _sprintlokaalService = sprintlokaalService;
+            _leerlingverdelingService = leerlingverdelingService;
         }
 
         public IActionResult Index()
         {
-            var vakResult = _vakService.Find();
+            var vakResult = _beheerderService.Find();
             return View("Index", vakResult);
         }
 
@@ -54,10 +79,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
         {
             return View();
         }
-
-
-
-
 
         public IActionResult Klasverdeling()
         {

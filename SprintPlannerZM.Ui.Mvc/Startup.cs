@@ -26,10 +26,20 @@ namespace SprintPlannerZM.Ui.Mvc
             services.AddDbContext<TihfDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("TIHFDbContext")));
+            services.AddScoped<IDeadlineService, DeadlineService>();
+            services.AddScoped<IBeheerderService, BeheerderService>();
+            services.AddScoped<IDagdeelService, DagdeelService>();
+            services.AddScoped<IExamentijdspanneService, ExamentijdspanneService>();
             services.AddScoped<ILeerlingService, LeerlingService>();
             services.AddScoped<IKlasService, KlasService>();
             services.AddScoped<ILeerkrachtService, LeerkrachtService>();
             services.AddScoped<IVakService, VakService>();
+            services.AddScoped<IExamenroosterService, ExamenroosterService>();
+            services.AddScoped<ILokaalService, LokaalService>();
+            services.AddScoped<IHulpleerlingService, HulpleerlingService>();
+            services.AddScoped<ISprintvakService, SprintvakService>();
+            services.AddScoped<ISprintlokaalService, SprintlokaalService>();
+            services.AddScoped<ILeerlingverdelingService, LeerlingverdelingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

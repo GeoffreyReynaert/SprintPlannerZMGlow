@@ -1,13 +1,17 @@
-﻿@model IList<SprintPlannerZM.Model.Vak>
+﻿@model IList<SprintPlannerZM.Model.Beheerder>
 
-<h1>Leerkrachten</h1>
+<h1>rooster</h1>
 
 
 <table class="styled-table">
     <thead>
         <tr>
             <th>Id</th>
-            <th>Vaknaam</th>
+            <th>klasid</th>
+            <th>klasid</th>
+            <th>Id</th>
+            <th>klasid</th>
+            <th>klasid</th>
         </tr>
     </thead>
     <tbody class="scroll-style">
@@ -15,14 +19,26 @@
         {
             foreach (var leerkracht in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => leerkracht.VakID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => leerkracht.vaknaam)
-                    </td>
-                </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => leerkracht.beheerderID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => leerkracht.voornaam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => leerkracht.familienaam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => leerkracht.telefoonNr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => leerkracht.email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => leerkracht.rol)
+            </td>
+        </tr>
             }
         }
     </tbody>

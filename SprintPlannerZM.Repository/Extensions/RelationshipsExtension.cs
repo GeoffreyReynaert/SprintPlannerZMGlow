@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using System;
 using SprintPlannerZM.Model;
 
 namespace SprintPlannerZM.Repository.Extensions
@@ -23,6 +22,11 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.ConfigureLeerling();
             builder.ConfigureKlas();
             builder.ConfigureVak();
+            builder.ConfigureExamenrooster();
+            builder.ConfigureHulpleerling();
+            builder.ConfigureSprintvak();
+            builder.ConfigureSprintlokaal();
+            builder.ConfigureLeerlingverdeling();
         }
 
         private static void ConfigureLeerling(this ModelBuilder builder)
@@ -38,7 +42,7 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Klas>()
                 .HasOne(a => a.Leerkracht)
                 .WithMany(u => u.Klassen)
-                .HasForeignKey(a => a.klasID);
+                .HasForeignKey(a => a.titularisID);
         }
 
         private static void ConfigureVak(this ModelBuilder builder)
@@ -46,12 +50,84 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Vak>()
                 .HasOne(a => a.Leerkracht)
                 .WithMany(u => u.Vakken)
-                .HasForeignKey(a => a.VakID);
+                .HasForeignKey(a => a.leerkrachtID);
             builder.Entity<Vak>()
                 .HasOne(a => a.Klas)
                 .WithMany(u => u.Vakken)
-                .HasForeignKey(a => a.VakID);
+                .HasForeignKey(a => a.klasID);
             //vak is enkel 1 leerkracht
+        }
+
+        private static void ConfigureExamenrooster(this ModelBuilder builder)
+        {
+            builder.Entity<Examenrooster>()
+                .HasOne(a => a.Vak)
+                .WithMany(u => u.Examenroosters)
+                .HasForeignKey(a => a.vakID);
+            builder.Entity<Examenrooster>()
+                .HasOne(a => a.Dagdeel)
+                .WithMany(u => u.Examenroosters)
+                .HasForeignKey(a => a.dagdeelID);
+            builder.Entity<Examenrooster>()
+                .HasOne(a => a.Examentijdspanne)
+                .WithMany(u => u.Examenroosters)
+                .HasForeignKey(a => a.tijdspanneID);
+        }
+        private static void ConfigureHulpleerling(this ModelBuilder builder)
+        {
+            builder.Entity<Hulpleerling>()
+                .HasOne(a => a.Klas)
+                .WithMany(u => u.Hulpleerlingen)
+                .HasForeignKey(a => a.klasID);
+            builder.Entity<Hulpleerling>()
+                .HasOne(a => a.Leerling)
+                .WithMany(u => u.Hulpleerlingen)
+                .HasForeignKey(a => a.leerlingID);
+        }
+        private static void ConfigureSprintvak(this ModelBuilder builder)
+        {
+            builder.Entity<Sprintvak>()
+                .HasOne(a => a.Vak)
+                .WithMany(u => u.Sprintvakken)
+                .HasForeignKey(a => a.vakID);
+            builder.Entity<Sprintvak>()
+                .HasOne(a => a.Hulpleerling)
+                .WithMany(u => u.Sprintvakken)
+                .HasForeignKey(a => a.hulpleerlingID);
+        }
+        private static void ConfigureSprintlokaal(this ModelBuilder builder)
+        {
+            builder.Entity<Sprintlokaal>()
+                .HasOne(a => a.Leerkracht)
+                .WithMany(u => u.Sprintlokalen)
+                .HasForeignKey(a => a.sprintlokaalID);
+            builder.Entity<Sprintlokaal>()
+                .HasOne(a => a.Lokaal)
+                .WithMany(u => u.Sprintlokalen)
+                .HasForeignKey(a => a.sprintlokaalID);
+            builder.Entity<Sprintlokaal>()
+                .HasOne(a => a.Dagdeel)
+                .WithMany(u => u.Sprintlokalen)
+                .HasForeignKey(a => a.dagdeelID);
+            builder.Entity<Sprintlokaal>()
+                .HasOne(a => a.Examentijdspanne)
+                .WithMany(u => u.Sprintlokalen)
+                .HasForeignKey(a => a.tijdspanneID);
+        }
+        private static void ConfigureLeerlingverdeling(this ModelBuilder builder)
+        {
+            builder.Entity<Leerlingverdeling>()
+                .HasOne(a => a.Hulpleerling)
+                .WithMany(u => u.Leerlingverdelingen)
+                .HasForeignKey(a => a.hulpleerlingID);
+            builder.Entity<Leerlingverdeling>()
+                .HasOne(a => a.Sprintlokaal)
+                .WithMany(u => u.Leerlingverdelingen)
+                .HasForeignKey(a => a.sprintlokaalID);
+            builder.Entity<Leerlingverdeling>()
+                .HasOne(a => a.Examenrooster)
+                .WithMany(u => u.Leerlingverdelingen)
+                .HasForeignKey(a => a.examenID);
         }
     }
 }

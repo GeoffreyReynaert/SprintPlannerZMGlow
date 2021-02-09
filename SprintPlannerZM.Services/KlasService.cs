@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SprintPlannerZM.Model;
+﻿using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SprintPlannerZM.Services
 {

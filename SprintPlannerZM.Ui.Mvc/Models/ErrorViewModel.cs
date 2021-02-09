@@ -1,5 +1,3 @@
-using System;
-
 namespace SprintPlannerZM.Ui.Mvc.Models
 {
     public class ErrorViewModel

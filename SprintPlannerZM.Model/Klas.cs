@@ -10,5 +10,6 @@ namespace SprintPlannerZM.Model
         public IList<Leerling> Leerlingen { get; set; }
         public Leerkracht Leerkracht { get; set; }
         public IList<Vak> Vakken { get; set; }
+        public IList<Hulpleerling> Hulpleerlingen { get; set; }
     }
 }
