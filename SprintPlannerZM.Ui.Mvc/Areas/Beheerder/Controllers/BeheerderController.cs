@@ -36,9 +36,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View();
+            return  View();
         }
 
 
@@ -98,7 +98,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                     email = leerkracht.gebruikersnaam,
                     rol = 2,
                     status = true,
-                    sprinttoezichter = false
+                    sprintToezichter = false
                 };
 
                 Klas klasMetTitul = new Klas
