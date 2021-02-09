@@ -6,8 +6,10 @@ namespace SprintPlannerZM.Model
     {
         public int lokaalID { get; set; }
         public string lokaalnaam { get; set; }
-        public int capaciteit { get; set; }
+        public byte capaciteit { get; set; }
         public string lokaaltype { get; set; }
-        public IList<Sprintlokaal> Sprintlokalen { get; set; }
+        public byte sprintlokaal { get; set; }
+        public IList<Sprintlokaal> Sprintlokalen { get; set; } 
+
     }
 }

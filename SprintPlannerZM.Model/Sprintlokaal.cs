@@ -5,8 +5,8 @@ namespace SprintPlannerZM.Model
     public class Sprintlokaal
     {
         public int sprintlokaalID { get; set; }
-        public int tijdspanneID { get; set; }
-        public int dagdeelID { get; set; }
+        public byte tijdspanneID { get; set; }
+        public byte dagdeelID { get; set; }
         public int lokaalID { get; set; }
         public long leerkrachtID { get; set; }
         public Lokaal Lokaal { get; set; }
