@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using SmartSchoolSoapApi;
 using SprintPlannerZM.Model;
@@ -40,33 +42,38 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             return View();
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> TeacherTest()
+        public IActionResult ImportPagina()
         {
-            var SoapSSApi = SoapConnection();
-
-            var result = await SoapSSApi.getClassTeachersAsync(
-                _appSettings.SsApiPassword, true);
-
-            IList<TitularisEnKlasSoap> leerkrachten = new List<TitularisEnKlasSoap>();
-
-            JArray teachers = JArray.Parse(result.ToString());
-            foreach (var teacher in teachers)
-            {
-                TitularisEnKlasSoap leerkracht = new TitularisEnKlasSoap();
-                leerkracht = teacher.ToObject<TitularisEnKlasSoap>();
-                leerkrachten.Add(leerkracht);
-            }
-            return View(leerkrachten);
+            return View();
         }
 
         [HttpGet]
-        public async void ImportKlasTitularisEnKlas()
+        //public async Task<IActionResult> TeacherTest()
+        //{
+        //    var SoapSSApi = SoapConnection();
+
+        //    var result = await SoapSSApi.getClassTeachersAsync(
+        //        _appSettings.SsApiPassword, true);
+
+        //    IList<TitularisEnKlasSoap> leerkrachten = new List<TitularisEnKlasSoap>();
+
+        //    JArray teachers = JArray.Parse(result.ToString());
+        //    foreach (var teacher in teachers)
+        //    {
+        //        TitularisEnKlasSoap leerkracht = new TitularisEnKlasSoap();
+        //        leerkracht = teacher.ToObject<TitularisEnKlasSoap>();
+        //        leerkrachten.Add(leerkracht);
+        //    }
+        //    return View(leerkrachten);
+        //}
+
+        [HttpGet]
+        public async Task<IActionResult> ImportKlasTitularisEnKlas()
         {
             IList<TitularisEnKlasSoap> titularisenMetKlas = new List<TitularisEnKlasSoap>();
-
+            IList<string> geschrevenResults = new List<string>();
             var index = 1;
+
             var SoapSSApi = SoapConnection();
             var result = await SoapSSApi.getClassTeachersAsync(_appSettings.SsApiPassword, true);
 
@@ -79,8 +86,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                 CreateIdWhenStamboekNull(index, leerkracht);
                 titularisenMetKlas.Add(leerkracht);
 
-                Console.WriteLine(user + " = Raw result => Jason Parsed = ");
-                Console.WriteLine(leerkracht.naam + " " + leerkracht.voornaam + " " + leerkracht.klasnaam + " " + leerkracht.stamboeknummer + "/" + leerkracht.internummer);
             }
 
             var i = 1;
@@ -92,13 +97,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                 _leerkrachtService.Create(titularis);
                 _klasService.Create(klasMetTitul);
 
-                Console.WriteLine("Leerkracht met ID " + titularis.leerkrachtID + " naam " + titularis.achternaam + " " + titularis.voornaam);
-                Console.WriteLine(i + "/" + titularisenMetKlas.Count + " is toegevoegd");
-
-                Console.WriteLine("klas met ID " + klasMetTitul.klasID + " klasnaam " +
-                                  klasMetTitul.klasnaam + " met titularisID" + klasMetTitul.titularisID + " naam " +
-                                  titularis.achternaam + " " + titularis.voornaam);
-                Console.WriteLine(i + "/" + titularisenMetKlas.Count + " is toegevoegd");
+                geschrevenResults.Add("Klas " + i + "/" + titularisenMetKlas.Count + " met ID " + klasMetTitul.klasID + " klasnaam " + klasMetTitul.klasnaam +"/r/n"
+                                      + " met titularisID " + klasMetTitul.titularisID + " naam " + titularis.achternaam + " " + titularis.voornaam);
                 i++;
 
             }
@@ -106,20 +106,16 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             //Gemaakt om de klas als result op te vangen !!fout in de data!!
             var unknownKlas = new Klas { klasnaam = "0", titularisID = 1, klasID = 1 };
             _klasService.Create(unknownKlas);
+
+            return PartialView("PartialBerichtenResults",geschrevenResults);
         }
 
 
         //Importeren van leerlingen leerkrachten vakken en hun relatie naar mekaar en de klas
         [HttpGet]
-        public async void ImportStudentklasLeerkrachtVak()
+        public async Task<IActionResult> ImportStudentklasLeerkrachtVak()
         {
-            var SoapSSApi = SoapConnection();
-
-            var result = await SoapSSApi.getSkoreClassTeacherCourseRelationAsync(
-                _appSettings.SsApiPassword);
-
-            XDocument xDoc = XDocument.Parse(result.ToString());
-
+            IList<string> geschrevenMessages = new List<string>();
             IList<Leerkracht> vakleerkrachten = new List<Leerkracht>();
             IList<Leerkracht> distinctLeerkrachten = new List<Leerkracht>();
 
@@ -128,12 +124,18 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
 
             IList<Vak> vakken = new List<Vak>();
 
+            var SoapSSApi = SoapConnection();
+
+            var result = await SoapSSApi.getSkoreClassTeacherCourseRelationAsync(
+                _appSettings.SsApiPassword);
+
+            XDocument xDoc = XDocument.Parse(result.ToString());
+
             foreach (XElement element in xDoc.Descendants("courseTeacherClass"))
             {
                 if (element.Element("internnummer").Value != "")
                 {
                     var dbKlas = _klasService.Get(element.Element("klasnaam").Value);
-
 
                     var soapVak = new Vak()
                     {
@@ -182,8 +184,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             var i = 1;
             foreach (var leerling in distinctLeerlingen)
             {
-                Console.WriteLine(leerling.voorNaam + " " + leerling.familieNaam);
-                Console.WriteLine("leerling " + i + "/" + distinctLeerlingen.Count + " is toegevoegd");
+                geschrevenMessages.Add(leerling.voorNaam + " " + leerling.familieNaam);
+                geschrevenMessages.Add("leerling " + i + "/" + distinctLeerlingen.Count + " is toegevoegd");
                 _leerlingService.Create(leerling);
                 i++;
             }
@@ -191,8 +193,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             i = 1;
             foreach (var leerkracht in distinctLeerkrachten)
             {
-                Console.WriteLine(leerkracht.voornaam + " " + leerkracht.achternaam);
-                Console.WriteLine("leerkracht " + i + "/" + distinctLeerkrachten.Count + " is toegevoegd");
+                geschrevenMessages.Add(leerkracht.voornaam + " " + leerkracht.achternaam);
+                geschrevenMessages.Add("leerkracht " + i + "/" + distinctLeerkrachten.Count + " is toegevoegd");
                 _leerkrachtService.Create(leerkracht);
                 i++;
             }
@@ -200,24 +202,26 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             i = 1;
             foreach (var vak in vakken)
             {
-                Console.WriteLine(vak.vaknaam + " klasid: " + vak.klasID + " leerkrachtID: " + vak.leerkrachtID);
-                Console.WriteLine("Vak " + i + "/" + vakken.Count + " is toegevoegd");
+                geschrevenMessages.Add(vak.vaknaam + " klasid: " + vak.klasID + " leerkrachtID: " + vak.leerkrachtID);
+                geschrevenMessages.Add("Vak " + i + "/" + vakken.Count + " is toegevoegd");
                 _vakService.Create(vak);
                 i++;
             }
+
+
+            return PartialView("PartialBerichtenResults", geschrevenMessages);
         }
 
 
-        //enigste manier om de fout te omzeilen dat het woord adress onbekend was in reference file van de connected service SOAP
+        public async Task<IActionResult> CsvUpload()
+        {
+            return PartialView("PartialBerichtenResults");
+        }
+        
 
-
-
-
-
-
-        //FUNCTIES//
-        //Soap Connectie aanmaken om de data uit smartschool soap api te krijgen
-        public V3PortClient SoapConnection()
+    //FUNCTIES//
+    //Soap Connectie aanmaken om de data uit smartschool soap api te krijgen
+    public V3PortClient SoapConnection()
         {
 
             var SoapSSApi = new V3PortClient();
@@ -267,4 +271,5 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
         }
 
     }
+
 }

@@ -47,6 +47,13 @@ button.bg-info:focus {
     border-color: rgb(0,155,168);
 }
 
+.btn-secondary {
+    color: #fff;
+    background-color: rgb(191, 107, 60);
+    border-color: rgb(191, 107, 60);
+}
+
+
 
 
 /*tabellen opmaak leerling overzicht*/
