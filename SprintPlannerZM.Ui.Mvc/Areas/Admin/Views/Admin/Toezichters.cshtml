@@ -43,24 +43,22 @@
     <div class="tbl-content">
         <table>
             <tbody>
-                <section>
-                    <div class="">
-                        <div class="containerLeerkrachten">
-                            @foreach (var leerkracht in @Model)
-                            {
-                                <div class=" card p-1 m-2" style="width: 15rem;">
-                                    <div>
-                                        @leerkracht.achternaam @leerkracht.voornaam
-                                        <label class="switch">
-                                            <input type="checkbox">
-                                            <span class="slider round"></span>
-                                        </label>
-                                    </div>
+                <div class="">
+                    <div class="containerLeerkrachten">
+                        @foreach (var leerkracht in @Model)
+                        {
+                            <div class=" card p-1 m-2" style="width: 15rem;">
+                                <div>
+                                    @leerkracht.achternaam @leerkracht.voornaam
+                                    <label class="switch">
+                                        <input type="checkbox" value="True">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div>
-                            }
-                        </div>
+                            </div>
+                        }
                     </div>
-                </section>
+                </div>
             </tbody>
         </table>
     </div>

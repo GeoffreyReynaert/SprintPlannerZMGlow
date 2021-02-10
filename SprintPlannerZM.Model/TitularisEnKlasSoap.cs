@@ -1,6 +1,6 @@
-﻿namespace SoapSSMvc.Model
+﻿namespace SprintPlannerZM.Model
 {
-    public class LeerkrachtSsSoap
+    public class TitularisEnKlasSoap
     {
         public string naam { get; set; }
         public string voornaam { get; set; }

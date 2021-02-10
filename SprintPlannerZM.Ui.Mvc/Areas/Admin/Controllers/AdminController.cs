@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using SprintPlannerZM.Services.Abstractions;
 namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class AdminController: Controller
+    public class AdminController : Controller
     {
         public readonly IDeadlineService _deadlineService;
         public readonly IBeheerderService _beheerderService;
@@ -66,12 +67,37 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
             return View("Index");
         }
 
-
+        [HttpGet]
         //Alle leerlingen overzicht
         public IActionResult LeerlingenOverzicht()
         {
-            var klasResult = _klasService.Find();
-            return View(klasResult);
+            var klassen = _klasService.Find();
+            foreach (var klas in klassen)
+            {
+                klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
+            }
+            return View(klassen);
+        }
+
+        [HttpPost]
+        public IActionResult LeerlingenOverzicht(Leerling leerling)
+        {
+            if (leerling.mklas == true || leerling.typer == true || leerling.sprinter == true)
+            {
+                
+                if (existsAsHulpLeerling(leerling.leerlingID))
+                { 
+                    Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
+                }
+                else
+                {
+                    Hulpleerling hulpleerling = new Hulpleerling { klasID = leerling.KlasID, leerlingID = leerling.leerlingID, };
+                    _hulpleerlingService.Create(hulpleerling);
+                }
+
+            }
+            _leerlingService.Update(leerling.leerlingID, leerling);
+            return RedirectToAction();
         }
 
         public IActionResult DropDownKeuze(int id)
@@ -102,6 +128,21 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
         public IActionResult Overzichten()
         {
             return View();
+        }
+
+        public bool existsAsHulpLeerling(long id)
+        {
+            Hulpleerling dbHulpLeerling = new Hulpleerling();
+            dbHulpLeerling = _hulpleerlingService.GetbyLeerlingId(id);
+
+            if (dbHulpLeerling==null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

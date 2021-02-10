@@ -19,6 +19,12 @@ namespace SprintPlannerZM.Services
             return _database.Hulpleerling.SingleOrDefault(v => v.hulpleerlingID == id);
         }
 
+        public Hulpleerling GetbyLeerlingId(long leerlingID)
+        {
+
+            return _database.Hulpleerling.FirstOrDefault(l => l.leerlingID == leerlingID);
+        }
+
         public IList<Hulpleerling> Find()
         {
             return _database.Hulpleerling.ToList();

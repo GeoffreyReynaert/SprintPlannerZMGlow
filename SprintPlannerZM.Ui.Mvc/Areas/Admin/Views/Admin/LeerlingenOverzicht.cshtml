@@ -1,4 +1,8 @@
-﻿@model IList<SprintPlannerZM.Model.Klas>
+﻿@using SprintPlannerZM.Model
+@model IList<SprintPlannerZM.Model.Klas>
+@{
+    int leerlingencount = 0;
+}
 <head>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
@@ -6,9 +10,7 @@
     <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true" />
     <script src="~/js/site.js"></script>
 </head>
-
-
-<br/>
+<br />
 <div class="pt-3">
     <div class="containerDropdowns left-allignToNav">
         <form>
@@ -19,33 +21,57 @@
                         @klas.klasnaam
                     </option>
                 }
-            </select >
+            </select>
         </form>
-        
-        
-
-        <form >
+        <form>
             <select class="form-control select2 textBoxLayout">
-                <option>Balthasar Boma</option>
-                <option>Xavier Waterslaeghers</option>
-                <option>Maurice de Praetere</option>
-                <option>Fernand Costermans</option>
-                <option>Marc Vertongen</option>
-                <option>Pol De Tremmerie</option>
+                @foreach (var klas in Model)
+                {
+                    @foreach (var leerling in klas.Leerlingen)
+                    {
+                        <option>
+                            @leerling.familieNaam @leerling.voorNaam
+                        </option>
+                        leerlingencount++;
+                    }
+                }
             </select>
         </form>
     </div>
 </div>
 
+<section class="left-allignToNav pt-3">
+    <div class="tbl-header">
+        <table>
+            <thead>
+                <tr>
+                    <!--class h6 om zo via bootstrap title ook responsive maken-->
+                    <th class="h6">Leerling ondersteuning keuze</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tbl-content">
+
+        @foreach (var klas in Model)
+        {
+            foreach (var leerling in klas.Leerlingen)
+            {
+                <form method="post">
+                    <div class="trBordercolor container">
+                        <partial name="PartialLeerlingenOverzicht" model=leerling />
+                    </div>
+                </form>
+            }
+        }
+
+    </div>
+</section>
+<div class="containerDropdowns left-allignToNav tableFixFooter">Totaal:@leerlingencount</div>
 
 <script>
     $('.select2').select2();
 </script>
-
-
-<partial name="PartialLeerlingenOverzicht" />
-
-
 
 @section Scripts
 {

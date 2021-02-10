@@ -3,7 +3,6 @@ using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
-using SoapSSMvc.Model;
 
 namespace SprintPlannerZM.Services
 {

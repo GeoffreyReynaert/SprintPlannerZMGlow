@@ -15,14 +15,23 @@ namespace SprintPlannerZM.Services
             _database = database;
         }
 
-        public Leerling Get(int id)
+        public Leerling Get(long id)
         {
             return _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
         }
 
+
+
         public IList<Leerling> Find()
         {
             return _database.Leerling.ToList();
+        }
+
+        public IList<Leerling> FindByKlasID(int klasid)
+        {
+            var leerlingenPerKlas = _database.Leerling.Where(l => l.KlasID == klasid);
+            var leerlingen = leerlingenPerKlas.ToList();
+            return leerlingen;
         }
 
         public Leerling Create(Leerling leerling)
@@ -36,15 +45,14 @@ namespace SprintPlannerZM.Services
             return leerling;
         }
 
-        public Leerling Update(int id, Leerling leerling)
+        public Leerling Update(long id, Leerling leerling)
         {
             {
-                var dbLeerling = Get(id);
-                if (dbLeerling == null)
-                {
-                    return leerling;
-                }
-                _database.Leerling.Update(dbLeerling);
+                var leerlingToUpd = _database.Leerling.SingleOrDefault(l=>l.leerlingID == id);
+                leerlingToUpd.sprinter = leerling.sprinter;
+                leerlingToUpd.mklas = leerling.mklas;
+                leerlingToUpd.typer = leerling.typer;
+                _database.Leerling.Update(leerlingToUpd);
                 _database.SaveChanges();
                 return leerling;
             }

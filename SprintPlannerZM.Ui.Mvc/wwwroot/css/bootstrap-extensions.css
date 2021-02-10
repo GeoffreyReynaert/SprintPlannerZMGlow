@@ -115,7 +115,8 @@ th {
 }
 
 .trBordercolor {
-    
+
+    padding: 14px;
     border: #bf6b3c solid 2px;
 }
 td {
