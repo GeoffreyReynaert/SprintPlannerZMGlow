@@ -1,21 +1,30 @@
-﻿
+﻿@model IList<string>
 
-        <div class="containerllnoverzicht pt-5">
-            <button id="importTitulEnKlas" class="btn btn-secondary">Stap1 titularis/klas</button>
-            <button id="ImportKlasVakLeerkrLeerlEnRelaties" class="btn btn-secondary">Stap2 studenten/leerkrachten/vak</button>
-        @using (Html.BeginForm("XlsUpload", "Beheerder", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            <span>
-                <input class="btn btn-secondary" name="xlsFile" type="file"><button class="btn btn-light" type="submit">CSV Lokaal verzend</button>
-            </span>
-        }
-        </div>
+<div class="containerllnoverzicht pt-5">
+    <button id="importTitulEnKlas" class="btn btn-secondary">Stap1 titularis/klas</button>
+    <button id="ImportKlasVakLeerkrLeerlEnRelaties" class="btn btn-secondary">Stap2 leerl/leerkr/vak</button>
+    @using (Html.BeginForm("XlsUpload", "Beheerder", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <span>
+            <input class="btn btn-secondary" name="xlsFile" type="file"><button class="btn btn-light" type="submit">CSV Lokaal verzend</button>
+        </span>
+    }
+</div>
 
-        <div class="tbl-content mt-5">
-            <div class="containerLeerkrachten">
-                <div class=" p-1 m-2">
-                    <div id="berichtWeergaveDiv"></div>
-                </div>
+<div class="tbl-content mt-5">
+    <div class="containerLeerkrachten">
+        <div class=" p-1 m-2">
+            <div id="berichtWeergaveDiv">
+                @if (@Model != null)
+                {
+                    <span>er zijn in totaal @Model.Count lokalen toegevoegd</span> <br /> <br />
+                    @foreach (var message in @Model)
+                    {
+                        <span>@message</span> <br />
+                    }
+                }
             </div>
         </div>
+    </div>
+</div>
 

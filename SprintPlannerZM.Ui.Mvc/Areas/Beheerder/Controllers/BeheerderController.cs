@@ -218,12 +218,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             return PartialView("PartialBerichtenResults", geschrevenMessages);
         }
 
-        [HttpPost]
+        
         public async Task<IActionResult> XlsUpload(IFormFile xlsFile)
         {
             IList<Lokaal> lokalen = new List<Lokaal>();
             List<string> berichten = new List<string>();
-            var xlsStream = xlsFile.OpenReadStream();
+            var xlsStream =  xlsFile.OpenReadStream();
 
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -239,12 +239,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                             if (column == 0) //Lokaalnaam
                             {
                                 lokaal.lokaalnaam= reader.GetValue(column).ToString();//Get Value returns object
-                                berichten.Add(reader.GetValue(column).ToString());
                             }
                             else if(column==1) //afkorting
                             {
                                 lokaal.naamafkorting = reader.GetValue(column).ToString();//Get Value returns object
-                                berichten.Add(reader.GetValue(column).ToString());
                             }
                         }
                         lokalen.Add(lokaal);
@@ -256,12 +254,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             {
                 if (!lokaal.lokaalnaam.Equals("lokaalnaam"))
                 {
-                    _lokaalService.Create(lokaal);
-                    Console.WriteLine(lokaal.lokaalnaam +" "+ lokaal.naamafkorting+" is created");
+                     _lokaalService.Create(lokaal);
+                    berichten.Add(lokaal.lokaalnaam +" "+ lokaal.naamafkorting+" is created");
                 }
                
             }
-            return PartialView("PartialBerichtenResults", berichten);
+             return View("ImportPagina",berichten);
         }
 
 

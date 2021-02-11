@@ -36,7 +36,8 @@ $(function () {
 
     $("#importTitulEnKlas").on("click", getMessages);
     $("#ImportKlasVakLeerkrLeerlEnRelaties").on("click", getMessagesFromRelationImport);
-
+    //$("#xlsBtn").on("click", getMessagesFromLokalen);
+    
     //bij laden van de index
     //  $(document).ready(getPlayerInfo);
 });
@@ -45,6 +46,7 @@ const getMessages = () => {
     $.ajax({
         type: "GET",
         url: 'ImportKlasTitularisEnKlas',
+        async: true,
         success: function (response) {
             $("#berichtWeergaveDiv").html(response);
         }
@@ -60,4 +62,14 @@ const getMessagesFromRelationImport = () => {
         }
     });
 };
+
+//const getMessagesFromLokalen = () => {
+//    $.ajax({
+//        type: "POST",
+//        url: 'XlsUpload',
+//        success: function (response) {
+//            $("#berichtWeergaveDiv").html(response);
+//        }
+//    });
+//};
 
