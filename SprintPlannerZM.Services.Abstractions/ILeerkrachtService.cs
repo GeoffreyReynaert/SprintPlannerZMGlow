@@ -11,7 +11,7 @@ namespace SprintPlannerZM.Services.Abstractions
     public interface ILeerkrachtService
 
     {
-        Leerkracht Get(int id);
+        Leerkracht Get(long id);
         Leerkracht GetByKlasId(int id);
         IList<Leerkracht> Find();
         Leerkracht Create(Leerkracht leerkracht);

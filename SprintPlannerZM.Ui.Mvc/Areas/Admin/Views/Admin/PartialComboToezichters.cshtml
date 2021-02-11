@@ -1,0 +1,23 @@
+﻿@model SprintPlannerZM.Model.Leerkracht
+<div class="tbl-content">
+    <table>
+        <tbody>
+        <section>
+            <div class="">
+                <div class="containerLeerkrachten">
+                    <div class=" card p-1 m-2" style="width: 15rem;">
+                            <div>
+                                @Model.achternaam @Model.voornaam
+                                <label class="switch">
+                                    <input type="checkbox" @(Convert.ToBoolean(@Model.sprintToezichter) == true ? "checked='checked'" : string.Empty)>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </section>
+        </tbody>
+    </table>
+</div>
+<div class="containerDropdowns left-allignToNav tableFixFooter">Totaal: 1</div>

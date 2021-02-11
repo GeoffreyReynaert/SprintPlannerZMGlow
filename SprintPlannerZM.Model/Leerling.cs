@@ -12,6 +12,7 @@ namespace SprintPlannerZM.Model
         public int KlasID { get; set; }
         public Klas Klas { get; set; }
 
+        public Hulpleerling Hulpleerling { get; set; }
         public IList<Hulpleerling> Hulpleerlingen { get; set; }
 
         public override bool Equals(object obj)
