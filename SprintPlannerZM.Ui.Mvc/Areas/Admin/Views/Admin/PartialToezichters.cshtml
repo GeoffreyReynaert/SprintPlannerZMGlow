@@ -15,7 +15,7 @@
                                     <div class=" card p-1 m-2" style="width: 15rem;">
                                     <div>
                                         @leerkracht.achternaam @leerkracht.voornaam
-                                        <label class="switch">
+                                        <label class="switch float-right">
                                             <input type="checkbox" @(Convert.ToBoolean(leerkracht.sprintToezichter) == true ? "checked='checked'" : string.Empty)>
                                             <span class="slider round"></span>
                                         </label>
@@ -29,4 +29,4 @@
             </tbody>
         </table>
     </div>
-<div class="containerDropdowns left-allignToNav tableFixFooter">Totaal: @count</div>
+<div class="containerDropdowns tableFixFooter">Totaal: @count</div>

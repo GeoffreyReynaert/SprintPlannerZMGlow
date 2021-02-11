@@ -24,14 +24,13 @@ namespace SprintPlannerZM.Services
 
         public IList<Leerling> Find()
         {
-            return _database.Leerling.ToList();
+            return _database.Leerling.OrderBy(l => l.familieNaam).ToList();
         }
 
         public IList<Leerling> FindByKlasID(int klasid)
         {
-            var leerlingenPerKlas = _database.Leerling.Where(l => l.KlasID == klasid);
-            var leerlingen = leerlingenPerKlas.ToList();
-            return leerlingen;
+            var leerlingenPerKlas = _database.Leerling.Where(l => l.KlasID == klasid).OrderBy(l=>l.familieNaam).ToList();
+            return leerlingenPerKlas;
         }
 
         public Leerling Create(Leerling leerling)

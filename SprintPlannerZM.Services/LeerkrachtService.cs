@@ -27,7 +27,8 @@ namespace SprintPlannerZM.Services
 
         public IList<Leerkracht> Find()
         {
-            return _database.Leerkracht.ToList();
+            return _database.Leerkracht.OrderBy(l => l.achternaam).ToList();
+            //return _database.Leerkracht.ToList();
         }
 
         public Leerkracht Create(Leerkracht leerkracht)

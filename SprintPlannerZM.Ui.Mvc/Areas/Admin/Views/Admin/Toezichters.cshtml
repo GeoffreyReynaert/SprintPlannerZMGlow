@@ -45,24 +45,31 @@
 </section>
 
 <script>
-    $('.select2').select2();
     $(document).ready(function () {
         $("#partialView").load("PartialAlleLeerkrachten");
+        $('.select2').select2();
     });
     $("#cmbLeerkrachten").change(function () {
-        console.log($(this).find('option:selected').val());
-
         if ($(this).find('option:selected').val() != "kies") {
             $("#partialView").load("PartialComboToezichters", { leerkrachtID: $(this).find('option:selected').val() });
         }
     });
     $('.mt-1').change(function () {
-        if ($(this).attr('id') == 'isAlles')
+        if ($(this).attr('id') == 'isAlles') {
             $("#partialView").load("PartialAlleLeerkrachten");
-        else if ($(this).attr('id') == 'isGeenToez')
+            $("#cmbLeerkrachten").val('kies');
+            $('.select2').select2();
+        }
+        else if ($(this).attr('id') == 'isGeenToez') {
             $("#partialView").load("PartialToezichters");
-        else if ($(this).attr('id') == 'isToez')
+            $("#cmbLeerkrachten").val('kies');
+            $('.select2').select2();
+        }
+        else if ($(this).attr('id') == 'isToez') {
             $("#partialView").load("PartialGeenToezichters");
+            $("#cmbLeerkrachten").val('kies');
+            $('.select2').select2();
+            }
     });
     //$("#cmbLeerkrachten").change(function() {
     //    const leerkrachtID = $(this).find('option:selected').val();

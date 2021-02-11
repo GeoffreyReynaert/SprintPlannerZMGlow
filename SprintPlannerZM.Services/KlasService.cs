@@ -17,17 +17,17 @@ namespace SprintPlannerZM.Services
         }
         public Klas Get(int id)
         {
-            return _database.Klas.SingleOrDefault(l => l.klasID == id);
+            return _database.Klas.SingleOrDefault(k => k.klasID == id);
         }
 
         public Klas Get(string name)
         {
-            return _database.Klas.SingleOrDefault(l => l.klasnaam == name);
+            return _database.Klas.SingleOrDefault(k => k.klasnaam == name);
         }
 
         public IList<Klas> Find()
         {
-            return _database.Klas.ToList();
+            return _database.Klas.OrderBy(k => k.klasnaam).ToList();
         }
 
         public Klas Create(Klas klas)
