@@ -2,14 +2,14 @@
 
 <head>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true" />
     <script src="~/js/site.js"></script>
 
 </head>
 
-<br/>
+<br />
 <div class="containerRadioButton left-allignToNav">
     <input type="radio" id="isAlles" class="mt-1" name="keuzeToez" value="false" checked="True">
     <label class="ml-n5" for="isAlles">Toon alles</label>
@@ -22,52 +22,31 @@
     <div class="tbl-header">
         <table>
             <thead>
-            <tr>
-                <th class="h6" rowspan="4">
-                    <div class="containerDropdowns ">
-                        <form class="col-4">
-                            <select class="form-control select2" id="cmbLeerkrachten">
-                                <option value="kies">--Kies een leeraar--</option>
-                                @foreach (var leeraar in Model)
-                                {
-                                    <option asp-route-id="@leeraar.leerkrachtID" value="@leeraar.leerkrachtID">@leeraar.achternaam @leeraar.voornaam</option>
-                                }
+                <tr>
+                    <th class="h6" rowspan="4">
+                        <div class="containerDropdowns ">
+                            <form class="col-4">
+                                <select class="form-control select2" id="cmbLeerkrachten">
+                                    <option value="kies">--Kies een leeraar--</option>
+                                    @foreach (var leeraar in Model)
+                                    {
+                                        <option asp-route-id="@leeraar.leerkrachtID" value="@leeraar.leerkrachtID">@leeraar.achternaam @leeraar.voornaam</option>
+                                    }
 
-                            </select>
-                        </form>
-                    </div>
-                </th>
-            </tr>
+                                </select>
+                            </form>
+                        </div>
+                    </th>
+                </tr>
             </thead>
         </table>
     </div>
-    <div class="tbl-content">
-        <table>
-            <tbody>
-                <div>
-                    <div class="containerLeerkrachten">
-                        @foreach (var leerkracht in @Model)
-                        {
-                            <div class=" card p-1 m-2" style="width: 15rem;">
-                                <div>
-                                    @leerkracht.achternaam @leerkracht.voornaam
-                                    <label class="switch">
-                                        <input type="checkbox" value="True">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </tbody>
-        </table>
-    </div>
+    <div id="partialView"></div>
 </section>
 
 <script>
     $('.select2').select2();
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#partialView").load("PartialAlleLeerkrachten");
     });
     $("#cmbLeerkrachten").change(function () {
@@ -75,9 +54,9 @@
 
         if ($(this).find('option:selected').val() != "kies") {
             $("#partialView").load("PartialComboToezichters", { leerkrachtID: $(this).find('option:selected').val() });
-            }
+        }
     });
-    $('.mt-1').change(function() {
+    $('.mt-1').change(function () {
         if ($(this).attr('id') == 'isAlles')
             $("#partialView").load("PartialAlleLeerkrachten");
         else if ($(this).attr('id') == 'isGeenToez')
