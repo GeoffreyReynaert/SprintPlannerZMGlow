@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
+using Net.SourceForge.Koogra.Excel.Records;
 using Newtonsoft.Json.Linq;
+using OfficeOpenXml;
 using SmartSchoolSoapApi;
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
@@ -24,16 +28,18 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
         private readonly IKlasService _klasService;
         private readonly ILeerlingService _leerlingService;
         private readonly IVakService _vakService;
+        private readonly ILokaalService _lokaalService;
 
 
         public BeheerderController(AppSettings appSettings, ILeerkrachtService leerkrachtService,
-            IKlasService klasService, ILeerlingService leerlingService, IVakService vakService)
+            IKlasService klasService, ILeerlingService leerlingService, IVakService vakService, ILokaalService lokaalService)
         {
             _appSettings = appSettings;
             _leerkrachtService = leerkrachtService;
             _klasService = klasService;
             _leerlingService = leerlingService;
             _vakService = vakService;
+            _lokaalService = lokaalService;
         }
 
 
@@ -97,7 +103,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                 _leerkrachtService.Create(titularis);
                 _klasService.Create(klasMetTitul);
 
-                geschrevenResults.Add("Klas " + i + "/" + titularisenMetKlas.Count + " met ID " + klasMetTitul.klasID + " klasnaam " + klasMetTitul.klasnaam +"/r/n"
+                geschrevenResults.Add("Klas " + i + "/" + titularisenMetKlas.Count + " met ID " + klasMetTitul.klasID + " klasnaam " + klasMetTitul.klasnaam + "/r/n"
                                       + " met titularisID " + klasMetTitul.titularisID + " naam " + titularis.achternaam + " " + titularis.voornaam);
                 i++;
 
@@ -107,7 +113,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             var unknownKlas = new Klas { klasnaam = "0", titularisID = 1, klasID = 1 };
             _klasService.Create(unknownKlas);
 
-            return PartialView("PartialBerichtenResults",geschrevenResults);
+            return PartialView("PartialBerichtenResults", geschrevenResults);
         }
 
 
@@ -116,6 +122,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
         public async Task<IActionResult> ImportStudentklasLeerkrachtVak()
         {
             IList<string> geschrevenMessages = new List<string>();
+
             IList<Leerkracht> vakleerkrachten = new List<Leerkracht>();
             IList<Leerkracht> distinctLeerkrachten = new List<Leerkracht>();
 
@@ -208,20 +215,59 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                 i++;
             }
 
-
             return PartialView("PartialBerichtenResults", geschrevenMessages);
         }
 
-
-        public async Task<IActionResult> CsvUpload()
+        [HttpPost]
+        public async Task<IActionResult> XlsUpload(IFormFile xlsFile)
         {
-            return PartialView("PartialBerichtenResults");
-        }
-        
+            IList<Lokaal> lokalen = new List<Lokaal>();
+            List<string> berichten = new List<string>();
+            var xlsStream = xlsFile.OpenReadStream();
 
-    //FUNCTIES//
-    //Soap Connectie aanmaken om de data uit smartschool soap api te krijgen
-    public V3PortClient SoapConnection()
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            using (var reader = ExcelReaderFactory.CreateReader(xlsStream))
+            {
+                do
+                {
+                    while (reader.Read()) //Each ROW
+                    {
+                        Lokaal lokaal = new Lokaal();
+                        for (int column = 0; column < reader.FieldCount; column++)
+                        {
+                            if (column == 0) //Lokaalnaam
+                            {
+                                lokaal.lokaalnaam= reader.GetValue(column).ToString();//Get Value returns object
+                                berichten.Add(reader.GetValue(column).ToString());
+                            }
+                            else if(column==1) //afkorting
+                            {
+                                lokaal.naamafkorting = reader.GetValue(column).ToString();//Get Value returns object
+                                berichten.Add(reader.GetValue(column).ToString());
+                            }
+                        }
+                        lokalen.Add(lokaal);
+                    }
+                } while (reader.NextResult()); //Move to NEXT SHEET
+            }
+
+            foreach (var lokaal in lokalen)
+            {
+                if (!lokaal.lokaalnaam.Equals("lokaalnaam"))
+                {
+                    _lokaalService.Create(lokaal);
+                    Console.WriteLine(lokaal.lokaalnaam +" "+ lokaal.naamafkorting+" is created");
+                }
+               
+            }
+            return PartialView("PartialBerichtenResults", berichten);
+        }
+
+
+        //FUNCTIES//
+        //Soap Connectie aanmaken om de data uit smartschool soap api te krijgen
+        public V3PortClient SoapConnection()
         {
 
             var SoapSSApi = new V3PortClient();
