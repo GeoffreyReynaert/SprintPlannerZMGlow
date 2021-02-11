@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using SprintPlannerZM.Model;
-
 
 namespace SprintPlannerZM.Repository.Extensions
 {
@@ -9,10 +7,7 @@ namespace SprintPlannerZM.Repository.Extensions
     {
         public static void RemovePluralizingTableNameConvention(this ModelBuilder modelBuilder)
         {
-            foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
-            {
-                entity.SetTableName(entity.DisplayName());
-            }
+            foreach (var entity in modelBuilder.Model.GetEntityTypes()) entity.SetTableName(entity.DisplayName());
         }
     }
 
@@ -44,7 +39,6 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.Leerkracht)
                 .WithMany(u => u.Klassen)
                 .HasForeignKey(a => a.titularisID);
-
         }
 
         private static void ConfigureVak(this ModelBuilder builder)
@@ -57,7 +51,6 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.Klas)
                 .WithMany(u => u.Vakken)
                 .HasForeignKey(a => a.klasID);
-        
         }
 
         private static void ConfigureExamenrooster(this ModelBuilder builder)
@@ -75,6 +68,7 @@ namespace SprintPlannerZM.Repository.Extensions
                 .WithMany(u => u.Examenroosters)
                 .HasForeignKey(a => a.tijdspanneID);
         }
+
         private static void ConfigureHulpleerling(this ModelBuilder builder)
         {
             builder.Entity<Hulpleerling>()
@@ -83,9 +77,11 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasForeignKey(a => a.klasID);
             builder.Entity<Hulpleerling>()
                 .HasOne(a => a.Leerling)
-                .WithMany(u => u.Hulpleerlingen)
-                .HasForeignKey(a => a.leerlingID);
+                .WithOne(u => u.Hulpleerling)
+                .HasPrincipalKey<Hulpleerling>(a => a.leerlingID)
+                .HasForeignKey<Leerling>(u => u.leerlingID);
         }
+
         private static void ConfigureSprintvak(this ModelBuilder builder)
         {
             builder.Entity<Sprintvak>()
@@ -97,6 +93,7 @@ namespace SprintPlannerZM.Repository.Extensions
                 .WithMany(u => u.Sprintvakken)
                 .HasForeignKey(a => a.hulpleerlingID);
         }
+
         private static void ConfigureSprintlokaal(this ModelBuilder builder)
         {
             builder.Entity<Sprintlokaal>()
@@ -116,6 +113,7 @@ namespace SprintPlannerZM.Repository.Extensions
                 .WithMany(u => u.Sprintlokalen)
                 .HasForeignKey(a => a.tijdspanneID);
         }
+
         private static void ConfigureLeerlingverdeling(this ModelBuilder builder)
         {
             builder.Entity<Leerlingverdeling>()

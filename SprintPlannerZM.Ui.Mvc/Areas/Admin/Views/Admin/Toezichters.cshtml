@@ -2,73 +2,80 @@
 
 <head>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true"/>
     <script src="~/js/site.js"></script>
+
 </head>
 
-<br />
+<br/>
 <div class="containerRadioButton left-allignToNav">
+    <input type="radio" id="isAlles" class="mt-1" name="keuzeToez" value="false" checked="True">
+    <label class="ml-n5" for="isAlles">Toon alles</label>
     <input type="radio" id="isGeenToez" class="mt-1" name="keuzeToez" value="False">
     <label class="ml-n5" for="isGeenToez">Geen toezichter</label><br>
-    <input type="radio" id="isToez" class="mt-1" name="keuzeToez" value="True">
+    <input type="radio" id="isToez" class="mt-1" name="keuzeToez" value="False">
     <label class="ml-n5" for="isToez">Toezichters</label><br>
-    <input type="radio" id="isAlles" class="mt-1" name="keuzeToez" value="Any">
-    <label class="ml-n5" for="isAlles">Toon alles</label>
 </div>
 <section class="left-allignToNav pt-3">
     <div class="tbl-header">
         <table>
             <thead>
-                <tr>
-                    <th class="h6" rowspan="4">
-                        <div class="containerDropdowns ">
-                            <form class="col-4">
-                                <select class="form-control select2 ">
-                                    <option>--Kies een leeraar--</option>
-                                    @foreach (var leeraar in Model)
-                                    {
-                                        <option>@leeraar.achternaam @leeraar.voornaam</option>
-                                    }
+            <tr>
+                <th class="h6" rowspan="4">
+                    <div class="containerDropdowns ">
+                        <form class="col-4">
+                            <select class="form-control select2" id="cmbLeerkrachten">
+                                <option value="kies">--Kies een leeraar--</option>
+                                @foreach (var leeraar in Model)
+                                {
+                                    <option asp-route-id="@leeraar.leerkrachtID" value="@leeraar.leerkrachtID">@leeraar.achternaam @leeraar.voornaam</option>
+                                }
 
-                                </select>
-                            </form>
-                        </div>
-                    </th>
-                </tr>
+                            </select>
+                        </form>
+                    </div>
+                </th>
+            </tr>
             </thead>
         </table>
     </div>
-    <div class="tbl-content">
-        <table>
-            <tbody>
-                <section>
-                    <div class="">
-                        <div class="containerLeerkrachten">
-                            @foreach (var leerkracht in @Model)
-                            {
-                                <div class=" card p-1 m-2" style="width: 15rem;">
-                                    <div>
-                                        @leerkracht.achternaam @leerkracht.voornaam
-                                        <label class="switch">
-                                            <input type="checkbox">
-                                            <span class="slider round"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </section>
-            </tbody>
-        </table>
-    </div>
+    <div id="partialView"></div>
 </section>
+
 <script>
     $('.select2').select2();
+    $(document).ready(function() {
+        $("#partialView").load("PartialAlleLeerkrachten");
+    });
+    $("#cmbLeerkrachten").change(function () {
+        console.log($(this).find('option:selected').val());
+
+        if ($(this).find('option:selected').val() != "kies") {
+            $("#partialView").load("PartialComboToezichters", { leerkrachtID: $(this).find('option:selected').val() });
+            }
+    });
+    $('.mt-1').change(function() {
+        if ($(this).attr('id') == 'isAlles')
+            $("#partialView").load("PartialAlleLeerkrachten");
+        else if ($(this).attr('id') == 'isGeenToez')
+            $("#partialView").load("PartialToezichters");
+        else if ($(this).attr('id') == 'isToez')
+            $("#partialView").load("PartialGeenToezichters");
+    });
+    //$("#cmbLeerkrachten").change(function() {
+    //    const leerkrachtID = $(this).find('option:selected').val();
+    //    $.ajax({
+    //        type: "POST",
+    //        url: `PartialComboToezichters`,
+    //        data: { "leerkrachtID": leerkrachtID },
+    //        success: function(response) {
+    //            $("#partialView").html(response);
+    //        }
+    //    });
+    //});
 </script>
-<div class="containerDropdowns left-allignToNav tableFixFooter">Totaal: 28</div>
 <div class="containerCenterHor left-allignToNav pt-4">
-    <button asp-action="" class="btn btn-primary btnCenter "> Bevestig </button>
+    <button asp-action="" class="btn btn-primary btnCenter"> Bevestig </button>
 </div>

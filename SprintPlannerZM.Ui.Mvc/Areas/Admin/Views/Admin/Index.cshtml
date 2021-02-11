@@ -1,5 +1,9 @@
 ﻿@model IList<SprintPlannerZM.Model.Beheerder>
 
+<head>
+    <link href="~/css/Toezichter.css" rel="stylesheet" />
+</head>
+
 <h1>rooster</h1>
 
 
@@ -19,27 +23,63 @@
         {
             foreach (var leerkracht in Model)
             {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => leerkracht.beheerderID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => leerkracht.voornaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => leerkracht.familienaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => leerkracht.telefoonNr)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => leerkracht.email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => leerkracht.rol)
-            </td>
-        </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => leerkracht.beheerderID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => leerkracht.voornaam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => leerkracht.familienaam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => leerkracht.telefoonNr)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => leerkracht.email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => leerkracht.rol)
+                    </td>
+                </tr>
             }
         }
     </tbody>
 </table>
+
+<div class="container">
+
+    <div class="licht-grijs">
+        <div id="myBar" class="container turk" style="height:24px;width:0%">
+        </div>
+    </div>
+
+    <p id="myP">Added <span id="nummerke">0</span> of 10 data</p>
+    <p id="myP">Aantal procent: <span id="procent">0</span></p>
+
+    <button class="buttontje turk" onclick="move();this.disabled='true'">Upload Data</button>
+</div>
+<script>
+
+    function move() {
+        var elem = document.getElementById("myBar");
+        var width = 0;
+        var id = setInterval(frame, 50);
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+                document.getElementById("myP").className = "trumpkleur opacity";
+                document.getElementById("myP").innerHTML = "Successfully uploaded 10 data!";
+            } else {
+                width++;
+                elem.style.width = width + '%';
+                var num = width * 1 / 10;
+                num = num.toFixed(0);
+                document.getElementById("nummerke").innerHTML = num;
+                document.getElementById("procent").innerHTML = width * 1 +'%';
+            }
+        }
+    }
+
+</script>

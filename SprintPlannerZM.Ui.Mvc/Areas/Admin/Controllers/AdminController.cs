@@ -1,31 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SprintPlannerZM.Model;
-using SprintPlannerZM.Repository;
+﻿using Microsoft.AspNetCore.Mvc;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class AdminController: Controller
+    public class AdminController : Controller
     {
-        public readonly IDeadlineService _deadlineService;
         public readonly IBeheerderService _beheerderService;
         private readonly IDagdeelService _dagdeelService;
+        public readonly IDeadlineService _deadlineService;
+        private readonly IExamenroosterService _examenroosterService;
         private readonly IExamentijdspanneService _examentijdspanneService;
-        private readonly ILeerlingService _leerlingService;
-        private readonly ILokaalService _lokaalService;
+        private readonly IHulpleerlingService _hulpleerlingService;
         private readonly IKlasService _klasService;
         private readonly ILeerkrachtService _leerkrachtService;
-        private readonly IVakService _vakService;
-        private readonly IExamenroosterService _examenroosterService;
-        private readonly IHulpleerlingService _hulpleerlingService;
-        private readonly ISprintvakService _sprintvakService;
-        private readonly ISprintlokaalService _sprintlokaalService;
+        private readonly ILeerlingService _leerlingService;
         private readonly ILeerlingverdelingService _leerlingverdelingService;
+        private readonly ILokaalService _lokaalService;
+        private readonly ISprintlokaalService _sprintlokaalService;
+        private readonly ISprintvakService _sprintvakService;
+        private readonly IVakService _vakService;
 
         public AdminController(
             IDeadlineService deadlineService,
@@ -90,13 +84,35 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
             return View();
         }
 
-
-
         public IActionResult Toezichters()
         {
-            IList<Leerkracht> leerkrachten = new List<Leerkracht>();
-            leerkrachten = _leerkrachtService.Find();
+            var leerkrachten = _leerkrachtService.Find();
             return View(leerkrachten);
+        }
+
+        public IActionResult PartialAlleLeerkrachten()
+        {
+            var leerkrachten = _leerkrachtService.Find();
+            return PartialView("PartialAlleLeerkrachten", leerkrachten);
+        }
+
+        public IActionResult PartialToezichters()
+        {
+            var leerkrachten = _leerkrachtService.Find();
+            return PartialView("PartialToezichters", leerkrachten);
+        }
+
+        public IActionResult PartialGeenToezichters()
+        {
+            var leerkrachten = _leerkrachtService.Find();
+            return PartialView("PartialGeenToezichters", leerkrachten);
+        }
+
+        [HttpPost]
+        public IActionResult PartialComboToezichters(long leerkrachtID)
+        {
+            var leerkracht = _leerkrachtService.Get(leerkrachtID);
+            return PartialView("PartialComboToezichters", leerkracht);
         }
 
         public IActionResult Overzichten()
