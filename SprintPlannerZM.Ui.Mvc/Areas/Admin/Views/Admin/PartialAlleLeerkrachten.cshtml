@@ -1,0 +1,25 @@
+﻿<div class="tbl-content">
+        <table>
+            <tbody>
+            <section>
+                <div class="">
+                    <div class="containerLeerkrachten">
+                        @foreach (var leerkracht in Model)
+                        {
+                            <div class=" card p-1 m-2" style="width: 15rem;">
+                                <div>
+                                    @leerkracht.achternaam @leerkracht.voornaam
+                                    <label class="switch">
+                                        <input type="checkbox" @(Convert.ToBoolean(leerkracht.sprintToezichter) == true ? "checked='checked'" : string.Empty)>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+            </tbody>
+        </table>
+    </div>
+<div class="containerDropdowns left-allignToNav tableFixFooter">Totaal: @Model.Count</div>

@@ -16,7 +16,7 @@ namespace SprintPlannerZM.Services
             _database = database;
         }
 
-        public Leerkracht Get(int id)
+        public Leerkracht Get(long id)
         {
             return _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == id);
         }
