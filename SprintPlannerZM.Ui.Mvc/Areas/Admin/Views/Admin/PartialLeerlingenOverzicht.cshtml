@@ -1,135 +1,25 @@
-﻿
-<section class="left-allignToNav pt-3">
-    <div class="tbl-header">
-        <table>
-            <thead>
-            <tr>
-                <!--class h6 om zo via bootstrap title ook responsive maken-->
-                <th class="h6">Naam</th>
-                <th class="h6">Sprint</th>
-                <th class="h6">Typer</th>
-                <th class="h6">M-Klas</th>
-            </tr>
-            </thead>
-        </table>
+﻿@using SprintPlannerZM.Model
+@using SprintPlannerZM.Services
+
+@model SprintPlannerZM.Model.Leerling
+
+<div class="">
+    <input type="hidden" name="leerlingID" asp-for="@Model.leerlingID" value="@Model.leerlingID" />
+    <input type="hidden" asp-for="@Model.familieNaam" />
+    <input type="hidden" asp-for="@Model.voorNaam" />
+    <input type="hidden" asp-for="@Model.email" />
+    <input type="hidden" asp-for="@Model.KlasID" />
+
+    <div class="pt-2 containerllnoverzicht">
+        <h6 class="w-20" > @Model.familieNaam @Model.voorNaam</h6>
+        <span> Sprint </span>
+        <input type="checkbox" asp-for="sprinter" id="sprint" class="ml-lg-n5 mt-1">
+        <span> Typer </span>
+        <input asp-for="typer" type="checkbox" id="typer" class="ml-lg-n5 mt-1">
+        <span> M-Klas </span>
+        <input asp-for="mklas" type="checkbox" id="mklas" class="ml-lg-n5 mt-1">
+        <button type="submit" class="btn btn-primary mt-md-n2 "> Bevestig </button>
     </div>
-    <div class="tbl-content">
-        <table>
-            <tbody>
-            <tr class="trBordercolor pt-2">
-                <td>Mark Otto</td>
-                <td> <input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>James Cooke </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jan claes </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            <tr class="trBordercolor">
-                <td>Jacob Thornton </td>
-                <td><input type="checkbox" id="" name="" value=""> Sprint</td>
-                <td><input type="checkbox" id="" name="" value=""> Typer</td>
-                <td><input type="checkbox" id="" name="" value=""> M-Klas</td>
-            </tr>
-            </tbody>
-        </table>
         
-    </div>
-</section>
-<div class="containerDropdowns left-allignToNav tableFixFooter">Totaal: 25</div>
-<div class="containerCenterHor left-allignToNav pt-4">
-    <button asp-action="" class="btn btn-primary btnCenter "> Bevestig </button>
 </div>
+

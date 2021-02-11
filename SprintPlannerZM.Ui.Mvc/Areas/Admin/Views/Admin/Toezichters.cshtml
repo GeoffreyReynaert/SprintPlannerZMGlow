@@ -41,7 +41,28 @@
             </thead>
         </table>
     </div>
-    <div id="partialView"></div>
+    <div class="tbl-content">
+        <table>
+            <tbody>
+                <div>
+                    <div class="containerLeerkrachten">
+                        @foreach (var leerkracht in @Model)
+                        {
+                            <div class=" card p-1 m-2" style="width: 15rem;">
+                                <div>
+                                    @leerkracht.achternaam @leerkracht.voornaam
+                                    <label class="switch">
+                                        <input type="checkbox" value="True">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </tbody>
+        </table>
+    </div>
 </section>
 
 <script>

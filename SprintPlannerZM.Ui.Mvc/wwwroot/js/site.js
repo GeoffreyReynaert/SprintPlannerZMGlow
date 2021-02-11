@@ -31,3 +31,33 @@ function setStyle(pagina) {
         break;
     }
 }
+
+$(function () {
+
+    $("#importTitulEnKlas").on("click", getMessages);
+    $("#ImportKlasVakLeerkrLeerlEnRelaties").on("click", getMessagesFromRelationImport);
+
+    //bij laden van de index
+    //  $(document).ready(getPlayerInfo);
+});
+
+const getMessages = () => {
+    $.ajax({
+        type: "GET",
+        url: 'ImportKlasTitularisEnKlas',
+        success: function (response) {
+            $("#berichtWeergaveDiv").html(response);
+        }
+    });
+};
+
+const getMessagesFromRelationImport = () => {
+    $.ajax({
+        type: "GET",
+        url: 'ImportStudentklasLeerkrachtVak',
+        success: function (response) {
+            $("#berichtWeergaveDiv").html(response);
+        }
+    });
+};
+

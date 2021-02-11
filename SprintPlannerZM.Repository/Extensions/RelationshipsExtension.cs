@@ -77,9 +77,10 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasForeignKey(a => a.klasID);
             builder.Entity<Hulpleerling>()
                 .HasOne(a => a.Leerling)
-                .WithOne(u => u.Hulpleerling)
-                .HasPrincipalKey<Hulpleerling>(a => a.leerlingID)
+                .WithOne(u => u.hulpleerling)
+                .HasPrincipalKey<Hulpleerling>(a=>a.leerlingID)
                 .HasForeignKey<Leerling>(u => u.leerlingID);
+
         }
 
         private static void ConfigureSprintvak(this ModelBuilder builder)

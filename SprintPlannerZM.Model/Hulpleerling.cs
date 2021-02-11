@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SprintPlannerZM.Model
 {
     public class Hulpleerling
     {
+        [Key]
         public int hulpleerlingID { get; set; }
         public int klasID { get; set; }
-        public bool sprint { get; set; }
-        public bool typer { get; set; }
-        public bool mklas { get; set; }
         public long leerlingID { get; set; }
         public Klas Klas { get; set; }
         public Leerling Leerling { get; set; }

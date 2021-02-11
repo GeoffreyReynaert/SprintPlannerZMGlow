@@ -10,10 +10,12 @@ namespace SprintPlannerZM.Model
         public string familieNaam { get; set; }
         public string email { get; set; }
         public int KlasID { get; set; }
+        public bool sprinter { get; set; }
+        public bool typer { get; set; }
+        public bool mklas { get; set; }
         public Klas Klas { get; set; }
-
-        public Hulpleerling Hulpleerling { get; set; }
-        public IList<Hulpleerling> Hulpleerlingen { get; set; }
+        public Hulpleerling hulpleerling { get; set; }
+        
 
         public override bool Equals(object obj)
         {
