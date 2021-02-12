@@ -9,6 +9,12 @@
             <input class="btn btn-secondary" name="xlsFile" type="file"><button class="btn btn-light" type="submit">CSV Lokaal verzend</button>
         </span>
     }
+    @using (Html.BeginForm("ImportExamens", "Beheerder", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <span>
+            <input class="btn btn-secondary" name="csvFile" type="file"><button class="btn btn-light" type="submit">CSV Examenplanning verzend</button>
+        </span>
+    }
 </div>
 
 <div class="tbl-content mt-5">

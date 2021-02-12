@@ -53,25 +53,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             return View();
         }
 
-        [HttpGet]
-        //public async Task<IActionResult> TeacherTest()
-        //{
-        //    var SoapSSApi = SoapConnection();
-
-        //    var result = await SoapSSApi.getClassTeachersAsync(
-        //        _appSettings.SsApiPassword, true);
-
-        //    IList<TitularisEnKlasSoap> leerkrachten = new List<TitularisEnKlasSoap>();
-
-        //    JArray teachers = JArray.Parse(result.ToString());
-        //    foreach (var teacher in teachers)
-        //    {
-        //        TitularisEnKlasSoap leerkracht = new TitularisEnKlasSoap();
-        //        leerkracht = teacher.ToObject<TitularisEnKlasSoap>();
-        //        leerkrachten.Add(leerkracht);
-        //    }
-        //    return View(leerkrachten);
-        //}
 
         [HttpGet]
         public async Task<IActionResult> ImportKlasTitularisEnKlas()
@@ -262,6 +243,41 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
              return View("ImportPagina",berichten);
         }
 
+        public IActionResult ImportExamens(IFormFile csvFile)
+        {
+            IList<Examenrooster> examenroosters = new List<Examenrooster>();
+            List<string> berichten = new List<string>();
+
+            var csvStream = csvFile.OpenReadStream();
+
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            using (var reader = ExcelReaderFactory.CreateReader(csvStream))
+            {
+                do
+                {
+                    while (reader.Read()) //Each ROW
+                    {
+                        Examenrooster rooster = new Examenrooster();
+                        for (int column = 0; column < reader.FieldCount; column++)
+                        {
+                            if (column == 0) //Lokaalnaam
+                            {
+                                rooster.vakID = int.Parse(reader.GetValue(column).ToString());//Get Value returns object
+                            }
+                            else if (column == 1) //afkorting
+                            {
+                              
+                            }
+                        }
+                        examenroosters.Add(lokaal);
+                    }
+                } while (reader.NextResult()); //Move to NEXT SHEET
+            }
+
+
+            return View("ImportPagina");
+        }
 
         //FUNCTIES//
         //Soap Connectie aanmaken om de data uit smartschool soap api te krijgen
