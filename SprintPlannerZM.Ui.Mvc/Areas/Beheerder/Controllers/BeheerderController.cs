@@ -1,17 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.ServiceModel;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
-using Net.SourceForge.Koogra.Excel.Records;
 using Newtonsoft.Json.Linq;
-using OfficeOpenXml;
 using SmartSchoolSoapApi;
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
@@ -29,10 +26,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
         private readonly ILeerlingService _leerlingService;
         private readonly IVakService _vakService;
         private readonly ILokaalService _lokaalService;
+        private readonly IExamenroosterService _examenroosterService;
 
 
         public BeheerderController(AppSettings appSettings, ILeerkrachtService leerkrachtService,
-            IKlasService klasService, ILeerlingService leerlingService, IVakService vakService, ILokaalService lokaalService)
+            IKlasService klasService, ILeerlingService leerlingService, IVakService vakService, ILokaalService lokaalService, IExamenroosterService examenroosterService)
         {
             _appSettings = appSettings;
             _leerkrachtService = leerkrachtService;
@@ -40,6 +38,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             _leerlingService = leerlingService;
             _vakService = vakService;
             _lokaalService = lokaalService;
+            _examenroosterService = examenroosterService;
         }
 
 
@@ -70,7 +69,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             {
                 var leerkracht = user.ToObject<TitularisEnKlasSoap>();
 
-                CreateIdWhenStamboekNull(index, leerkracht);
+                if (leerkracht.stamboeknummer == "NULL")
+                {
+                    leerkracht.stamboeknummer = index.ToString();
+                    index++;
+                }
+              
                 titularisenMetKlas.Add(leerkracht);
 
             }
@@ -199,12 +203,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             return PartialView("PartialBerichtenResults", geschrevenMessages);
         }
 
-        
+
         public async Task<IActionResult> XlsUpload(IFormFile xlsFile)
         {
             IList<Lokaal> lokalen = new List<Lokaal>();
             List<string> berichten = new List<string>();
-            var xlsStream =  xlsFile.OpenReadStream();
+            var xlsStream = xlsFile.OpenReadStream();
 
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -219,9 +223,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                         {
                             if (column == 0) //Lokaalnaam
                             {
-                                lokaal.lokaalnaam= reader.GetValue(column).ToString();//Get Value returns object
+                                lokaal.lokaalnaam = reader.GetValue(column).ToString();//Get Value returns object
                             }
-                            else if(column==1) //afkorting
+                            else if (column == 1) //afkorting
                             {
                                 lokaal.naamafkorting = reader.GetValue(column).ToString();//Get Value returns object
                             }
@@ -235,24 +239,25 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             {
                 if (!lokaal.lokaalnaam.Equals("lokaalnaam"))
                 {
-                     _lokaalService.Create(lokaal);
-                    berichten.Add(lokaal.lokaalnaam +" "+ lokaal.naamafkorting+" is created");
+                    _lokaalService.Create(lokaal);
+                    berichten.Add(lokaal.lokaalnaam + " " + lokaal.naamafkorting + " is created");
                 }
-               
+
             }
-             return View("ImportPagina",berichten);
+            return View("ImportPagina", berichten);
         }
 
-        public IActionResult ImportExamens(IFormFile csvFile)
+        public IActionResult ImportExamens()
         {
             IList<Examenrooster> examenroosters = new List<Examenrooster>();
             List<string> berichten = new List<string>();
 
-            var csvStream = csvFile.OpenReadStream();
+            var file = Request.Form.Files[0];
+            var xlsStream = file.OpenReadStream();
 
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-            using (var reader = ExcelReaderFactory.CreateReader(csvStream))
+            using (var reader = ExcelReaderFactory.CreateReader(xlsStream))
             {
                 do
                 {
@@ -263,21 +268,28 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                         {
                             if (column == 0) //Lokaalnaam
                             {
-                                rooster.vakID = int.Parse(reader.GetValue(column).ToString());//Get Value returns object
+                                rooster.examenID =Int32.Parse( reader.GetValue(column).ToString());//Get Value returns object
                             }
-                            else if (column == 1) //afkorting
-                            {
-                              
-                            }
+                            //else if (column == 1) //afkorting
+                            //{
+                            //    rooster. = reader.GetValue(column).ToString();//Get Value returns object
+                            //}
                         }
-                        examenroosters.Add(lokaal);
+                        examenroosters.Add(rooster);
                     }
                 } while (reader.NextResult()); //Move to NEXT SHEET
             }
 
+            foreach (var rooster in examenroosters)
+            {
+              //  _lokaalService.Create(lokaal);
+                    berichten.Add(rooster.examenID +" is created");
 
-            return View("ImportPagina");
+            }
+            return View("ImportPagina", berichten);
+ 
         }
+        
 
         //FUNCTIES//
         //Soap Connectie aanmaken om de data uit smartschool soap api te krijgen
@@ -318,17 +330,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             return klasMetTitul;
         }
 
-        //Id aanmake in het geval het stamboek null is
-        public TitularisEnKlasSoap CreateIdWhenStamboekNull(int idIndex, TitularisEnKlasSoap leerkracht)
-        {
-            if (leerkracht.stamboeknummer == "NULL")
-            {
-                leerkracht.stamboeknummer = idIndex.ToString();
-                idIndex++;
-            }
-
-            return leerkracht;
-        }
 
     }
 

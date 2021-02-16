@@ -21,8 +21,6 @@ namespace SprintPlannerZM.Repository
         public DbSet<Sprintvak> Sprintvak { get; set; }
         public DbSet<Sprintlokaal> Sprintlokaal { get; set; }
         public DbSet<Leerlingverdeling> Leerlingverdeling { get; set; }
-        public DbSet<Dagdeel> Dagdeel { get; set; }
-        public DbSet<Examentijdspanne> Examentijdspanne { get; set; }
         public DbSet<Deadline> Deadline { get; set; }
         public DbSet<Beheerder> Beheerder { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

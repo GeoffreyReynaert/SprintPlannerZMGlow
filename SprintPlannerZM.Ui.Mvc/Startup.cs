@@ -40,8 +40,6 @@ namespace SprintPlannerZM.Ui.Mvc
 
             services.AddScoped<IDeadlineService, DeadlineService>();
             services.AddScoped<IBeheerderService, BeheerderService>();
-            services.AddScoped<IDagdeelService, DagdeelService>();
-            services.AddScoped<IExamentijdspanneService, ExamentijdspanneService>();
             services.AddScoped<ILeerlingService, LeerlingService>();
             services.AddScoped<IKlasService, KlasService>();
             services.AddScoped<ILeerkrachtService, LeerkrachtService>();

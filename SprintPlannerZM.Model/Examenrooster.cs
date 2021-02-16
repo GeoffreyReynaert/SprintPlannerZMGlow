@@ -10,11 +10,9 @@ namespace SprintPlannerZM.Model
         public int vakID { get; set; }
         public byte[] examendoc { get; set; }
         public byte[] examendoc2 { get; set; }
-        public byte tijdspanneID { get; set; }
-        public byte dagdeelID { get; set; }
+        public string tijd { get; set; }
+        public string datum { get; set; }
         public Vak Vak { get; set; }
-        public Dagdeel Dagdeel { get; set; }
-        public Examentijdspanne Examentijdspanne { get; set; }
         public IList<Leerlingverdeling> Leerlingverdelingen { get; set; }
     }
 }

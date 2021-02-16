@@ -19,13 +19,11 @@
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="5.5.3" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
-    <PackageReference Include="excellupload" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="SoapCore" Version="1.1.0.7" />
-    <PackageReference Include="SystemWebPackage" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
