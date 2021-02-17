@@ -21,7 +21,7 @@ namespace SprintPlannerZM.Services
 
         public Vak GetBySubString(string vakNaam, int klasID)
         {
-            return _database.Vak.Where(v => v.klasID == klasID).SingleOrDefault(v => v.vaknaam.Contains(vakNaam.Substring(0, 3)));
+            return _database.Vak.Where(v => v.klasID == klasID).First(v => v.vaknaam.Contains(vakNaam.Substring(0, 3)));
         }
 
         public IList<Vak> Find()

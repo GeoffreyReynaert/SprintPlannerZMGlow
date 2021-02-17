@@ -9,11 +9,12 @@ using System.Xml.Linq;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime.Workdays;
 using SmartSchoolSoapApi;
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using SprintPlannerZM.Ui.Mvc.Settings;
+
+// ReSharper disable CommentTypo
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
 {
@@ -42,6 +43,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             _examenroosterService = examenroosterService;
         }
 
+        
+        /*!!!!!!!!!  Navigatie  !!!!!!!!!!!*/
 
         public IActionResult Index()
         {
@@ -54,30 +57,34 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
         }
 
 
+
+        /*!!!!!!!!!!!!  Importeren van start gegevens   !!!!!!!!!!!
+          !               Titularissen en klassen   ||            ! 
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Connectie met Soap Api
+          !        klassen, Studenten, leerkrachten, vakken       !
+          !           en de relatie die dezze verbind             !  Berichten weergave via partial en ajax call
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
         [HttpGet]
         public async Task<IActionResult> ImportKlasTitularisEnKlas()
         {
+            var index = 1;
             IList<TitularisEnKlasSoap> titularisenMetKlas = new List<TitularisEnKlasSoap>();
             IList<string> geschrevenResults = new List<string>();
-            var index = 1;
 
             var SoapSSApi = SoapConnection();
             var result = await SoapSSApi.getClassTeachersAsync(_appSettings.SsApiPassword, true);
-
             JArray users = JArray.Parse(result.ToString());
 
             foreach (var user in users)
             {
-                var leerkracht = user.ToObject<TitularisEnKlasSoap>();
-
-                if (leerkracht.stamboeknummer == "NULL")
+                var titularisMetKlas = user.ToObject<TitularisEnKlasSoap>();
+                if (titularisMetKlas.stamboeknummer == "NULL")
                 {
-                    leerkracht.stamboeknummer = index.ToString();
+                    titularisMetKlas.stamboeknummer = index.ToString();
                     index++;
                 }
-              
-                titularisenMetKlas.Add(leerkracht);
-
+                titularisenMetKlas.Add(titularisMetKlas);
             }
 
             var i = 1;
@@ -88,22 +95,16 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
 
                 _leerkrachtService.Create(titularis);
                 _klasService.Create(klasMetTitul);
-
                 geschrevenResults.Add("Klas " + i + "/" + titularisenMetKlas.Count + " met ID " + klasMetTitul.klasID + " klasnaam " + klasMetTitul.klasnaam + "/r/n"
                                       + " met titularisID " + klasMetTitul.titularisID + " naam " + titularis.achternaam + " " + titularis.voornaam);
                 i++;
-
             }
-
-            //Gemaakt om de klas als result op te vangen !!fout in de data!!
-            var unknownKlas = new Klas { klasnaam = "0", titularisID = 1, klasID = 1 };
-            _klasService.Create(unknownKlas);
-
+            //opvangen soap fouten
+            var  klas = new Klas(){klasID = 1,klasnaam = "0",titularisID = 1 };
+            _klasService.Create(klas);
             return PartialView("PartialBerichtenResults", geschrevenResults);
         }
 
-
-        //Importeren van leerlingen leerkrachten vakken en hun relatie naar mekaar en de klas
         [HttpGet]
         public async Task<IActionResult> ImportStudentklasLeerkrachtVak()
         {
@@ -111,17 +112,24 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             IList<Leerkracht> vakleerkrachten = new List<Leerkracht>();
             IList<Leerling> leerlingen = new List<Leerling>();
             IList<Vak> vakken = new List<Vak>();
+            IList<long> stamboekenList = new List<long>();
+            var idMaker = 1;
 
             var SoapSSApi = SoapConnection();
             var result = await SoapSSApi.getSkoreClassTeacherCourseRelationAsync(
                 _appSettings.SsApiPassword);
 
             XDocument xDoc = XDocument.Parse(result.ToString());
-            Console.WriteLine(xDoc);
+
+            /*!!!     Opmaken van alle leerlingen per vak omdat Getalle leerlingen in SS niet bestaat.
+                           deze lijst dan distinct gemaakt en foreach toegevoegd aan de database     !!!*/
+
             foreach (XElement element2 in xDoc.Descendants("leerling"))
             {
+                //lln zonder intern nr zijn verlaters
                 if (element2.Element("internnummer").Value != "")
                 {
+                    Console.WriteLine(element2.Parent.Parent.Element("klasnaam").Value);
                     var dbKlas = _klasService.Get(element2.Parent.Parent.Element("klasnaam").Value);
 
                     var soapLeerling = new Leerling
@@ -135,22 +143,92 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                     leerlingen.Add(soapLeerling);
                 }
             }
+
             var distinctLeerlingen = leerlingen.Distinct().ToList();
+
+            var i = 1;
+            foreach (var leerling in distinctLeerlingen)
+            {
+                geschrevenMessages.Add(leerling.voorNaam + " " + leerling.familieNaam);
+                geschrevenMessages.Add("leerling " + i + "/" + distinctLeerlingen.Count + " is toegevoegd");
+                _leerlingService.Create(leerling);
+                i++;
+            }
+
+
+            /*!!!     Opmaken van alle vakken en leerkrachten en de relaties met de klas .leerlingen gebruikt om de klas
+                          te kunnen linken aan de vakken omdat de data niet consistent genoeg is in de soap response          !!!*/
 
             foreach (XElement element in xDoc.Descendants("courseTeacherClass"))
             {
-                if (element.Element("internnummer").Value != "")
+                Console.WriteLine(element);
+                stamboekenList.Clear();
+                
+                var stamboekNummer = 0L;
+                var dbLeerling = new Leerling();
+
+                //voor elke leerling van het vak worden de id bijgehouden en gebruikt om de klas uit de db te halen
+                foreach (var leerling in element.Descendants("leerling"))
                 {
-                    var dbKlas = _klasService.Get(element.Element("klasnaam").Value);
+                    stamboekNummer = Int64.Parse(leerling.Element("stamboeknummer").Value.ToString());
+                    stamboekenList.Add(stamboekNummer);
+                    Console.WriteLine(stamboekNummer);
+                }
 
-                    var soapVak = new Vak()
+                //indien er geen id's gevonden zijn 
+                if (stamboekenList.Count != 0)
+                {
+                    dbLeerling = _leerlingService.Get(stamboekenList[0]);
+                    if (dbLeerling == null)
                     {
-                        leerkrachtID = long.Parse(element.Element("stamboeknummer").Value),
-                        vaknaam = element.Element("vaknaam").Value,
-                        klasID = dbKlas.klasID
-                    };
-                    vakken.Add(soapVak);
+                        dbLeerling = _leerlingService.Get(stamboekenList[1]);
+                    }
 
+                    if (element.Element("stamboeknummer").Value.Equals("NULL"))
+                    {
+                        var number = _leerkrachtService.Find().Count(l => l.leerkrachtID > 0 && l.leerkrachtID < 100);
+                        var soapVak = new Vak()
+                        {
+                            leerkrachtID = number + 1,
+                            vaknaam = element.Element("vaknaam").Value,
+                            klasID = dbLeerling.KlasID
+                        };
+                        vakken.Add(soapVak);
+                    }
+                    else
+                    {
+                        var soapVak = new Vak()
+                        {
+                            leerkrachtID = long.Parse(element.Element("stamboeknummer").Value),
+                            vaknaam = element.Element("vaknaam").Value,
+                            klasID = dbLeerling.KlasID
+                        };
+                        vakken.Add(soapVak);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("leerlingen lijst leeg van deze klas ");
+                }
+
+                if (element.Element("stamboeknummer").Value.Equals("NULL"))
+                {
+                    var number = _leerkrachtService.Find().Count(l => l.leerkrachtID > 0 && l.leerkrachtID < 100);
+                    var soapVakLeerkracht = new Leerkracht()
+                    {
+                        leerkrachtID = number + idMaker,
+                        achternaam = element.Element("naam").Value,
+                        voornaam = element.Element("voornaam").Value,
+                        email = element.Element("gebruikersnaam").Value,
+                        sprintToezichter = false,
+                        status = true,
+                        rol = 2
+                    };
+                    vakleerkrachten.Add(soapVakLeerkracht);
+                    idMaker++;
+                }
+                else
+                {
                     var soapVakLeerkracht = new Leerkracht()
                     {
                         leerkrachtID = long.Parse(element.Element("stamboeknummer").Value),
@@ -161,34 +239,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                         status = true,
                         rol = 2
                     };
-
                     vakleerkrachten.Add(soapVakLeerkracht);
                 }
             }
-
-
-
-            IList<Klas> klassenMetLeerlingen = new List<Klas>();
-            var klassen = _klasService.Find();
             var distinctLeerkrachten = vakleerkrachten.Distinct().ToList();
-      
-
-
-           var i = 1;
-            foreach (var leerling in distinctLeerlingen)
-            {
-
-                geschrevenMessages.Add(leerling.voorNaam + " " + leerling.familieNaam);
-                geschrevenMessages.Add("leerling " + i + "/" + distinctLeerlingen.Count + " is toegevoegd");
-                _leerlingService.Create(leerling);
-                i++;
-            }
-
-
-            //foreach (var klas in klassen)
-            //{
-            //    klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
-            //}
 
             i = 1;
             foreach (var leerkracht in distinctLeerkrachten)
@@ -212,6 +266,15 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
             return PartialView("PartialBerichtenResults", geschrevenMessages);
         }
 
+
+
+
+        /*!!!!!!!!!!!!  Importeren van start gegevens   !!!!!!!!!!!
+          !                  XLS Lokalen import                   ! 
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     Importeren van XLS en het gebruiken van
+          !                 XLS van CSV uit MyRo                  !
+          !                Examenrooster Import                   !     Berichten weergave via partial en ajax call
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         public async Task<IActionResult> XlsUpload(IFormFile xlsFile)
         {
@@ -263,7 +326,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
 
             var file = Request.Form.Files[0];
             var xlsStream = file.OpenReadStream();
-
+            var vakSchoonmaak = new Vak { vaknaam = "schoonmaak", klasID = 1, leerkrachtID = 1};
+            _vakService.Create(vakSchoonmaak);
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             using (var reader = ExcelReaderFactory.CreateReader(xlsStream))
@@ -277,91 +341,97 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
                         var lokaal = new Lokaal();
                         var vak = new Vak();
                         IList<Vak> vakken;
+
                         for (int column = 0; column < reader.FieldCount; column++)
                         {
-                            if (column == 1) //Klasnaam
+                            if (column == 1) //Klas uit id
                             {
-
                                 klas = _klasService.GetBySubString(reader.GetValue(column).ToString());
                                 Console.WriteLine(reader.GetValue(column).ToString());
+                            }// Klasnaam
 
-
-                            }
-                            else if (column == 3) // vak naam
+                            else if (column == 3) // vak naam met klas.id dat vakID geeft
                             {
                                 if (reader.GetValue(column).ToString().Contains("SCHOONMAAK"))// opvangen van poets tijd
                                 {
-                                    vak= new Vak { vakID = 99999, vaknaam = reader.GetValue(column).ToString() };
-                                    Console.WriteLine("Schoonmaak word aangemaakt als nieuw vak voor uur regeling met ID:"+vak.vakID+"  vaknaam:"+vak.vaknaam+" zonder klasID en LeerkrachtID " );  
+                                    vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), 1);
                                 }
                                 else if (reader.GetValue(column).ToString().Contains("MAVO"))
                                 {
-                                    vak = _vakService.GetBySubString("maatschappelijke vorming" , klas.klasID);
+                                    vak = _vakService.GetBySubString("maatschappelijke vorming", klas.klasID);
                                     Console.WriteLine(reader.GetValue(column) + " MAVO tis gelukt");
                                 }
-                                else if (reader.GetValue(column).ToString().Contains("AAR")&&klas.klasnaam.Equals("1A3"))
+                                else if (reader.GetValue(column).ToString().Contains("AAR")) // kan nog hieronder bij de rest just for testing purposes
                                 {
-                                    vakken = _vakService.FindBySubstring("exploratie", klas.klasID);
+                                    vakken = _vakService.FindBySubstring(reader.GetValue(column).ToString(), klas.klasID);
                                     vak = vakken[0];
-                                    Console.WriteLine(reader.GetValue(column) + "exploratie tis gelukt");
+                                    Console.WriteLine(reader.GetValue(column) + "Aardrijkskunde tis gelukt");
                                 }
-                                else if (reader.GetValue(column).ToString().Contains("WIS")|| reader.GetValue(column).ToString().Contains("FRA"))
+                                else if (reader.GetValue(column).ToString().Contains("FRA")) // kan nog hieronder bij de rest just for testing purposes
                                 {
-                                   
-                                    vakken = _vakService.FindBySubstring(reader.GetValue(column).ToString(), klas.klasID);// staat voor wiskunde-4u
+                                    vakken = _vakService.FindBySubstring(reader.GetValue(column).ToString(), klas.klasID);
                                     vak = vakken[0];
-                                    Console.WriteLine(reader.GetValue(column) + "wiskunde en frans tis gelukt");
+                                    Console.WriteLine(reader.GetValue(column) + "frans tis gelukt");
+                                }
+                                else if (reader.GetValue(column).ToString().Contains("WIS")) // alles kan hierin later
+                                {
+                                    vakken = _vakService.FindBySubstring(reader.GetValue(column).ToString(), klas.klasID);
+                                    vak = vakken[0];
+                                    Console.WriteLine(reader.GetValue(column) + "wiskunde  tis gelukt ");
                                 }
                                 else
                                 {
-                                    
-                                    vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), klas.klasID);
+                                    vakken = _vakService.FindBySubstring(reader.GetValue(column).ToString(), klas.klasID);
+                                    vak = vakken[0];
                                     Console.WriteLine(reader.GetValue(column).ToString());
                                 }
                                 rooster.vakID = vak.vakID;
+                            } // vak naam met klas.id dat vakID geeft
 
-                            }
                             else if (column == 4)// lokaal ID nog verwerken in examenrooster
                             {
                                 lokaal = _lokaalService.Get(Int32.Parse(reader.GetValue(column).ToString()));
-                                Console.WriteLine(Int32.Parse(reader.GetValue(column).ToString() ?? string.Empty));
-                            }
+                                Console.WriteLine(Int32.Parse(reader.GetValue(column).ToString()));
+                            } // lokaal ID nog verwerken in examenrooster
+
                             else if (column == 5)// datum van examen
                             {
                                 rooster.datum = reader.GetValue(column).ToString();
-                                Console.WriteLine("datum :"+ reader.GetValue(column));
-                            }
+                                Console.WriteLine("datum :" + reader.GetValue(column));
+                            } // datum van examen
+
                             else if (column == 6)// foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
                             {
                                 var tweeDeligAntw = reader.GetValue(column).ToString().Split(" ");
                                 rooster.tijd = tweeDeligAntw[1];
                                 Console.WriteLine("uur :" + tweeDeligAntw[1]);
-                            }
-                            
-                           
-
+                            } // foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
                         }
-                        
                         examenroosters.Add(rooster);
                     }
-                } while (reader.NextResult()); 
+                } while (reader.NextResult());
             }
-
+            
             foreach (var rooster in examenroosters)
             {
-           //  _examenroosterService.Create(rooster);
-                    berichten.Add("examen op "+rooster.tijd +" "+ rooster.datum+" voor het vak"+ rooster.Vak.vaknaam + " en klas is aangemaakt");
+                _examenroosterService.Create(rooster);
+                berichten.Add("examen op " + rooster.tijd + " " + rooster.datum + " met id" + rooster.examenID + " is aangemaakt");
             }
             return View("ImportPagina", berichten);
- 
-        }
-        
 
-        //FUNCTIES//
+        }
+
+
+
+
+
+        /*!!!!!!!!!!!!         Extra functies           !!!!!!!!!!!
+          !                                                       ! 
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
         //Soap Connectie aanmaken om de data uit smartschool soap api te krijgen
         public V3PortClient SoapConnection()
         {
-
             var SoapSSApi = new V3PortClient();
             SoapSSApi.Endpoint.Address = new EndpointAddress("https://tihf.smartschool.be/Webservices/V3");
 
