@@ -5,10 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\AdminArea\Models\**" />
+    <Content Remove="Areas\AdminArea\Models\**" />
+    <EmbeddedResource Remove="Areas\AdminArea\Models\**" />
+    <None Remove="Areas\AdminArea\Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Areas\BeheerderArea\Models\" />
     <Folder Include="Areas\LeerlingArea\Models\" />
     <Folder Include="Areas\LeerkrachtArea\Models\" />
-    <Folder Include="Areas\AdminArea\Models\" />
 
   </ItemGroup>
 

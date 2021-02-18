@@ -43,7 +43,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             _examenroosterService = examenroosterService;
         }
 
-        
+
         /*!!!!!!!!!  Navigatie  !!!!!!!!!!!*/
 
         public IActionResult Index()
@@ -52,6 +52,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
         public IActionResult ImportPagina()
+        {
+            return View();
+        }
+
+        public IActionResult BeherenGegevens()
         {
             return View();
         }
@@ -100,7 +105,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 i++;
             }
             //opvangen soap fouten
-            var  klas = new Klas(){klasID = 1,klasnaam = "0",titularisID = 1 };
+            var klas = new Klas() { klasID = 1, klasnaam = "0", titularisID = 1 };
             _klasService.Create(klas);
             return PartialView("PartialBerichtenResults", geschrevenResults);
         }
@@ -163,7 +168,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             {
                 Console.WriteLine(element);
                 stamboekenList.Clear();
-                
+
                 var stamboekNummer = 0L;
                 var dbLeerling = new Leerling();
 
@@ -326,7 +331,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
             var file = Request.Form.Files[0];
             var xlsStream = file.OpenReadStream();
-            var vakSchoonmaak = new Vak { vaknaam = "schoonmaak", klasID = 1, leerkrachtID = 1};
+            var vakSchoonmaak = new Vak { vaknaam = "schoonmaak", klasID = 1, leerkrachtID = 1 };
             _vakService.Create(vakSchoonmaak);
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -411,7 +416,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                     }
                 } while (reader.NextResult());
             }
-            
+
             foreach (var rooster in examenroosters)
             {
                 _examenroosterService.Create(rooster);
@@ -419,6 +424,56 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             }
             return View("ImportPagina", berichten);
 
+        }
+
+
+
+
+        /*!!!!!!!!!!!!     Beheren van  gegevens      !!!!!!!!!!!
+        !       Leerkr, Leerl, Klas, Vak, Lokalen en klassen    ! 
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
+        !                                                       !
+        !                                                       !  Berichten weergave via partial en ajax call
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+        [HttpGet]
+        public async Task<IActionResult> BeherenLeerling()
+        {
+            var leerlingen = _leerlingService.Find();
+
+            return PartialView("PartialBeherenLeerling",leerlingen);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BeherenLeerkracht()
+        {
+            var leerkrachten = _leerkrachtService.Find();
+
+            return PartialView("PartialBeherenLeerkracht",leerkrachten);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BeherenVak()
+        {
+            var vakken = _vakService.Find();
+
+            return PartialView("PartialBeherenVak", vakken);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BeherenKlas()
+        {
+            var klassen = _klasService.Find();
+
+            return PartialView("PartialBeherenKlas", klassen);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BeherenLokalen()
+        {
+            var lokalen = _lokaalService.Find();
+
+            return PartialView("PartialBeherenLokalen", lokalen);
         }
 
 

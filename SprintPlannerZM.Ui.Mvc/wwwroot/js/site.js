@@ -36,6 +36,7 @@ $(function () {
 
     $("#importTitulEnKlas").on("click", getMessages);
     $("#ImportKlasVakLeerkrLeerlEnRelaties").on("click", getMessagesFromRelationImport);
+    $("#beherenLeerlingen").on("click", getLeerlingen);
 
     //bij laden van de index
     //  $(document).ready(getPlayerInfo);
@@ -62,4 +63,13 @@ const getMessagesFromRelationImport = () => {
     });
 };
 
+const getLeerlingen = () => {
+    $.ajax({
+        type: "GET",
+        url: 'BeherenLeerling',
+        success: function (response) {
+            $("#beheerWeergave").html(response);
+        }
+    });
+};
 

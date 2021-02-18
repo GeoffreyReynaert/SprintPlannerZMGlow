@@ -1,0 +1,24 @@
+﻿@model IList<SprintPlannerZM.Model.Leerling>
+
+<section>
+    <div class="text-white">
+        <div class="containerBeheer">
+            @foreach (var leerling in @Model)
+            {
+                <div class=" card text-black-50 p-1 m-2" style="width: 15rem;">
+                    <div class="card-header">
+                        @leerling.familieNaam @leerling.voorNaam >
+                    </div>
+                    <div class="card-body text-black-50">
+                        <span> email: @leerling.email</span><br>
+                        <span> klasID: @leerling.KlasID</span><br>
+                        <span> Stamboeknummer SmartS. : @leerling.leerlingID</span><br>
+                    </div>
+                    <div class="card-footer">
+                        <a type="button" id="buybutton" name="@leerling.leerlingID" class="btn btn-success float-right" asp-action="" asp-route-itemId="@leerling.leerlingID">Wijzig</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
