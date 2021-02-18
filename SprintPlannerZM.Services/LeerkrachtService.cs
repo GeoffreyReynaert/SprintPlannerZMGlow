@@ -20,11 +20,6 @@ namespace SprintPlannerZM.Services
             return _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == id);
         }
 
-        public Leerkracht GetByKlasId(int id)
-        {
-            return _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID== id);
-        }
-
         public IList<Leerkracht> Find()
         {
             return _database.Leerkracht.OrderBy(l => l.achternaam).ToList();
@@ -43,7 +38,7 @@ namespace SprintPlannerZM.Services
         }
 
 
-        public Leerkracht Update(int id, Leerkracht leerkracht)
+        public Leerkracht Update(long id, Leerkracht leerkracht)
         {
             {
                 var dbLeerkracht = Get(id);
@@ -57,7 +52,7 @@ namespace SprintPlannerZM.Services
             }
         }
 
-        public bool Delete(int id)
+        public bool Delete(long id)
         {
             {
                 var dbLeerkracht = Get(id);

@@ -433,7 +433,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         !       Leerkr, Leerl, Klas, Vak, Lokalen en klassen    ! 
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
         !                                                       !
-        !                                                       !  Berichten weergave via partial en ajax call
+        !                 Beheer Leerling                       !  Berichten weergave via partial en ajax call
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         [HttpGet]
@@ -445,12 +445,49 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
         [HttpGet]
+        public IActionResult LeerlingEdit(int id)
+        {
+            var item = _leerlingService.Get(id);
+            return View(item);
+        }
+
+        [HttpPost]
+        public IActionResult LeerlingEdit(Leerling leerling)
+        {
+            _leerlingService.Update(leerling.leerlingID, leerling);
+            return View("BeherenGegevens");
+        }
+
+       /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
+          !                 Beheer Leerkracht                     ! 
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+        [HttpGet]
         public async Task<IActionResult> BeherenLeerkracht()
         {
             var leerkrachten = _leerkrachtService.Find();
 
             return PartialView("PartialBeherenLeerkracht",leerkrachten);
         }
+
+        [HttpGet]
+        public IActionResult LeerkrachtEdit(long id)
+        {
+            var leerkracht = _leerkrachtService.Get(id);
+            return View(leerkracht);
+        }
+
+        [HttpPost]
+        public IActionResult LeerkrachtEdit(Leerkracht leerkracht)
+        {
+            _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
+            return View("BeherenGegevens");
+        }
+
+
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
+           !                     Beheer Vak                        ! 
+           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         [HttpGet]
         public async Task<IActionResult> BeherenVak()
@@ -461,6 +498,27 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
         [HttpGet]
+        public IActionResult VakEdit(int id)
+        {
+            var vak = _vakService.Get(id);
+            return View(vak);
+        }
+
+        [HttpPost]
+        public IActionResult VakEdit(Vak vak)
+        {
+            _vakService.Update(vak.vakID, vak);
+            return View("BeherenGegevens");
+        }
+
+
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
+           !                     Beheer Klas                        ! 
+           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+
+
+        [HttpGet]
         public async Task<IActionResult> BeherenKlas()
         {
             var klassen = _klasService.Find();
@@ -469,11 +527,48 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
         [HttpGet]
+        public IActionResult KlasEdit(int id)
+        {
+            var klas = _klasService.Get(id);
+            return View(klas);
+        }
+
+        [HttpPost]
+        public IActionResult KlasEdit(Klas klas)
+        {
+            _klasService.Update(klas.klasID, klas);
+            return View("BeherenGegevens");
+        }
+
+
+
+
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
+           !                     Beheer Lokaal                        ! 
+           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+
+
+        [HttpGet]
         public async Task<IActionResult> BeherenLokalen()
         {
             var lokalen = _lokaalService.Find();
 
             return PartialView("PartialBeherenLokalen", lokalen);
+        }
+
+        [HttpGet]
+        public IActionResult LokaalEdit(int id)
+        {
+            var lokaal = _lokaalService.Get(id);
+            return View(lokaal);
+        }
+
+        [HttpPost]
+        public IActionResult LokaalEdit(Lokaal lokaal)
+        {
+            _lokaalService.Update(lokaal.lokaalID, lokaal);
+            return View("BeherenGegevens");
         }
 
 

@@ -140,16 +140,19 @@ body {
 }
 
 .containerBeheer {
-    flex-wrap: wrap;
-    display: flex;
-    flex-direction: row;
     justify-content: center;
     background-color: rgba(12, 116, 125, 0.64);
     border: #bf6b3c solid 2px;
     height: 500px;
     overflow-x: auto;
 }
-
+.containerFlex {
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    justify-content: center;
+}
 
 /* The switch&sliders toezichters - the box around the slider */
 .switch {

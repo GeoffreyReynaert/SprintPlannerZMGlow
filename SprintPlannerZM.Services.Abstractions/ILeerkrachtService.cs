@@ -11,10 +11,9 @@ namespace SprintPlannerZM.Services.Abstractions
 
     {
         Leerkracht Get(long id);
-        Leerkracht GetByKlasId(int id);
         IList<Leerkracht> Find();
         Leerkracht Create(Leerkracht leerkracht);
-        Leerkracht Update(int id, Leerkracht leerkracht);
-        bool Delete(int id);
+        Leerkracht Update(long id, Leerkracht leerkracht);
+        bool Delete(long id);
     }
 }
