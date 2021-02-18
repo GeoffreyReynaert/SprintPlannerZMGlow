@@ -123,7 +123,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         public IActionResult LeerlingOverzicht(int leerlingID)
         {
             var leerling = _leerlingService.Get(leerlingID);
-            return View("LeerlingOverzicht", leerling);
+            return PartialView("LeerlingOverzicht", leerling);
         }
 
         public IActionResult Klasverdeling()

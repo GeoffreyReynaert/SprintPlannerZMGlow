@@ -7,10 +7,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerkrachtArea.Controllers
     public class LeerkrachtController : Controller
     {
         public readonly IBeheerderService _beheerderService;
-        private readonly IDagdeelService _dagdeelService;
         public readonly IDeadlineService _deadlineService;
         private readonly IExamenroosterService _examenroosterService;
-        private readonly IExamentijdspanneService _examentijdspanneService;
         private readonly IHulpleerlingService _hulpleerlingService;
         private readonly IKlasService _klasService;
         private readonly ILeerkrachtService _leerkrachtService;
@@ -24,8 +22,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerkrachtArea.Controllers
         public LeerkrachtController(
             IDeadlineService deadlineService,
             IBeheerderService beheerderService,
-            IDagdeelService dagdeelService,
-            IExamentijdspanneService examentijdspanneService,
             ILeerlingService leerlingService,
             ILokaalService lokaalService,
             IKlasService klasService,
@@ -40,8 +36,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerkrachtArea.Controllers
         {
             _deadlineService = deadlineService;
             _beheerderService = beheerderService;
-            _dagdeelService = dagdeelService;
-            _examentijdspanneService = examentijdspanneService;
             _leerlingService = leerlingService;
             _lokaalService = lokaalService;
             _klasService = klasService;

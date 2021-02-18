@@ -13,15 +13,10 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json.Linq;
-using SmartSchoolSoapApi;
-using SprintPlannerZM.Model;
-using SprintPlannerZM.Services.Abstractions;
-using SprintPlannerZM.Ui.Mvc.Settings;
 
 // ReSharper disable CommentTypo
 
-namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
+namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 {
     [Area("BeheerderArea")]
     public class BeheerderController : Controller
