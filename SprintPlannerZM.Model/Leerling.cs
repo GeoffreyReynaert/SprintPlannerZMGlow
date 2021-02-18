@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace SprintPlannerZM.Model
@@ -35,7 +36,6 @@ namespace SprintPlannerZM.Model
             if (other == null) return false;
             return (this.leerlingID.Equals(other.leerlingID));
         }
-
     }
     
 }

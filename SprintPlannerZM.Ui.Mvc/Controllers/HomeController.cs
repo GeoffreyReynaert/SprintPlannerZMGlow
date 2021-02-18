@@ -27,7 +27,7 @@ namespace SprintPlannerZM.Ui.Mvc.Controllers
 
         public IActionResult AdminIndex()
         {
-            return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            return RedirectToAction("Index", "Admin", new { area = "AdminArea" });
         }
     }
 }

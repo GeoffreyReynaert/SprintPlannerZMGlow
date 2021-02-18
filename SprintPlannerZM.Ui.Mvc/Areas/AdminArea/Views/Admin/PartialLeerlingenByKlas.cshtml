@@ -1,0 +1,49 @@
+﻿@model IList<SprintPlannerZM.Model.Leerling>
+
+<section class="left-allignToNav pt-3">
+<div class="tbl-header">
+    <table>
+        <thead>
+        <tr>
+            <th class="h6">Leerling ondersteuning keuze</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<div class="tbl-content">
+@{
+    var count = 0;
+}
+@foreach (var leerling in Model)
+{
+    count++;
+    <div class="">
+        <input type="hidden" id="leerlingID" asp-for="@leerling.leerlingID" value="@leerling.leerlingID" />
+        <input type="hidden" asp-for="@leerling.familieNaam" />
+        <input type="hidden" asp-for="@leerling.voorNaam" />
+        <input type="hidden" asp-for="@leerling.email" />
+        <input type="hidden" asp-for="@leerling.KlasID" />
+
+        <div class="pt-2 containerllnoverzicht">
+            <h6 class="w-20" id="leerlingInfo" value="@leerling.leerlingID"> @leerling.familieNaam @leerling.voorNaam</h6>
+            <span> Sprint </span>
+            <input asp-for="@leerling.sprinter" type="checkbox" id="sprint" class="ml-lg-n5 mt-1">
+            <span> Typer </span>
+            <input asp-for="@leerling.typer" type="checkbox" id="typer" class="ml-lg-n5 mt-1">
+            <span> M-Klas </span>
+            <input asp-for="@leerling.mklas" type="checkbox" id="mklas" class="ml-lg-n5 mt-1">
+            <button type="submit" class="btn btn-primary mt-md-n2 "> Bevestig </button>
+        </div>
+    </div>
+}
+</div>
+</section>
+<div class="containerDropdowns left-allignToNav tableFixFooter">Totaal: @count</div>
+<script>
+    $("#leerlingInfo").click(function () {
+        $("#partialViewLeerling").load("LeerlingOverzicht", { leerlingID: $("#leerlingID").val() });
+        console.log($("#leerlingID").val());
+        // verwijder vorige partialview zonder data of gekoppelde events te verwijderen.
+        $("#partialView").detach();
+    });
+</script>

@@ -5,14 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Beheerder\Models\" />
-    <Folder Include="Areas\Leerling\Controllers\" />
-    <Folder Include="Areas\Leerling\Models\" />
-    <Folder Include="Areas\Leerling\Views\" />
-    <Folder Include="Areas\Leerkracht\Controllers\" />
-    <Folder Include="Areas\Leerkracht\Models\" />
-    <Folder Include="Areas\Leerkracht\Views\" />
-    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\BeheerderArea\Models\" />
+    <Folder Include="Areas\LeerlingArea\Models\" />
+    <Folder Include="Areas\LeerkrachtArea\Models\" />
+    <Folder Include="Areas\AdminArea\Models\" />
 
   </ItemGroup>
 

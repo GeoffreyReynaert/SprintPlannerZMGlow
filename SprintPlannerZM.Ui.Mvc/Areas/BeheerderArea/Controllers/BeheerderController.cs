@@ -13,9 +13,9 @@ using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using SprintPlannerZM.Ui.Mvc.Settings;
 
-namespace SprintPlannerZM.Ui.Mvc.Areas.Beheerder.Controllers
+namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 {
-    [Area("Beheerder")]
+    [Area("BeheerderArea")]
     public class BeheerderController : Controller
     {
 

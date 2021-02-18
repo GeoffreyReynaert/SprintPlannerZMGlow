@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using SprintPlannerZM.Model;
-using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
+using System;
 
-namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
+namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 {
-    [Area("Admin")]
+    [Area("AdminArea")]
     public class AdminController : Controller
     {
         public readonly IBeheerderService _beheerderService;
@@ -84,31 +79,57 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
         {
             if (leerling.mklas == true || leerling.typer == true || leerling.sprinter == true)
             {
-                
                 if (existsAsHulpLeerling(leerling.leerlingID))
                 { 
                     Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
                 }
                 else
                 {
-                    Hulpleerling hulpleerling = new Hulpleerling { klasID = leerling.KlasID, leerlingID = leerling.leerlingID, };
+                    Hulpleerling hulpleerling = new Hulpleerling { klasID = leerling.KlasID, leerlingID = leerling.leerlingID };
                     _hulpleerlingService.Create(hulpleerling);
                 }
-
             }
             _leerlingService.Update(leerling.leerlingID, leerling);
             return RedirectToAction();
         }
 
-        public IActionResult DropDownKeuze(int id)
+        public IActionResult AlleLeerlingen()
         {
-            return null;
+            var klassen = _klasService.Find();
+            foreach (var klas in klassen)
+            {
+                klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
+            }
+            return View("LeerlingenOverzicht", klassen);
+        }
+        public IActionResult PartialAlleLeerlingen()
+        {
+            var klassen = _klasService.Find();
+            foreach (var klas in klassen)
+            {
+                klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
+            }
+            return PartialView("PartialAlleLeerlingen", klassen);
+        }
+        [HttpPost]
+        public IActionResult PartialLeerlingenByKlas(int klasID)
+        {
+            var leerlingen = _leerlingService.FindByKlasID(klasID);
+            return PartialView("PartialLeerlingenByKlas", leerlingen);
+        }
+
+        [HttpPost]
+        public IActionResult PartialComboLeerlingen(int leerlingID)
+        {
+            var leerling = _leerlingService.Get(leerlingID);
+            return PartialView("PartialComboLeerlingen", leerling);
         }
 
         //Detail alle leerlingen naar leerling uit lijst
-        public IActionResult LeerlingOverzicht()
+        public IActionResult LeerlingOverzicht(int leerlingID)
         {
-            return View();
+            var leerling = _leerlingService.Get(leerlingID);
+            return View("LeerlingOverzicht", leerling);
         }
 
         public IActionResult Klasverdeling()
@@ -157,14 +178,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.Admin.Controllers
             Hulpleerling dbHulpLeerling = new Hulpleerling();
             dbHulpLeerling = _hulpleerlingService.GetbyLeerlingId(id);
 
-            if (dbHulpLeerling==null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return dbHulpLeerling != null;
         }
     }
 }
