@@ -21,10 +21,10 @@
             <div class="navbar-collapse collapse justify-content-between">
                 <ul>
                     <li>
-                        <img src="~/img/tihf goede start.jpg" width="200" height="200" alt="Navigatie achtergrond"/>
+                        <img src="~/img/tihf goede start.jpg" width="200" height="200" alt="Navigatie achtergrond" />
                     </li>
                     <li>
-                        <a id="Index" class="fas" asp-area="AdminArea" asp-controller="Admin" asp-action="Index">Home</a>
+                        <a id="AdminIndex" class="fas" asp-area="AdminArea" asp-controller="Admin" asp-action="Index">Home</a>
                     </li>
                     <li>
                         <a id="LeerlingenOverzicht" class="fas" asp-area="AdminArea" asp-controller="Admin" asp-action="LeerlingenOverzicht">Leerling overzicht</a>
@@ -39,10 +39,16 @@
                         <a id="Overzichten" class="fas" asp-area="AdminArea" asp-controller="Admin" asp-action="Overzichten">Overzichten</a>
                     </li>
                     <li>
-                        <a class="fas" asp-area="" asp-controller="Home" asp-action="Index">Log Out</a>
+                        <a id="Logout" class="fas" asp-area="AdminArea" asp-controller="Home" asp-action="Index">Log Out</a>
                     </li>
                     <li>
                         <a id="BeheerderIndex" class="fas" asp-area="BeheerderArea" asp-controller="Beheerder" asp-action="Index">Beheerder Index</a>
+                    </li>
+                    <li>
+                        <a id="LeerlingIndex" class="fas" asp-area="LeerlingArea" asp-controller="Leerling" asp-action="Index">Leerling Index</a>
+                    </li>
+                    <li>
+                        <a id="LeerkrachtIndex" class="fas" asp-area="LeerkrachtArea" asp-controller="Leerkracht" asp-action="Index">Leerkracht Index</a>
                     </li>
 
                 </ul>

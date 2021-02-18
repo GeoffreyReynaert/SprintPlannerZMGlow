@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]Beheerder AREA BETA</title>
+    <title>@ViewData["Title"]Leerling AREA BETA</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/bootstrap-extensions.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -24,18 +24,14 @@
                         <img src="~/img/tihf goede start.jpg" width="200" height="200" alt="Navigatie achtergrond"/>
                     </li>
                     <li>
-                        <a id="AdminIndex" class="fas" asp-area="Admin" asp-controller="Admin" asp-action="Index">Admin Home</a>
+                        <a id="AdminIndex" class="fas" asp-area="AdminArea" asp-controller="Admin" asp-action="Index">Admin Home</a>
                     </li>
                     <li>
-                        <a id="BeheerderIndex" class="fas" asp-area="Beheerder" asp-controller="Beheerder" asp-action="Index">Beheerder Home</a>
+                        <a id="LeerlingIndex" class="fas" asp-area="LeerlingArea" asp-controller="Leerling" asp-action="Index">Leerling Home</a>
                     </li>
                     <li>
-                        <a id="Import" class="fas" asp-area="Beheerder" asp-controller="Beheerder" asp-action="ImportPagina">Importeren opstart gegevens</a>
+                        <a id="Keuzevakken" class="fas" asp-area="LeerlingArea" asp-controller="Leerling" asp-action="Keuzevak">Sprint Keuze</a>
                     </li>
-                    @*<li>
-                        <a id="BeheerderLeerkrachten" class="fas" asp-area="Beheerder" asp-controller="Beheerder" asp-action="TeacherTest">Leerkrachten Test</a>
-                    </li>*@
-
                     <li>
                         <!--class="nav-link text-light"-->
                         <a class="fas" asp-area="" asp-controller="Home" asp-action="Index">Log Out</a>

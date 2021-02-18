@@ -1,17 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.ServiceModel;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using SmartSchoolSoapApi;
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using SprintPlannerZM.Ui.Mvc.Settings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.ServiceModel;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 {
