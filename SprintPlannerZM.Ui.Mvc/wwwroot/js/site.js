@@ -9,7 +9,7 @@ function () {
 
 function setStyle(pagina) {
     switch (pagina) {
-    case "Admin":
+    case "AdminArea":
         var Index = document.getElementById("Index");
         Index.className += " sidebar-nav";
         break;
