@@ -59,14 +59,6 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.Vak)
                 .WithMany(u => u.Examenroosters)
                 .HasForeignKey(a => a.vakID);
-            builder.Entity<Examenrooster>()
-                .HasOne(a => a.Dagdeel)
-                .WithMany(u => u.Examenroosters)
-                .HasForeignKey(a => a.dagdeelID);
-            builder.Entity<Examenrooster>()
-                .HasOne(a => a.Examentijdspanne)
-                .WithMany(u => u.Examenroosters)
-                .HasForeignKey(a => a.tijdspanneID);
         }
 
         private static void ConfigureHulpleerling(this ModelBuilder builder)
@@ -105,14 +97,6 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.Lokaal)
                 .WithMany(u => u.Sprintlokalen)
                 .HasForeignKey(a => a.lokaalID);
-            builder.Entity<Sprintlokaal>()
-                .HasOne(a => a.Dagdeel)
-                .WithMany(u => u.Sprintlokalen)
-                .HasForeignKey(a => a.dagdeelID);
-            builder.Entity<Sprintlokaal>()
-                .HasOne(a => a.Examentijdspanne)
-                .WithMany(u => u.Sprintlokalen)
-                .HasForeignKey(a => a.tijdspanneID);
         }
 
         private static void ConfigureLeerlingverdeling(this ModelBuilder builder)

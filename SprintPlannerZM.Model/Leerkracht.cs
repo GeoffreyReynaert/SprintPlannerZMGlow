@@ -32,7 +32,7 @@ namespace SprintPlannerZM.Model
         public bool Equals(Leerkracht other)
         {
             if (other == null) return false;
-            return (this.leerkrachtID.Equals(other.leerkrachtID));
+            return (this.achternaam.Equals(other.achternaam)&& (this.voornaam.Equals(other.voornaam)));
         }
         public IList<Sprintlokaal> Sprintlokalen { get; set; }
     }

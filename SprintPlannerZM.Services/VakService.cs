@@ -19,11 +19,20 @@ namespace SprintPlannerZM.Services
             return _database.Vak.SingleOrDefault(v => v.vakID == id);
         }
 
+        public Vak GetBySubString(string vakNaam, int klasID)
+        {
+            return _database.Vak.Where(v => v.klasID == klasID).First(v => v.vaknaam.Contains(vakNaam.Substring(0, 3)));
+        }
+
         public IList<Vak> Find()
         {
             return _database.Vak.ToList();
         }
 
+        public IList<Vak> FindBySubstring(string vakNaam, int klasID)
+        {
+            return _database.Vak.Where(v => v.vaknaam.Contains(vakNaam.Substring(0, 3))).ToList();
+        }
         public Vak Create(Vak vak)
         {
             _database.Vak.Add(vak);

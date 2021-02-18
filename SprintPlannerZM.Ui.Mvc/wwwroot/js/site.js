@@ -45,6 +45,7 @@ const getMessages = () => {
     $.ajax({
         type: "GET",
         url: 'ImportKlasTitularisEnKlas',
+        async: true,
         success: function (response) {
             $("#berichtWeergaveDiv").html(response);
         }
@@ -60,4 +61,5 @@ const getMessagesFromRelationImport = () => {
         }
     });
 };
+
 

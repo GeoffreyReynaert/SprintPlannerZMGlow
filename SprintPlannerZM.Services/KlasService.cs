@@ -25,6 +25,11 @@ namespace SprintPlannerZM.Services
             return _database.Klas.SingleOrDefault(k => k.klasnaam == name);
         }
 
+        public Klas GetBySubString(string klasnaam)
+        {
+            return _database.Klas.SingleOrDefault(l => l.klasnaam.Substring(0,3) == klasnaam.Substring(0,3));
+        }
+
         public IList<Klas> Find()
         {
             return _database.Klas.OrderBy(k => k.klasnaam).ToList();
