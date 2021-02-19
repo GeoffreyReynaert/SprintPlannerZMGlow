@@ -73,7 +73,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         {
             if (leerling.mklas == true || leerling.typer == true || leerling.sprinter == true)
             {
-                if (existsAsHulpLeerling(leerling.leerlingID))
+                if (ExistsAsHulpLeerling(leerling.leerlingID))
                 { 
                     Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
                 }
@@ -143,6 +143,15 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return PartialView("PartialAlleLeerkrachten", leerkrachten);
         }
 
+        [HttpPost]
+        public IActionResult UpdateToezichter(long leerkrachtID)
+        {
+            var leerkracht = _leerkrachtService.Get(leerkrachtID);
+            leerkracht.sprintToezichter = leerkracht.sprintToezichter != true;
+            _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
+            return RedirectToAction();
+        }
+
         public IActionResult PartialToezichters()
         {
             var leerkrachten = _leerkrachtService.Find();
@@ -167,7 +176,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View();
         }
 
-        public bool existsAsHulpLeerling(long id)
+        public bool ExistsAsHulpLeerling(long id)
         {
             Hulpleerling dbHulpLeerling = new Hulpleerling();
             dbHulpLeerling = _hulpleerlingService.GetbyLeerlingId(id);

@@ -16,7 +16,7 @@
                                     <div>
                                         @leerkracht.achternaam @leerkracht.voornaam
                                         <label class="switch float-right">
-                                            <input type="checkbox" @(Convert.ToBoolean(leerkracht.sprintToezichter) == true ? "checked='checked'" : string.Empty)>
+                                            <input id="chboxLeerkracht{@count}" value="@leerkracht.leerkrachtID" type="checkbox" @(Convert.ToBoolean(leerkracht.sprintToezichter) == true ? "checked='checked'" : string.Empty)>
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
@@ -30,3 +30,13 @@
         </table>
     </div>
 <div class="containerDropdowns tableFixFooter">Totaal: @count</div>
+
+<script>
+    $('input[id*="chboxLeerkracht"]').change(function () {
+        $.ajax({
+            type: "POST",
+            url: `UpdateToezichter`,
+            data: { "leerkrachtID": $(this).val() }
+        });
+    });
+</script>

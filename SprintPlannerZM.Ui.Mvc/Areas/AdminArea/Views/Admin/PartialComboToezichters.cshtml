@@ -9,7 +9,7 @@
                             <div>
                                 @Model.achternaam @Model.voornaam
                                 <label class="switch float-right">
-                                    <input type="checkbox" @(Convert.ToBoolean(@Model.sprintToezichter) == true ? "checked='checked'" : string.Empty)>
+                                    <input id="chboxLeerkracht" value="@Model.leerkrachtID" type="checkbox" @(Convert.ToBoolean(@Model.sprintToezichter) == true ? "checked='checked'" : string.Empty)>
                                     <span class="slider round"></span>
                                 </label>
                             </div>
@@ -21,3 +21,13 @@
     </table>
 </div>
 <div class="containerDropdowns tableFixFooter">Totaal: 1</div>
+
+<script>
+    $('#chboxLeerkracht').change(function () {
+        $.ajax({
+            type: "POST",
+            url: `UpdateToezichter`,
+            data: { "leerkrachtID": $(this).val() }
+        });
+    });
+</script>

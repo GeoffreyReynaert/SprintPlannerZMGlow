@@ -43,7 +43,7 @@ namespace SprintPlannerZM.Services
         }
 
 
-        public Leerkracht Update(int id, Leerkracht leerkracht)
+        public Leerkracht Update(long id, Leerkracht leerkracht)
         {
             {
                 var dbLeerkracht = Get(id);
