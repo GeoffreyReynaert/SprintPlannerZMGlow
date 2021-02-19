@@ -1,11 +1,49 @@
 ﻿@model SprintPlannerZM.Model.Leerling
 
 <div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
-<div class="card-header">
-    @Model.familieNaam @Model.voorNaam
+    <div class="card-header">
+        @Model.familieNaam @Model.voorNaam
+    </div>
 </div>
-<div class="card-body text-black-50">
-    <span> klasID: @Model.KlasID</span><br>
-    <span> Stamboek SmartS. : @Model.leerlingID</span><br>
-</div>
-</div>
+
+<form method="post">
+    <div class="mngmnt-background-div p-3">
+        <input type="hidden" asp-for="@Model.leerlingID" />
+        <div class="form-group">
+            <label asp-for="@Model.familieNaam">familienaam</label>
+            <input asp-for="@Model.familieNaam" class="form-control" />
+            <span asp-validation-for="@Model.familieNaam"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.voorNaam">voornaam </label>
+            <input asp-for="@Model.voorNaam" class="form-control" />
+            <span asp-validation-for="@Model.voorNaam"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.KlasID">klasID </label>
+            <input asp-for="@Model.KlasID" class="form-control" />
+            <span asp-validation-for="@Model.KlasID"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.email">status (actief=1 of niet=0)</label>
+            <input asp-for="@Model.email" class="form-control" />
+            <span asp-validation-for="@Model.email"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.mklas">sprintToezichter</label>
+            <input type="checkbox" asp-for="@Model.mklas" class="form-control" />
+            <span asp-validation-for="@Model.mklas"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.sprinter">sprintToezichter</label>
+            <input type="checkbox" asp-for="@Model.sprinter" class="form-control" />
+            <span asp-validation-for="@Model.sprinter"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.typer">sprintToezichter</label>
+            <input type="checkbox" asp-for="@Model.typer" class="form-control" />
+            <span asp-validation-for="@Model.typer"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

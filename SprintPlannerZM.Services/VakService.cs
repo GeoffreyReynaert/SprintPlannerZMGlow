@@ -14,24 +14,43 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
+
+
         public Vak Get(int id)
         {
-            return _database.Vak.SingleOrDefault(v => v.vakID == id);
+          var vak = _database.Vak.SingleOrDefault(v => v.vakID == id);
+          vak.Klas= _database.Klas.SingleOrDefault(k=>k.klasID == vak.klasID);
+          return vak;
         }
 
+
+        //Gebruik bij import examens nog niet zeker door lijst van antwoorden ipv van enkel een vak (meerdere door versch leerkrachten)
         public Vak GetBySubString(string vakNaam, int klasID)
         {
-            return _database.Vak.Where(v => v.klasID == klasID).First(v => v.vaknaam.Contains(vakNaam.Substring(0, 3)));
+            var vak = _database.Vak.Where(v => v.klasID == klasID).First(v => v.vaknaam.Contains(vakNaam.Substring(0, 3)));
+            vak.Klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+            return vak;
         }
 
         public IList<Vak> Find()
         {
-            return _database.Vak.ToList();
+            var vakken = _database.Vak.ToList();
+            foreach (var vak in vakken)
+            {
+                vak.Klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+            }
+            return vakken;
         }
 
         public IList<Vak> FindBySubstring(string vakNaam, int klasID)
         {
-            return _database.Vak.Where(v => v.vaknaam.Contains(vakNaam.Substring(0, 3))).ToList();
+          var vakken =  _database.Vak.Where(v => v.vaknaam.Contains(vakNaam.Substring(0, 3))).ToList();
+          foreach (var vak in vakken)
+          {
+              vak.Klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+          }
+
+          return vakken;
         }
         public Vak Create(Vak vak)
         {

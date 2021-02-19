@@ -436,6 +436,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         !                 Beheer Leerling                       !  Berichten weergave via partial en ajax call
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
+
         [HttpGet]  //get van de lijst
         public async Task<IActionResult> BeherenLeerling()
         {
@@ -444,19 +445,29 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             return PartialView("PartialBeherenLeerling",leerlingen);
         }  
 
+
         [HttpGet] // get van de gekozen item
         public IActionResult LeerlingEdit(int id)
         {
-            var item = _leerlingService.Get(id);
-            return View(item);
+            if (id == 0)
+            {
+                return RedirectToAction("BeherenLeerling");
+            }
+            var leerling = _leerlingService.Get(id);
+            return View(leerling);
         }
+
 
         [HttpPost] // Post van de wijziging
         public IActionResult LeerlingEdit(Leerling leerling)
         {
             _leerlingService.Update(leerling.leerlingID, leerling);
-            return View("BeherenGegevens");
+            var berichten = new List<string>();
+            berichten.Add("leerling " + leerling.familieNaam + " is gewijzigd");
+            return View("BeherenGegevens", berichten);
+     
         }
+
 
        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
           !                 Beheer Leerkracht                     ! 
