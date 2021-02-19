@@ -436,22 +436,22 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         !                 Beheer Leerling                       !  Berichten weergave via partial en ajax call
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
-        [HttpGet]
+        [HttpGet]  //get van de lijst
         public async Task<IActionResult> BeherenLeerling()
         {
             var leerlingen = _leerlingService.Find();
 
             return PartialView("PartialBeherenLeerling",leerlingen);
-        }
+        }  
 
-        [HttpGet]
+        [HttpGet] // get van de gekozen item
         public IActionResult LeerlingEdit(int id)
         {
             var item = _leerlingService.Get(id);
             return View(item);
         }
 
-        [HttpPost]
+        [HttpPost] // Post van de wijziging
         public IActionResult LeerlingEdit(Leerling leerling)
         {
             _leerlingService.Update(leerling.leerlingID, leerling);
@@ -473,6 +473,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         [HttpGet]
         public IActionResult LeerkrachtEdit(long id)
         {
+            if (id == 0)
+            {
+                return RedirectToAction("BeherenLeerkracht");
+            }
             var leerkracht = _leerkrachtService.Get(id);
             return View(leerkracht);
         }
@@ -481,7 +485,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult LeerkrachtEdit(Leerkracht leerkracht)
         {
             _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
-            return View("BeherenGegevens");
+            var berichten = new List<string>();
+            berichten.Add("leerkracht " + leerkracht.achternaam + " is gewijzigd");
+            return View("BeherenGegevens", berichten);
         }
 
 
@@ -500,6 +506,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         [HttpGet]
         public IActionResult VakEdit(int id)
         {
+            if (id == 0)
+            {
+                return RedirectToAction("BeherenVak");
+            }
             var vak = _vakService.Get(id);
             return View(vak);
         }
@@ -508,7 +518,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult VakEdit(Vak vak)
         {
             _vakService.Update(vak.vakID, vak);
-            return View("BeherenGegevens");
+            var berichten = new List<string>();
+            berichten.Add("vak " + vak.vaknaam + " is gewijzigd");
+            return View("BeherenGegevens", berichten);
         }
 
 
@@ -529,6 +541,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         [HttpGet]
         public IActionResult KlasEdit(int id)
         {
+            if (id == 0)
+            {
+                return RedirectToAction("BeherenKlas");
+            }
             var klas = _klasService.Get(id);
             return View(klas);
         }
@@ -537,7 +553,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult KlasEdit(Klas klas)
         {
             _klasService.Update(klas.klasID, klas);
-            return View("BeherenGegevens");
+            var berichten = new List<string>();
+            berichten.Add("klas " + klas.klasnaam + " is gewijzigd");
+            return View("BeherenGegevens", berichten);
         }
 
 
@@ -560,6 +578,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         [HttpGet]
         public IActionResult LokaalEdit(int id)
         {
+            if (id==0)
+            {
+                return RedirectToAction("BeherenLokalen");
+            }
             var lokaal = _lokaalService.Get(id);
             return View(lokaal);
         }
@@ -568,7 +590,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult LokaalEdit(Lokaal lokaal)
         {
             _lokaalService.Update(lokaal.lokaalID, lokaal);
-            return View("BeherenGegevens");
+            var berichten = new List<string>();
+            berichten.Add("lokaal "+lokaal.lokaalnaam+" is gewijzigd" );
+            return View("BeherenGegevens",berichten);
         }
 
 

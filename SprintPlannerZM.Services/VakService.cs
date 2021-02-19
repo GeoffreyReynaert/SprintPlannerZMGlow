@@ -43,12 +43,11 @@ namespace SprintPlannerZM.Services
         public Vak Update(int id, Vak vak)
         {
             {
-                var dbVak = Get(id);
-                if (dbVak == null)
-                {
-                    return vak;
-                }
-                _database.Vak.Update(dbVak);
+                var vakToUpd = _database.Vak.SingleOrDefault(i => i.vakID == id);
+                vakToUpd.vaknaam = vak.vaknaam;
+                vakToUpd.vakID = vak.vakID;
+                vakToUpd.leerkrachtID = vak.leerkrachtID;
+                _database.Vak.Update(vakToUpd);
                 _database.SaveChanges();
                 return vak;
             }

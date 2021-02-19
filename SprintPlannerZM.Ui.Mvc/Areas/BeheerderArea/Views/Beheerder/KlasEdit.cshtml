@@ -5,3 +5,20 @@
         @Model.klasnaam  @Model.klasID
     </div>
 </div>
+
+<form method="post">
+    <div class="mngmnt-background-div p-3">
+        <input type="hidden" asp-for="@Model.klasID" />
+        <div class="form-group">
+            <label asp-for="@Model.klasnaam">Klas naam</label>
+            <input asp-for="@Model.klasnaam" class="form-control" />
+            <span asp-validation-for="@Model.klasnaam"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.titularisID">titularis ID</label>
+            <input asp-for="@Model.titularisID" class="form-control" />
+            <span asp-validation-for="@Model.titularisID"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

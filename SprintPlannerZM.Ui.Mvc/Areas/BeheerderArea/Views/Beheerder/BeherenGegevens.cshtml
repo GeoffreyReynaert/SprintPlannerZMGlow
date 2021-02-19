@@ -10,8 +10,14 @@
 
 <div class="containerBeheer mt-5">
     <div class=" p-1 m-2">
-            <div id="beheerWeergave">
- 
-            </div>
+        <div id="beheerWeergave">
+            @if (Model != null)
+            {
+                @foreach (var message in Model)
+                {
+                    <span>@message</span>
+                }
+            }
         </div>
+    </div>
 </div>

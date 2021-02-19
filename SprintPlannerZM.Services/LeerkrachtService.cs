@@ -41,12 +41,15 @@ namespace SprintPlannerZM.Services
         public Leerkracht Update(long id, Leerkracht leerkracht)
         {
             {
-                var dbLeerkracht = Get(id);
-                if (dbLeerkracht == null)
-                {
-                    return leerkracht;
-                }
-                _database.Leerkracht.Update(dbLeerkracht);
+                var leerkrachtToUpd = _database.Leerkracht.SingleOrDefault(i => i.leerkrachtID == id);
+                leerkrachtToUpd.achternaam = leerkracht.achternaam;
+                leerkrachtToUpd.voornaam = leerkracht.voornaam;
+                leerkrachtToUpd.status = leerkracht.status;
+                leerkrachtToUpd.email = leerkracht.email;
+                leerkrachtToUpd.kluisNr = leerkracht.kluisNr;
+                leerkrachtToUpd.sprintToezichter = leerkracht.sprintToezichter;
+                leerkrachtToUpd.rol = leerkracht.rol;
+                _database.Leerkracht.Update(leerkrachtToUpd);
                 _database.SaveChanges();
                 return leerkracht;
             }

@@ -49,14 +49,12 @@ namespace SprintPlannerZM.Services
         public Klas Update(int id, Klas klas)
         {
             {
-                var dbKlas = Get(id);
-                if (dbKlas == null)
-                {
-                    return klas;
-                }
-                _database.Klas.Update(dbKlas);
+                var klasToUpd = _database.Klas.SingleOrDefault(l => l.klasID == id);
+                klasToUpd.klasnaam = klas.klasnaam;
+                klasToUpd.titularisID = klas.titularisID;
+                _database.Klas.Update(klasToUpd);
                 _database.SaveChanges();
-                return klas;
+                return klasToUpd;
             }
         }
 

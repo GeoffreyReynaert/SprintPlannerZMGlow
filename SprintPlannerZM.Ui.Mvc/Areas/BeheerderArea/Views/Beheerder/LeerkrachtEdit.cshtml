@@ -5,3 +5,45 @@
         @Model.achternaam @Model.voornaam
     </div>
 </div>
+
+<form method="post">
+    <div class="mngmnt-background-div p-3">
+        <input type="hidden" asp-for="@Model.leerkrachtID" />
+        <div class="form-group">
+            <label asp-for="@Model.achternaam">familienaam</label>
+            <input asp-for="@Model.achternaam" class="form-control" />
+            <span asp-validation-for="@Model.achternaam"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.voornaam">voornaam </label>
+            <input asp-for="@Model.voornaam" class="form-control" />
+            <span asp-validation-for="@Model.voornaam"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.kluisNr">kluisNr </label>
+            <input asp-for="@Model.kluisNr" class="form-control" />
+            <span asp-validation-for="@Model.kluisNr"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.status">status (actief=1 of niet=0)</label>
+            <input asp-for="@Model.status" class="form-control" />
+            <span asp-validation-for="@Model.status"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.email">email</label>
+            <input asp-for="@Model.email" class="form-control" />
+            <span asp-validation-for="@Model.email"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.rol">Rol "2" voor leerkracht</label>
+            <input asp-for="@Model.rol" class="form-control" />
+            <span asp-validation-for="@Model.rol"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.sprintToezichter">sprintToezichter</label>
+            <input type="checkbox" asp-for="@Model.sprintToezichter" class="form-control" />
+            <span asp-validation-for="@Model.sprintToezichter"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
