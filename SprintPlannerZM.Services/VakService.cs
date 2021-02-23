@@ -1,12 +1,14 @@
-﻿using SprintPlannerZM.Model;
+﻿using System;
+using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 
 namespace SprintPlannerZM.Services
 {
-    public class VakService: IVakService
+    public class VakService : IVakService
     {
         private readonly TihfDbContext _database;
 
@@ -18,18 +20,28 @@ namespace SprintPlannerZM.Services
 
         public Vak Get(int id)
         {
-          var vak = _database.Vak.SingleOrDefault(v => v.vakID == id);
-          vak.Klas= _database.Klas.SingleOrDefault(k=>k.klasID == vak.klasID);
-          return vak;
+            var vak = _database.Vak.SingleOrDefault(v => v.vakID == id);
+            vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+            return vak;
         }
 
 
         //Gebruik bij import examens nog niet zeker door lijst van antwoorden ipv van enkel een vak (meerdere door versch leerkrachten)
         public Vak GetBySubString(string vakNaam, int klasID)
         {
-            var vak = _database.Vak.Where(v => v.klasID == klasID).First(v => v.vaknaam.Contains(vakNaam.Substring(0, 3)));
-            vak.Klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
-            return vak;
+            var klas = _database.Klas.SingleOrDefault(k => k.klasID == klasID);
+
+            var vakkenPerKlas = _database.Vak.Where(v => v.klasID == klasID).ToList();
+            foreach (var vak in vakkenPerKlas )
+            {
+                if (vak.vaknaam.Substring(0,3).ToLower().Equals(vakNaam.Substring(0, 3).ToLower()))
+                {
+                    vak.klas = klas;
+                    return vak;
+                }
+            }
+
+            return null;
         }
 
         public IList<Vak> Find()
@@ -37,21 +49,27 @@ namespace SprintPlannerZM.Services
             var vakken = _database.Vak.ToList();
             foreach (var vak in vakken)
             {
-                vak.Klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+                vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
             }
             return vakken;
         }
 
-        public IList<Vak> FindBySubstring(string vakNaam, int klasID)
-        {
-          var vakken =  _database.Vak.Where(v => v.vaknaam.Contains(vakNaam.Substring(0, 3))).ToList();
-          foreach (var vak in vakken)
-          {
-              vak.Klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
-          }
+        //public IList<Vak> FindBySubstring(string vakNaam, int klasID)
+        //{
+        //    var klas = _database.Klas.SingleOrDefault(k => k.klasID == klasID);
+        //    var vakkenPerKlas = _database.Vak.Where(v => v.klasID == klasID).ToList();
+        //    var vakken = _database.Vak.Where(v => v.vaknaam.Substring(0,3).ToLower().Equals(vakNaam.Substring(0, 3).ToLower())).ToList();
+        //    foreach (var vak in vakkenPerKlas)
+        //    {
+        //        if (vak.vaknaam.Substring(0, 3).ToLower().Equals(vakNaam.Substring(0, 3).ToLower()))
+        //        {
+        //            vak.klas = klas;
+        //            return vak;
+        //        }
+        //    }
 
-          return vakken;
-        }
+        //    return null;
+        //}
         public Vak Create(Vak vak)
         {
             _database.Vak.Add(vak);
