@@ -12,6 +12,12 @@
                     <div class="card-body text-black-50">
                         <span> stamboek: @leerkracht.leerkrachtID</span><br>
                         <span> status : @leerkracht.status</span><br>
+                        <span> Sprint toezicht ? @leerkracht.sprintToezichter</span><br>
+                        <span> titularis van :</span><br>
+                        @foreach (var klas in @leerkracht.Klassen)
+                        {
+                            <span>@klas.klasnaam</span><br>
+                        }
                     </div>
                     <div class="card-footer">
                         <a type="button" id="wijzigLeerkracht" name="@leerkracht.leerkrachtID" class="btn btn-success float-right" asp-action="LeerkrachtEdit" asp-route-id="@leerkracht.leerkrachtID">Wijzig</a>

@@ -74,6 +74,16 @@ const getLeerlingen = () => {
         success: function (response) {
             $("#beheerWeergave").html(response);
         }
+    });getLeerlingenLijst
+};
+
+const getLeerlingenLijst = () => {
+    $.ajax({
+        type: "GET",
+        url: 'GetLeerlingLijst',
+        success: function (response) {
+            $("#cmbLijsten").html(response);
+        }
     });
 };
 

@@ -11,7 +11,13 @@
                     </div>
                     <div class="card-body text-black-50">
                         <span> klasID: @leerling.KlasID</span><br>
+                        <span> klasNaam : @leerling.Klas.klasnaam</span><br>
                         <span> Stamboek SmartS. : @leerling.leerlingID</span><br>
+                        @if (@leerling.hulpleerling != null)
+                        {
+                            <span> klasNaam : @leerling.hulpleerling.hulpleerlingID</span>
+                            <br>
+                        }
                     </div>
                     <div class="card-footer">
                         <a type="button" id="wijzigLeerling" name="@leerling.leerlingID" class="btn btn-success float-right" asp-action="LeerlingEdit" asp-route-id="@leerling.leerlingID">Wijzig</a>

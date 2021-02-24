@@ -354,7 +354,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                             if (column == 1) //Klas uit id
                             {
                                 klas = _klasService.GetBySubString(reader.GetValue(column).ToString());
-                                if (klas==null)
+                                if (klas == null)
                                 {
                                     klas = _klasService.Get(1);
                                 }
@@ -378,7 +378,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), klas.klasID);
                                     Console.WriteLine(reader.GetValue(column) + "Schooltaal tis gelukt");
                                 }
-                                else if (reader.GetValue(column).ToString().Contains("AA")) 
+                                else if (reader.GetValue(column).ToString().Contains("AA"))
                                 {
                                     //TODO Veranderen van AAR naar AA moet consitent blijven zoals bv 3 letters en moet vast liggen met charlotte 3 is nodig AA te weinig
 
@@ -400,7 +400,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     rooster.Vak = _vakService.GetBySubString("studie van de".ToString(), klas.klasID);
                                     Console.WriteLine(reader.GetValue(column) + "studie van de publiciteit tis gelukt");
                                 }
-                                else if (reader.GetValue(column).ToString().Contains("WIS")) 
+                                else if (reader.GetValue(column).ToString().Contains("WIS"))
                                 {
                                     rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), klas.klasID);
                                     Console.WriteLine(reader.GetValue(column) + "wiskunde  tis gelukt ");
@@ -413,7 +413,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                 else if (reader.GetValue(column).ToString().Contains("IO3") ||
                                          reader.GetValue(column).ToString().Contains("IO4") ||
                                          reader.GetValue(column).ToString().Contains("IO5") ||
-                                         reader.GetValue(column).ToString().Contains("IO6")) 
+                                         reader.GetValue(column).ToString().Contains("IO6"))
                                 {
                                     if (klas.klasID != 1) // laatste van de input io opvangen die geen vak heeft nog klas
                                     {
@@ -430,7 +430,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                          reader.GetValue(column).ToString().Contains("FOUTLOOS") ||
                                          reader.GetValue(column).ToString().Contains("WELKWEG") ||
                                          reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT") ||
-                                         reader.GetValue(column).ToString().Contains("STUDIE")||
+                                         reader.GetValue(column).ToString().Contains("STUDIE") ||
                                          reader.GetValue(column).ToString().Contains("SPRINT") ||
                                          reader.GetValue(column).ToString().Contains("RESERVE") ||
                                          reader.GetValue(column).ToString().Contains("FG")) //7de jaar vind het juiste vak niet 
@@ -466,12 +466,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
                             else if (column == 4)// lokaal ID nog verwerken in examenrooster
                             {
-                                if (reader.GetValue(column)!=null)
+                                if (reader.GetValue(column) != null)
                                 {
                                     lokaal = _lokaalService.GetByName(reader.GetValue(column).ToString());
                                     Console.WriteLine(reader.GetValue(column).ToString());
                                 }
-                                
+
                             } // lokaal ID nog verwerken in examenrooster
 
                             else if (column == 5)// datum van examen
@@ -726,6 +726,15 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
 
+
+
+        [HttpGet]
+        public IActionResult GetLeerlingLijst()
+        {
+            var leerlingen = _leerlingService.Find();
+
+            return PartialView("PartialLeerlingenLijst", leerlingen);
+        }
 
     }
 

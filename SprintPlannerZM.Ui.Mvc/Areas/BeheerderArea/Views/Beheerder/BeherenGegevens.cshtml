@@ -10,14 +10,23 @@
 
 <div class="containerBeheer mt-5">
     <div class=" p-1 m-2">
+        <div class="pt-3" id="partialViewLeerling">
+            <div class="containerDropdowns left-allignToNav">
+                <form>
+                    <select class="form-control select2 textBoxLayout" id="cmbLijsten">
+                        <option id="leerlingIndex">---Kies ne leerling---</option>
+                        @*@foreach (var klas in Model)
+                        {
+                            @foreach (var leerling in klas.Leerlingen)
+                            {
+                                <option value="@leerling.leerlingID">@leerling.familieNaam @leerling.voorNaam</option>
+                            }
+                        }*@
+                    </select>
+                </form>
+            </div>
+        </div>
         <div id="beheerWeergave">
-            @if (Model != null)
-            {
-                @foreach (var message in Model)
-                {
-                    <span>@message</span>
-                }
-            }
         </div>
     </div>
 </div>
