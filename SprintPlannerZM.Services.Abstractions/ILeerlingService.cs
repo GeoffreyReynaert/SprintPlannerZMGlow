@@ -6,6 +6,7 @@ namespace SprintPlannerZM.Services.Abstractions
     public interface ILeerlingService
     {
         Leerling Get(long id);
+        Leerling GetToImport(long id);
         IList<Leerling> Find();
         IList<Leerling> FindByKlasID(int klasid);
         Leerling Create(Leerling leerling);

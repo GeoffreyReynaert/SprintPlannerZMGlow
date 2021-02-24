@@ -72,10 +72,12 @@ const getLeerlingen = () => {
         type: "GET",
         url: 'BeherenLeerling',
         success: function (response) {
+            alert("Dank u voor het wachten ");
             $("#beheerWeergave").html(response);
+            getLeerlingenLijst();
         }
-    });getLeerlingenLijst
-};
+    });
+}; 
 
 const getLeerlingenLijst = () => {
     $.ajax({

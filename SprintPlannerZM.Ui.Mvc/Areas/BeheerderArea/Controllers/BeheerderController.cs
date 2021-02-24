@@ -186,10 +186,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 //indien er geen id's gevonden zijn en dus geen leerlingen in de klas
                 if (stamboekenList.Count != 0)
                 {
-                    dbLeerling = _leerlingService.Get(stamboekenList[0]);
+                    dbLeerling = _leerlingService.GetToImport(stamboekenList[0]);
                     if (dbLeerling == null)
                     {
-                        dbLeerling = _leerlingService.Get(stamboekenList[1]);
+                        dbLeerling = _leerlingService.GetToImport(stamboekenList[1]);
                     }
 
                     if (element.Element("stamboeknummer").Value.Equals("NULL"))
@@ -330,179 +330,204 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         {
             IList<Examenrooster> examenroosters = new List<Examenrooster>();
             List<string> berichten = new List<string>();
-
-            var file = Request.Form.Files[0];
-            var xlsStream = file.OpenReadStream();
-            var vakSchoonmaak = new Vak { vaknaam = "schoonmaak", klasID = 1, leerkrachtID = 1 };
-            _vakService.Create(vakSchoonmaak);
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-            using (var reader = ExcelReaderFactory.CreateReader(xlsStream))
+            IFormFile file;
+            if (Request.Form.Files.Count != 0)
             {
-                do
+                file = Request.Form.Files[0];
+
+                var xlsStream = file.OpenReadStream();
+                var vakSchoonmaak = new Vak { vaknaam = "schoonmaak", klasID = 1, leerkrachtID = 1 };
+                _vakService.Create(vakSchoonmaak);
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                using (var reader = ExcelReaderFactory.CreateReader(xlsStream))
                 {
-                    while (reader.Read()) //Each ROW
+                    do
                     {
-                        var rooster = new Examenrooster();
-                        var klas = new Klas();
-                        var lokaal = new Lokaal();
-                        var vak = new Vak();
-                        //IList<Vak> vakken;
-
-                        for (int column = 0; column < reader.FieldCount; column++)
+                        while (reader.Read()) //Each ROW
                         {
-                            if (column == 1) //Klas uit id
+                            var rooster = new Examenrooster();
+                            var klas = new Klas();
+                            var lokaal = new Lokaal();
+                            var vak = new Vak();
+                            //IList<Vak> vakken;
+
+                            for (int column = 0; column < reader.FieldCount; column++)
                             {
-                                klas = _klasService.GetBySubString(reader.GetValue(column).ToString());
-                                if (klas == null)
+                                if (column == 1) //Klas uit id
                                 {
-                                    klas = _klasService.Get(1);
-                                }
-                                Console.WriteLine(reader.GetValue(column).ToString());
-                            }
-
-                            else if (column == 3) // vak naam met klas.id dat vakID geeft
-                            {
-                                if (reader.GetValue(column).ToString().Contains("SCHOONMAAK"))// opvangen van poets tijd
-                                {
-                                    rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), 1);
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("MAVO"))
-                                {
-                                    rooster.Vak = _vakService.GetBySubString("Maatschapp", klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + " MAVO tis gelukt");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("SCHOOLTAAL")) // kan nog hieronder bij de rest just for testing purposes
-                                {
-
-                                    rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "Schooltaal tis gelukt");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("AA"))
-                                {
-                                    //TODO Veranderen van AAR naar AA moet consitent blijven zoals bv 3 letters en moet vast liggen met charlotte 3 is nodig AA te weinig
-
-                                    rooster.Vak = _vakService.GetBySubString("Aar", klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "Aardrijkskunde tis gelukt");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("NAT.WET."))
-                                {
-                                    rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "nat.wet tis gelukt");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("FRA"))
-                                {
-                                    rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "frans tis gelukt");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("STD.V/D PUBL"))
-                                {
-                                    rooster.Vak = _vakService.GetBySubString("studie van de".ToString(), klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "studie van de publiciteit tis gelukt");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("WIS"))
-                                {
-                                    rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "wiskunde  tis gelukt ");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("KI"))
-                                {
-                                    rooster.Vak = _vakService.GetBySubString("kunst", klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "kunst initiatie tis gelukt ");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("IO3") ||
-                                         reader.GetValue(column).ToString().Contains("IO4") ||
-                                         reader.GetValue(column).ToString().Contains("IO5") ||
-                                         reader.GetValue(column).ToString().Contains("IO6"))
-                                {
-                                    if (klas.klasID != 1) // laatste van de input io opvangen die geen vak heeft nog klas
+                                    klas = _klasService.GetBySubString(reader.GetValue(column).ToString());
+                                    if (klas == null)
                                     {
-                                        rooster.Vak = _vakService.GetBySubString("integrale opdr", klas.klasID);
-                                        Console.WriteLine(reader.GetValue(column) + "Integrale opdrachten tis gelukt ");
+                                        klas = _klasService.Get(1);
+                                    }
+
+                                    Console.WriteLine(reader.GetValue(column).ToString());
+                                }
+
+                                else if (column == 3) // vak naam met klas.id dat vakID geeft
+                                {
+                                    if (reader.GetValue(column).ToString().Contains("SCHOONMAAK")
+                                    ) // opvangen van poets tijd
+                                    {
+                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), 1);
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("MAVO"))
+                                    {
+                                        rooster.Vak = _vakService.GetBySubString("Maatschapp", klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + " MAVO tis gelukt");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("SCHOOLTAAL")
+                                    ) // kan nog hieronder bij de rest just for testing purposes
+                                    {
+
+                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                            klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + "Schooltaal tis gelukt");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("AA"))
+                                    {
+                                        //TODO Veranderen van AAR naar AA moet consitent blijven zoals bv 3 letters en moet vast liggen met charlotte 3 is nodig AA te weinig
+
+                                        rooster.Vak = _vakService.GetBySubString("Aar", klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + "Aardrijkskunde tis gelukt");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("NAT.WET."))
+                                    {
+                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                            klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + "nat.wet tis gelukt");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("FRA"))
+                                    {
+                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                            klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + "frans tis gelukt");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("STD.V/D PUBL"))
+                                    {
+                                        rooster.Vak =
+                                            _vakService.GetBySubString("studie van de".ToString(), klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) +
+                                                          "studie van de publiciteit tis gelukt");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("WIS"))
+                                    {
+                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                            klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + "wiskunde  tis gelukt ");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("KI"))
+                                    {
+                                        rooster.Vak = _vakService.GetBySubString("kunst", klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + "kunst initiatie tis gelukt ");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("IO3") ||
+                                             reader.GetValue(column).ToString().Contains("IO4") ||
+                                             reader.GetValue(column).ToString().Contains("IO5") ||
+                                             reader.GetValue(column).ToString().Contains("IO6"))
+                                    {
+                                        if (klas.klasID != 1
+                                        ) // laatste van de input io opvangen die geen vak heeft nog klas
+                                        {
+                                            rooster.Vak = _vakService.GetBySubString("integrale opdr", klas.klasID);
+                                            Console.WriteLine(reader.GetValue(column) +
+                                                              "Integrale opdrachten tis gelukt ");
+                                        }
+                                        else
+                                        {
+                                            rooster.Vak = _vakService.GetBySubString("SCHOONMAAK", klas.klasID);
+                                            Console.WriteLine(reader.GetValue(column) +
+                                                              "Integrale opdrachten tis gelukt ");
+                                        }
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("INSTROOM") ||
+                                             reader.GetValue(column).ToString().Contains("FOUTLOOS") ||
+                                             reader.GetValue(column).ToString().Contains("WELKWEG") ||
+                                             reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT") ||
+                                             reader.GetValue(column).ToString().Contains("STUDIE") ||
+                                             reader.GetValue(column).ToString().Contains("SPRINT") ||
+                                             reader.GetValue(column).ToString().Contains("RESERVE") ||
+                                             reader.GetValue(column).ToString().Contains("FG")
+                                    ) //7de jaar vind het juiste vak niet 
+                                    {
+                                        //TODO instroom bestaat niet als vak in smartschool wat is dit ? momenteel omzeild
+
+                                        rooster.Vak = _vakService.GetBySubString("schoonmaak", 1);
+                                        Console.WriteLine(reader.GetValue(column) + "Niet gekende vakken opgemaakt ");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("OAVI"))
+                                    {
+                                        rooster.Vak = _vakService.GetBySubString("Ortho", klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + "ortho is gelukt ");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("PSYCHOLOGIE"))
+                                    {
+                                        rooster.Vak = _vakService.GetBySubString("Beroeps", klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) +
+                                                          "Beroepsgerichte psychologie is gelukt ");
+                                    }
+                                    else if (reader.GetValue(column).ToString().Contains("R EN E"))
+                                    {
+                                        rooster.Vak = _vakService.GetBySubString("Religie", klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + "Religie en ethiek is gelukt ");
                                     }
                                     else
                                     {
-                                        rooster.Vak = _vakService.GetBySubString("SCHOONMAAK", klas.klasID);
-                                        Console.WriteLine(reader.GetValue(column) + "Integrale opdrachten tis gelukt ");
+                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                            klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column).ToString());
                                     }
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("INSTROOM") ||
-                                         reader.GetValue(column).ToString().Contains("FOUTLOOS") ||
-                                         reader.GetValue(column).ToString().Contains("WELKWEG") ||
-                                         reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT") ||
-                                         reader.GetValue(column).ToString().Contains("STUDIE") ||
-                                         reader.GetValue(column).ToString().Contains("SPRINT") ||
-                                         reader.GetValue(column).ToString().Contains("RESERVE") ||
-                                         reader.GetValue(column).ToString().Contains("FG")) //7de jaar vind het juiste vak niet 
+
+
+                                } // vak naam met klas.id dat vakID geeft
+
+                                else if (column == 4) // lokaal ID nog verwerken in examenrooster
                                 {
-                                    //TODO instroom bestaat niet als vak in smartschool wat is dit ? momenteel omzeild
+                                    if (reader.GetValue(column) != null)
+                                    {
+                                        lokaal = _lokaalService.GetByName(reader.GetValue(column).ToString());
+                                        Console.WriteLine(reader.GetValue(column).ToString());
+                                    }
 
-                                    rooster.Vak = _vakService.GetBySubString("schoonmaak", 1);
-                                    Console.WriteLine(reader.GetValue(column) + "Niet gekende vakken opgemaakt ");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("OAVI"))
+                                } // lokaal ID nog verwerken in examenrooster
+
+                                else if (column == 5) // datum van examen
                                 {
-                                    rooster.Vak = _vakService.GetBySubString("Ortho", klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "ortho is gelukt ");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("PSYCHOLOGIE"))
+                                    rooster.datum = reader.GetValue(column).ToString();
+                                    Console.WriteLine("datum :" + reader.GetValue(column));
+                                } // datum van examen
+
+                                else if (column == 6
+                                ) // foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
                                 {
-                                    rooster.Vak = _vakService.GetBySubString("Beroeps", klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "Beroepsgerichte psychologie is gelukt ");
-                                }
-                                else if (reader.GetValue(column).ToString().Contains("R EN E"))
-                                {
-                                    rooster.Vak = _vakService.GetBySubString("Religie", klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column) + "Religie en ethiek is gelukt ");
-                                }
-                                else
-                                {
-                                    rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), klas.klasID);
-                                    Console.WriteLine(reader.GetValue(column).ToString());
-                                }
+                                    var tweeDeligAntw = reader.GetValue(column).ToString().Split(" ");
+                                    rooster.tijd = tweeDeligAntw[1];
+                                    Console.WriteLine("uur :" + tweeDeligAntw[1]);
+                                } // foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
+                            }
 
-
-                            } // vak naam met klas.id dat vakID geeft
-
-                            else if (column == 4)// lokaal ID nog verwerken in examenrooster
-                            {
-                                if (reader.GetValue(column) != null)
-                                {
-                                    lokaal = _lokaalService.GetByName(reader.GetValue(column).ToString());
-                                    Console.WriteLine(reader.GetValue(column).ToString());
-                                }
-
-                            } // lokaal ID nog verwerken in examenrooster
-
-                            else if (column == 5)// datum van examen
-                            {
-                                rooster.datum = reader.GetValue(column).ToString();
-                                Console.WriteLine("datum :" + reader.GetValue(column));
-                            } // datum van examen
-
-                            else if (column == 6)// foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
-                            {
-                                var tweeDeligAntw = reader.GetValue(column).ToString().Split(" ");
-                                rooster.tijd = tweeDeligAntw[1];
-                                Console.WriteLine("uur :" + tweeDeligAntw[1]);
-                            } // foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
+                            rooster.vakID = rooster.Vak.vakID;
+                            Console.WriteLine(rooster.Vak.vaknaam + " " + rooster.Vak.klasID + " " + rooster.datum);
+                            Console.WriteLine("");
+                            examenroosters.Add(rooster);
                         }
-                        rooster.vakID = rooster.Vak.vakID;
-                        Console.WriteLine(rooster.Vak.vaknaam + " " + rooster.Vak.klasID + " " + rooster.datum);
-                        Console.WriteLine("");
-                        examenroosters.Add(rooster);
-                    }
-                } while (reader.NextResult());
+                    } while (reader.NextResult());
+                }
+
+                foreach (var rooster in examenroosters)
+                {
+                    _examenroosterService.Create(rooster);
+                    berichten.Add("examen op " + rooster.tijd + " " + rooster.datum + " met id" + rooster.examenID +
+                                  " is aangemaakt");
+                }
+                return View("ImportPagina", berichten);
             }
 
-            foreach (var rooster in examenroosters)
-            {
-                _examenroosterService.Create(rooster);
-                berichten.Add("examen op " + rooster.tijd + " " + rooster.datum + " met id" + rooster.examenID + " is aangemaakt");
-            }
+            berichten.Add("Opgelet! U heeft Geen bestand verzonden");
             return View("ImportPagina", berichten);
-
         }
+
 
 
 

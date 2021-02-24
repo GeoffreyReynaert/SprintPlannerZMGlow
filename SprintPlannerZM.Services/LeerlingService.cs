@@ -18,12 +18,19 @@ namespace SprintPlannerZM.Services
         public Leerling Get(long id)
         {
             var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
-            leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == leerling.leerlingID);
             leerling.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerling.KlasID);
+                        leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == leerling.leerlingID);
+            //niet mogelijk bij import niewe get odig met hulpleerling inbegrepen en null check
 
             return leerling;
         }
 
+        public Leerling GetToImport(long id)
+        {
+            var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
+      
+            return leerling;
+        }
 
 
         public IList<Leerling> Find()

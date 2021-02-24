@@ -1,7 +1,11 @@
 ﻿@model IList<SprintPlannerZM.Model.Leerling>
 
-@foreach (var leerling in Model)
-{
-    <option>@leerling.voorNaam</option>
-}
-
+<form>
+    <select class="form-control select2 textBoxLayout">
+        <option id="leerlingIndex">---Kies ne leerling---</option>
+        @foreach (var leerling in Model)
+        {
+            <option value="@leerling.leerlingID">@leerling.voorNaam</option>
+        }
+    </select>
+</form>

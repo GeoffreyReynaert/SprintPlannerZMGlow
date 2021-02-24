@@ -1,18 +1,18 @@
 ﻿@model IList<string>
 
 <div class="containerllnoverzicht pt-5">
-    <button id="importTitulEnKlas" class="btn btn-secondary">Stap1 titularis/klas</button>
-    <button id="ImportKlasVakLeerkrLeerlEnRelaties" class="btn btn-secondary">Stap2 leerl/leerkr/vak</button>
+    <button id="importTitulEnKlas" class="btn btn-secondary" data-toggle="modal" data-target="#wachttijdModal">Stap1 titularis/klas</button>
+    <button id="ImportKlasVakLeerkrLeerlEnRelaties" class="btn btn-secondary" data-toggle="modal" data-target="#wachttijdModal">Stap2 leerl/leerkr/vak</button>
     @using (Html.BeginForm("XlsUpload", "Beheerder", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <span>
-            <input class="btn btn-secondary" name="xlsFile" type="file"><button class="btn btn-light" type="submit">CSV Lokaal verzend</button>
+            <input class="btn btn-secondary" name="xlsFile" type="file"><button class="btn btn-light" type="submit" data-toggle="modal" data-target="#wachttijdModal">CSV Lokaal verzend</button>
         </span>
     }
     @using (Html.BeginForm("ImportExamens", "Beheerder", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <span>
-            <input class="btn btn-secondary" name="csvFile" type="file"><button class="btn btn-light" type="submit">CSV Examenplanning verzend</button>
+            <input class="btn btn-secondary" name="csvFile" type="file"><button class="btn btn-light" type="submit" data-toggle="modal" data-target="#wachttijdModal">CSV Examenplanning verzend</button>
         </span>
     }
 </div>
@@ -34,3 +34,22 @@
     </div>
 </div>
 
+
+
+<div class="modal fade" id="wachttijdModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Wachttijd</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Opgelet de wachtijd kan oplopen <br />
+                Elke digitale cel is hard aan het werk voor u<br />
+                Dank u voor u geduld <br />
+            </div>
+        </div>
+    </div>
+</div>
