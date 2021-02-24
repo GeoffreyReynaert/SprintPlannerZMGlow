@@ -138,7 +138,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 if (element2.Element("internnummer").Value != "")
                 {
                     Console.WriteLine(element2.Parent.Parent.Element("klasnaam").Value);
-                    var dbKlas = _klasService.Get(element2.Parent.Parent.Element("klasnaam").Value);
+                    var dbKlas = _klasService.GetByKlasName(element2.Parent.Parent.Element("klasnaam").Value);
 
                     var soapLeerling = new Leerling
                     {

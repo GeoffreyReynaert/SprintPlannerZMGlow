@@ -17,14 +17,23 @@ namespace SprintPlannerZM.Services
         }
         public Klas Get(int id)
         {
-            return _database.Klas.SingleOrDefault(k => k.klasID == id);
+            var klas = _database.Klas.SingleOrDefault(k => k.klasID == id);
+            klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+            klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
+            klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
+
+            return klas;
         }
 
-        public Klas Get(string name)
+        public Klas GetByKlasName(string name)
         {
-            return _database.Klas.SingleOrDefault(k => k.klasnaam == name);
+            var klas = _database.Klas.SingleOrDefault(k => k.klasnaam.Equals(name));
+            klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+            return klas;
         }
 
+
+        //gebruik voor myro import enkel
         public Klas GetBySubString(string klasnaam)
         {
             var klas = new Klas();
@@ -74,8 +83,8 @@ namespace SprintPlannerZM.Services
                 //    klasnaam.Substring(0, 4).Equals("5KAB") ||
                 //    klasnaam.Substring(0, 4).Equals("5KAV"))
                 //{
-                    klas = _database.Klas.SingleOrDefault(l =>
-                        l.klasnaam.Substring(0, 4).Equals(klasnaam.Substring(0, 4)));
+                klas = _database.Klas.SingleOrDefault(l =>
+                    l.klasnaam.Substring(0, 4).Equals(klasnaam.Substring(0, 4)));
             }
 
             else if (klasnaam.Substring(0, 3).Equals("6TS"))
@@ -102,7 +111,15 @@ namespace SprintPlannerZM.Services
 
         public IList<Klas> Find()
         {
-            return _database.Klas.OrderBy(k => k.klasnaam).ToList();
+            var klassen = _database.Klas.OrderBy(k => k.klasnaam).ToList();
+
+            foreach (var klas in klassen)
+            {
+                klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+                klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
+                klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
+            }
+            return klassen;
         }
 
         public Klas Create(Klas klas)

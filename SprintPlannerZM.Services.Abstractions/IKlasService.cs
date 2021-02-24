@@ -6,7 +6,7 @@ namespace SprintPlannerZM.Services.Abstractions
     public interface IKlasService
     {
         Klas Get(int id);
-        Klas Get(string id);
+        Klas GetByKlasName(string id);
         Klas GetBySubString(string klasnaam);
         IList<Klas> Find();
         Klas Create(Klas klas);

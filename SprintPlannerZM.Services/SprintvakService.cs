@@ -16,12 +16,22 @@ namespace SprintPlannerZM.Services
         }
         public Sprintvak Get(int id)
         {
-            return _database.Sprintvak.SingleOrDefault(s => s.sprintvakID == id);
+            var sprintvak = _database.Sprintvak.SingleOrDefault(s => s.sprintvakID == id);
+            sprintvak.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprintvak.vakID);
+            sprintvak.Hulpleerling =
+                _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == sprintvak.hulpleerlingID);
+            return sprintvak;
         }
 
         public IList<Sprintvak> Find()
         {
-            return _database.Sprintvak.ToList();
+           var sprintvakken =_database.Sprintvak.ToList();
+           foreach (var sprintvak in sprintvakken)
+           {
+               sprintvak.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprintvak.vakID);
+               sprintvak.Hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == sprintvak.hulpleerlingID);
+            }
+            return sprintvakken;
         }
 
         public Sprintvak Create(Sprintvak sprintvak)

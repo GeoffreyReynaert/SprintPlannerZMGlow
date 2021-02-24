@@ -10,7 +10,13 @@
                         @klas.klasnaam
                     </div>
                     <div class="card-body text-black-50">
-                        <span> titularis ID: @klas.titularisID</span><br>
+                        <span> titularis : @klas.Leerkracht.achternaam @klas.Leerkracht.voornaam</span><br>
+                        <span> aantal leerlingen : @klas.Leerlingen.Count</span><br>
+                        <span> vakken :</span><br>
+                        @foreach (var vak in klas.Vakken)
+                        {
+                            <span>@vak.vaknaam</span><br>
+                        }
                     </div>
                     <div class="card-footer">
                         <a type="button" id="wijzigLeerling" name="@klas.klasID" class="btn btn-success float-right" asp-action="KlasEdit" asp-route-id="@klas.klasID">Wijzig</a>

@@ -17,13 +17,23 @@ namespace SprintPlannerZM.Services
 
         public Leerkracht Get(long id)
         {
-            return _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == id);
+            var leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == id);
+            leerkracht.Klassen = _database.Klas.Where(k => k.titularisID == leerkracht.leerkrachtID).ToList();
+            leerkracht.Vakken = _database.Vak.Where(v => v.leerkrachtID == leerkracht.leerkrachtID).ToList();
+            leerkracht.Sprintlokalen = _database.Sprintlokaal.Where(s => s.leerkrachtID == leerkracht.leerkrachtID).ToList();
+            return leerkracht;
         }
 
         public IList<Leerkracht> Find()
         {
+            var leerkrachten = _database.Leerkracht.ToList();
+            foreach (var leerkracht in leerkrachten)
+            {
+                leerkracht.Klassen = _database.Klas.Where(k => k.titularisID == leerkracht.leerkrachtID).ToList();
+                leerkracht.Vakken = _database.Vak.Where(v => v.leerkrachtID == leerkracht.leerkrachtID).ToList();
+                leerkracht.Sprintlokalen = _database.Sprintlokaal.Where(s => s.leerkrachtID == leerkracht.leerkrachtID).ToList();
+            }
             return _database.Leerkracht.OrderBy(l => l.achternaam).ToList();
-            //return _database.Leerkracht.ToList();
         }
 
         public Leerkracht Create(Leerkracht leerkracht)

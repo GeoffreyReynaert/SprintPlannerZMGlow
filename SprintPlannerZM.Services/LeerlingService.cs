@@ -6,7 +6,7 @@ using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
 {
-    public class LeerlingService: ILeerlingService
+    public class LeerlingService : ILeerlingService
     {
         private readonly TihfDbContext _database;
 
@@ -17,19 +17,36 @@ namespace SprintPlannerZM.Services
 
         public Leerling Get(long id)
         {
-            return _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
+            var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
+            leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == leerling.leerlingID);
+            leerling.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerling.KlasID);
+
+            return leerling;
         }
 
 
 
         public IList<Leerling> Find()
         {
-            return _database.Leerling.OrderBy(l => l.familieNaam).ToList();
+            var leerlingen =_database.Leerling.OrderBy(l => l.familieNaam).ToList();
+            foreach (var leerling in leerlingen)
+            {
+                leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == leerling.leerlingID);
+                leerling.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerling.KlasID);
+            }
+            return leerlingen;
         }
+
+
 
         public IList<Leerling> FindByKlasID(int klasid)
         {
-            var leerlingenPerKlas = _database.Leerling.Where(l => l.KlasID == klasid).OrderBy(l=>l.familieNaam).ToList();
+            var leerlingenPerKlas = _database.Leerling.Where(l => l.KlasID == klasid).OrderBy(l => l.familieNaam).ToList();
+            foreach (var leerlingperklas in leerlingenPerKlas)
+            {
+                leerlingperklas.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == leerlingperklas.leerlingID);
+                leerlingperklas.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerlingperklas.KlasID);
+            }
             return leerlingenPerKlas;
         }
 
@@ -47,7 +64,7 @@ namespace SprintPlannerZM.Services
         public Leerling Update(long id, Leerling leerling)
         {
             {
-                var leerlingToUpd = _database.Leerling.SingleOrDefault(l=>l.leerlingID == id);
+                var leerlingToUpd = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
                 leerlingToUpd.sprinter = leerling.sprinter;
                 leerlingToUpd.mklas = leerling.mklas;
                 leerlingToUpd.typer = leerling.typer;

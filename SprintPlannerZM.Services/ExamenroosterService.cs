@@ -6,61 +6,69 @@ using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
 {
-    public class ExamenroosterService: IExamenroosterService
+    public class ExamenroosterService : IExamenroosterService
 
     {
-    private readonly TihfDbContext _database;
+        private readonly TihfDbContext _database;
 
-    public ExamenroosterService(TihfDbContext database)
-    {
-        _database = database;
-    }
-
-    public Examenrooster Get(int id)
-    {
-        return _database.Examenrooster.SingleOrDefault(e => e.examenID == id);
-    }
-
-    public IList<Examenrooster> Find()
-    {
-        return _database.Examenrooster.ToList();
-    }
-
-    public Examenrooster Create(Examenrooster examenrooster)
-    {
-        _database.Examenrooster.Add(examenrooster);
-        _database.SaveChanges();
-        return examenrooster;
-    }
-
-    public Examenrooster Update(int id, Examenrooster examenrooster)
-    {
+        public ExamenroosterService(TihfDbContext database)
         {
-            var dbExamenrooster = Get(id);
-            if (dbExamenrooster == null)
-            {
-                return examenrooster;
-            }
+            _database = database;
+        }
 
-            _database.Examenrooster.Update(dbExamenrooster);
+        public Examenrooster Get(int id)
+        {
+            var examenrooster = _database.Examenrooster.SingleOrDefault(e => e.examenID == id);
+            var vak = _database.Vak.SingleOrDefault(v => v.vakID == examenrooster.vakID);
+            examenrooster.Vak = vak;
+            return examenrooster;
+        }
+
+        public IList<Examenrooster> Find()
+        {
+            var examenRoosters = _database.Examenrooster.ToList();
+            foreach (var rooster in examenRoosters)
+            {
+                rooster.Vak = _database.Vak.SingleOrDefault(v => v.vakID == rooster.vakID);
+            }
+            return examenRoosters;
+        }
+
+        public Examenrooster Create(Examenrooster examenrooster)
+        {
+            _database.Examenrooster.Add(examenrooster);
             _database.SaveChanges();
             return examenrooster;
         }
-    }
 
-    public bool Delete(int id)
-    {
+        public Examenrooster Update(int id, Examenrooster examenrooster)
         {
-            var dbExamenrooster = Get(id);
-            if (dbExamenrooster == null)
             {
-                return false;
-            }
+                var dbExamenrooster = Get(id);
+                if (dbExamenrooster == null)
+                {
+                    return examenrooster;
+                }
 
-            _database.Examenrooster.Remove(dbExamenrooster);
-            _database.SaveChanges();
-            return true;
+                _database.Examenrooster.Update(dbExamenrooster);
+                _database.SaveChanges();
+                return examenrooster;
+            }
         }
-    }
+
+        public bool Delete(int id)
+        {
+            {
+                var dbExamenrooster = Get(id);
+                if (dbExamenrooster == null)
+                {
+                    return false;
+                }
+
+                _database.Examenrooster.Remove(dbExamenrooster);
+                _database.SaveChanges();
+                return true;
+            }
+        }
     }
 }

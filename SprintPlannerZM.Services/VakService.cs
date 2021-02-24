@@ -22,11 +22,14 @@ namespace SprintPlannerZM.Services
         {
             var vak = _database.Vak.SingleOrDefault(v => v.vakID == id);
             vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+            vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
+            vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
+            vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
             return vak;
         }
 
 
-        //Gebruik bij import examens nog niet zeker door lijst van antwoorden ipv van enkel een vak (meerdere door versch leerkrachten)
+      //enkel voor importeren examens gebruikt
         public Vak GetBySubString(string vakNaam, int klasID)
         {
             var klas = _database.Klas.SingleOrDefault(k => k.klasID == klasID);
@@ -50,26 +53,13 @@ namespace SprintPlannerZM.Services
             foreach (var vak in vakken)
             {
                 vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+                vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
+                vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
+                vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
             }
             return vakken;
         }
 
-        //public IList<Vak> FindBySubstring(string vakNaam, int klasID)
-        //{
-        //    var klas = _database.Klas.SingleOrDefault(k => k.klasID == klasID);
-        //    var vakkenPerKlas = _database.Vak.Where(v => v.klasID == klasID).ToList();
-        //    var vakken = _database.Vak.Where(v => v.vaknaam.Substring(0,3).ToLower().Equals(vakNaam.Substring(0, 3).ToLower())).ToList();
-        //    foreach (var vak in vakkenPerKlas)
-        //    {
-        //        if (vak.vaknaam.Substring(0, 3).ToLower().Equals(vakNaam.Substring(0, 3).ToLower()))
-        //        {
-        //            vak.klas = klas;
-        //            return vak;
-        //        }
-        //    }
-
-        //    return null;
-        //}
         public Vak Create(Vak vak)
         {
             _database.Vak.Add(vak);
