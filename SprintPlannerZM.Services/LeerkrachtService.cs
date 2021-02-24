@@ -17,18 +17,23 @@ namespace SprintPlannerZM.Services
 
         public Leerkracht Get(long id)
         {
-            return _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == id);
-        }
-
-        public Leerkracht GetByKlasId(int id)
-        {
-            return _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID== id);
+            var leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == id);
+            leerkracht.Klassen = _database.Klas.Where(k => k.titularisID == leerkracht.leerkrachtID).ToList();
+            leerkracht.Vakken = _database.Vak.Where(v => v.leerkrachtID == leerkracht.leerkrachtID).ToList();
+            leerkracht.Sprintlokalen = _database.Sprintlokaal.Where(s => s.leerkrachtID == leerkracht.leerkrachtID).ToList();
+            return leerkracht;
         }
 
         public IList<Leerkracht> Find()
         {
+            var leerkrachten = _database.Leerkracht.ToList();
+            foreach (var leerkracht in leerkrachten)
+            {
+                leerkracht.Klassen = _database.Klas.Where(k => k.titularisID == leerkracht.leerkrachtID).ToList();
+                leerkracht.Vakken = _database.Vak.Where(v => v.leerkrachtID == leerkracht.leerkrachtID).ToList();
+                leerkracht.Sprintlokalen = _database.Sprintlokaal.Where(s => s.leerkrachtID == leerkracht.leerkrachtID).ToList();
+            }
             return _database.Leerkracht.OrderBy(l => l.achternaam).ToList();
-            //return _database.Leerkracht.ToList();
         }
 
         public Leerkracht Create(Leerkracht leerkracht)
@@ -46,18 +51,21 @@ namespace SprintPlannerZM.Services
         public Leerkracht Update(long id, Leerkracht leerkracht)
         {
             {
-                var dbLeerkracht = Get(id);
-                if (dbLeerkracht == null)
-                {
-                    return leerkracht;
-                }
-                _database.Leerkracht.Update(dbLeerkracht);
+                var leerkrachtToUpd = _database.Leerkracht.SingleOrDefault(i => i.leerkrachtID == id);
+                leerkrachtToUpd.achternaam = leerkracht.achternaam;
+                leerkrachtToUpd.voornaam = leerkracht.voornaam;
+                leerkrachtToUpd.status = leerkracht.status;
+                leerkrachtToUpd.email = leerkracht.email;
+                leerkrachtToUpd.kluisNr = leerkracht.kluisNr;
+                leerkrachtToUpd.sprintToezichter = leerkracht.sprintToezichter;
+                leerkrachtToUpd.rol = leerkracht.rol;
+                _database.Leerkracht.Update(leerkrachtToUpd);
                 _database.SaveChanges();
                 return leerkracht;
             }
         }
 
-        public bool Delete(int id)
+        public bool Delete(long id)
         {
             {
                 var dbLeerkracht = Get(id);

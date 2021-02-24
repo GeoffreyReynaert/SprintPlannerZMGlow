@@ -48,7 +48,7 @@ namespace SprintPlannerZM.Repository.Extensions
                 .WithMany(u => u.Vakken)
                 .HasForeignKey(a => a.leerkrachtID);
             builder.Entity<Vak>()
-                .HasOne(a => a.Klas)
+                .HasOne(a => a.klas)
                 .WithMany(u => u.Vakken)
                 .HasForeignKey(a => a.klasID);
         }

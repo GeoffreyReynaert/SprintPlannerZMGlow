@@ -16,18 +16,31 @@ namespace SprintPlannerZM.Services
         }
         public Hulpleerling Get(int id)
         {
-            return _database.Hulpleerling.SingleOrDefault(v => v.hulpleerlingID == id);
+            var hulpLln= _database.Hulpleerling.SingleOrDefault(v => v.hulpleerlingID == id);
+            hulpLln.Klas = _database.Klas.SingleOrDefault(k => k.klasID == hulpLln.klasID);
+            hulpLln.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == hulpLln.hulpleerlingID).ToList();
+            return hulpLln;
         }
 
         public Hulpleerling GetbyLeerlingId(long leerlingID)
         {
-
-            return _database.Hulpleerling.FirstOrDefault(l => l.leerlingID == leerlingID);
+            var hulpLln = _database.Hulpleerling.FirstOrDefault(l => l.leerlingID == leerlingID);
+            hulpLln.Klas = _database.Klas.SingleOrDefault(k => k.klasID == hulpLln.klasID);
+            hulpLln.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == hulpLln.hulpleerlingID).ToList();
+            return hulpLln;
         }
 
         public IList<Hulpleerling> Find()
         {
-            return _database.Hulpleerling.ToList();
+           var  hulpleerlingen = _database.Hulpleerling.ToList();
+
+            foreach (var hulpLln in hulpleerlingen)
+            {
+                hulpLln.Klas = _database.Klas.SingleOrDefault(k => k.klasID == hulpLln.klasID);
+                hulpLln.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == hulpLln.hulpleerlingID).ToList();
+            }
+
+            return hulpleerlingen;
         }
 
         public Hulpleerling Create(Hulpleerling hulpleerling)

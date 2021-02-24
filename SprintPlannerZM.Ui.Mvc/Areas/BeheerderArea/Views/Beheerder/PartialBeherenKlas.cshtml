@@ -1,0 +1,28 @@
+﻿@model IList<SprintPlannerZM.Model.Klas>
+
+<section>
+    <div class="text-white">
+        <div class="containerFlex">
+            @foreach (var klas in @Model)
+            {
+                <div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
+                    <div class="card-header">
+                        @klas.klasnaam
+                    </div>
+                    <div class="card-body text-black-50">
+                        <span> titularis : @klas.Leerkracht.achternaam @klas.Leerkracht.voornaam</span><br>
+                        <span> aantal leerlingen : @klas.Leerlingen.Count</span><br>
+                        <span> vakken :</span><br>
+                        @foreach (var vak in klas.Vakken)
+                        {
+                            <span>@vak.vaknaam</span><br>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <a type="button" id="wijzigLeerling" name="@klas.klasID" class="btn btn-success float-right" asp-action="KlasEdit" asp-route-id="@klas.klasID">Wijzig</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

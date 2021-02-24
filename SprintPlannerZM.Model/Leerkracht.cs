@@ -15,7 +15,7 @@ namespace SprintPlannerZM.Model
         public byte rol { get; set; }
         public IList<Klas> Klassen { get; set; }
         public IList<Vak> Vakken { get; set; }
-
+        public IList<Sprintlokaal> Sprintlokalen { get; set; }
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
@@ -26,14 +26,14 @@ namespace SprintPlannerZM.Model
 
         public override int GetHashCode()
         {
-            return (int) leerkrachtID;
+            return (int)leerkrachtID;
         }
 
         public bool Equals(Leerkracht other)
         {
             if (other == null) return false;
-            return (this.achternaam.Equals(other.achternaam)&& (this.voornaam.Equals(other.voornaam)));
+            return (this.achternaam.Equals(other.achternaam) && (this.voornaam.Equals(other.voornaam)));
         }
-        public IList<Sprintlokaal> Sprintlokalen { get; set; }
+
     }
 }

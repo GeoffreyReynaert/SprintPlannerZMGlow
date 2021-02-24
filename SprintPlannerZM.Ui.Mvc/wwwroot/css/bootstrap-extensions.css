@@ -91,12 +91,13 @@ table {
 }
 
 .tbl-content {
-    height: 400px;
+    height: 500px;
     overflow-x: auto;
     margin-top: 0px;
     border: #bf6b3c solid 2px;
     background-color: rgb(0,155,168);
 }
+
 
 .tbl-contentAgenda {
     height: 450px;

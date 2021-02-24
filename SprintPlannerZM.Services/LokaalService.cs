@@ -20,6 +20,11 @@ namespace SprintPlannerZM.Services
             return _database.Lokaal.SingleOrDefault(l => l.lokaalID == id);
         }
 
+        public Lokaal GetByName(string lokaalnaam)
+        {
+            return _database.Lokaal.SingleOrDefault(l => l.lokaalnaam.Equals(lokaalnaam));
+        }
+
         public IList<Lokaal> Find()
         {
             return _database.Lokaal.ToList();
@@ -35,14 +40,15 @@ namespace SprintPlannerZM.Services
         public Lokaal Update(int id, Lokaal lokaal)
         {
             {
-                var dblokaal = Get(id);
-                if (dblokaal == null)
-                {
-                    return lokaal;
-                }
-                _database.Lokaal.Update(dblokaal);
+                var lokaalToUpd = _database.Lokaal.SingleOrDefault(l => l.lokaalID == id);
+                lokaalToUpd.lokaalnaam = lokaal.lokaalnaam;
+                lokaalToUpd.naamafkorting = lokaal.naamafkorting;
+                lokaalToUpd.sprintlokaal = lokaal.sprintlokaal;
+                lokaalToUpd.capaciteit = lokaal.capaciteit;
+                lokaalToUpd.lokaaltype = lokaal.lokaaltype;
+                _database.Lokaal.Update(lokaalToUpd);
                 _database.SaveChanges();
-                return lokaal;
+                return lokaalToUpd;
             }
         }
 

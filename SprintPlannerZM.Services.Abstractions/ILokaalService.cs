@@ -6,6 +6,7 @@ namespace SprintPlannerZM.Services.Abstractions
     public interface ILokaalService
     {
         Lokaal Get(int id);
+        Lokaal GetByName(string lokaalnaam);
         IList<Lokaal> Find();
         Lokaal Create(Lokaal lokaal);
         Lokaal Update(int id, Lokaal lokaal);

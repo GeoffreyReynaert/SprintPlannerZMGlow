@@ -1,0 +1,30 @@
+﻿@model SprintPlannerZM.Model.Vak
+
+<div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
+    <div class="card-header">
+        @Model.vaknaam @Model.vakID
+        van klas @Model.klasID
+    </div>
+</div>
+
+<form method="post">
+    <div class="mngmnt-background-div p-3">
+        <input type="hidden" asp-for="@Model.vakID" />
+        <div class="form-group">
+            <label asp-for="@Model.vaknaam">Vak naam</label>
+            <input asp-for="@Model.vaknaam" class="form-control" />
+            <span asp-validation-for="@Model.vaknaam"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.klasID">Klas ID</label>
+            <input asp-for="@Model.klasID" class="form-control" />
+            <span asp-validation-for="@Model.klasID"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.leerkrachtID">Leerkracht ID</label>
+            <input asp-for="@Model.leerkrachtID" class="form-control" />
+            <span asp-validation-for="@Model.leerkrachtID"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

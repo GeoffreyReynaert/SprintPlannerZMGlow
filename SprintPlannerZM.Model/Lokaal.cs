@@ -9,7 +9,7 @@ namespace SprintPlannerZM.Model
         public string naamafkorting { get; set; }
         public byte capaciteit { get; set; }
         public string lokaaltype { get; set; }
-        public byte sprintlokaal { get; set; }
+        public bool sprintlokaal { get; set; }
         public IList<Sprintlokaal> Sprintlokalen { get; set; }
     }
 }
