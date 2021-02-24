@@ -152,3 +152,7 @@ td {
     justify-content: center;
     overflow-x: auto;
 }
+
+.margin {
+    margin-left: 55%;
+}

@@ -19,39 +19,61 @@
             foreach (var leerling in klas.Leerlingen)
             {
                 count++;
-                <form method="post">
-                    <div class="trBordercolor container">
-                        <div class="">
-                            <input id="leerlingID" value="@leerling.leerlingID" type="hidden" asp-for="@leerling.leerlingID"/>
-                            <input type="hidden" asp-for="@leerling.familieNaam"/>
-                            <input type="hidden" asp-for="@leerling.voorNaam"/>
-                            <input type="hidden" asp-for="@leerling.email"/>
-                            <input type="hidden" asp-for="@leerling.KlasID"/>
+                <div class="trBordercolor container">
+                    <div class="">
+                        <input id="leerlingId{@count}" value="@leerling.leerlingID" type="hidden"/>
+                        <input id="familieNaam{@count}" value="@leerling.familieNaam" type="hidden"/>
+                        <input id="voorNaam{@count}" value="@leerling.voorNaam" type="hidden"/>
+                        <input id="email{@count}" value="@leerling.email" type="hidden"/>
+                        <input id="klasId{@count}" value="@leerling.KlasID" type="hidden"/>
 
-                            <div class="pt-2 containerllnoverzicht">
-                                <h6 class="w-20" id="leerlingInfo"> @leerling.familieNaam @leerling.voorNaam</h6>
-                                <span> Sprint </span>
-                                <input asp-for="@leerling.sprinter" type="checkbox" id="sprint" class="ml-lg-n5 mt-1">
-                                <span> Typer </span>
-                                <input asp-for="@leerling.typer" type="checkbox" id="typer" class="ml-lg-n5 mt-1">
-                                <span> M-Klas </span>
-                                <input asp-for="@leerling.mklas" type="checkbox" id="mklas" class="ml-lg-n5 mt-1">
-                                <button type="submit" class="btn btn-primary mt-md-n2 "> Bevestig </button>
-                            </div>
+                        <div class="pt-2 containerllnoverzicht">
+                            <h6 class="w-20" id="leerlingNaam{@count}"> @leerling.familieNaam @leerling.voorNaam</h6>
+                            <span> Sprint </span>
+                            <input id="leerlingSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(leerling.sprinter) ? "checked='checked'" : string.Empty)>
+                            <span> Typer </span>
+                            <input id="leerlingTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(leerling.typer) ? "checked='checked'" : string.Empty)>
+                            <span> M-Klas </span>
+                            <input id="leerlingMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(leerling.mklas) ? "checked='checked'" : string.Empty)>
                         </div>
                     </div>
-                </form>
+                </div>
             }
         }
-
     </div>
 </section>
 <div class="containerDropdowns left-allignToNav tableFixFooter">Totaal: @count</div>
+<button id="btnUpdate" class="btn btn-primary mt-md-n2 margin"> Bevestig </button>
 <script>
-    $("#leerlingInfo").click(function () {
-        $("#partialViewLeerling").load("LeerlingOverzicht", { leerlingID: $("#leerlingID").val() });
-        console.log($("#leerlingID").val());
+    $('h6[id*="leerlingNaam"]').click(function() {
+        const idCount = $(this).attr('id').split('{').pop().split('}')[0];
+        $("#partialViewLeerling").load("LeerlingOverzicht", { leerlingID: $(`input[id="leerlingId{${idCount}}"]`).val() });
         // verwijder vorige partialview zonder data 
         $("#partialView").detach();
+    });
+
+    $("#btnUpdate").click(function() {
+        const leerlingLijst = [];
+        for (let count = 1; count <= @count; count++) {
+            const leerlingId = $(`input[id="leerlingId{${count}}"]`).val();
+            const familieNaam = $(`input[id="familieNaam{${count}}"]`).val();
+            const voorNaam = $(`input[id="voorNaam{${count}}"]`).val();
+            const email = $(`input[id="email{${count}}"]`).val();
+            const klasId = $(`input[id="klasId{${count}}"]`).val();
+            const leerlingSprint = $(`input[id="leerlingSprint{${count}}"]`).is(':checked');
+            const leerlingTyper = $(`input[id="leerlingTyper{${count}}"]`).is(':checked');
+            const leerlingMklas = $(`input[id="leerlingMklas{${count}}"]`).is(':checked');
+            const leerlingInfo = {};
+            leerlingInfo["leerlingId"] = leerlingId;
+            leerlingInfo["familieNaam"] = familieNaam;
+            leerlingInfo["voorNaam"] = voorNaam;
+            leerlingInfo["email"] = email;
+            leerlingInfo["klasId"] = klasId;
+            leerlingInfo["sprinter"] = leerlingSprint;
+            leerlingInfo["typer"] = leerlingTyper;
+            leerlingInfo["mklas"] = leerlingMklas;
+            leerlingLijst.push(leerlingInfo);
+        }
+        $(this).load("UpdateLeerlingen", { leerlingenLijst: JSON.stringify(leerlingLijst) });
     });
 </script>

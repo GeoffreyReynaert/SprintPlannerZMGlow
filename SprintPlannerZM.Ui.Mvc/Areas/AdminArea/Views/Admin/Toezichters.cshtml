@@ -2,41 +2,41 @@
 
 <head>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true"/>
     <script src="~/js/site.js"></script>
 
 </head>
 
-<br />
+<br/>
 <div class="containerRadioButton left-allignToNav">
-    <input type="radio" id="isAlles" class="mt-1" name="keuzeToez" value="false" checked="True">
+    <input checked class="mt-1" id="isAlles" name="keuzeToez" type="radio" value="False">
     <label class="ml-n5" for="isAlles">Toon alles</label>
-    <input type="radio" id="isGeenToez" class="mt-1" name="keuzeToez" value="False">
+    <input class="mt-1" id="isGeenToez" name="keuzeToez" type="radio" value="False">
     <label class="ml-n5" for="isGeenToez">Geen toezichter</label><br>
-    <input type="radio" id="isToez" class="mt-1" name="keuzeToez" value="False">
+    <input class="mt-1" id="isToez" name="keuzeToez" type="radio" value="False">
     <label class="ml-n5" for="isToez">Toezichters</label><br>
 </div>
 <section class="left-allignToNav pt-3">
     <div class="tbl-header">
         <table>
             <thead>
-                <tr>
-                    <th class="h6" rowspan="4">
-                        <div class="containerDropdowns ">
-                            <form class="col-4">
-                                <select class="form-control select2 js-example-placeholder-single js-states" id="cmbLeerkrachten">
-                                    <option id="index">---Kies ne leerkracht---</option>
-                                    @foreach (var leeraar in Model)
-                                    {
-                                        <option value="@leeraar.leerkrachtID">@leeraar.achternaam @leeraar.voornaam</option>
-                                    }
-                                </select>
-                            </form>
-                        </div>
-                    </th>
-                </tr>
+            <tr>
+                <th class="h6" rowspan="4">
+                    <div class="containerDropdowns ">
+                        <form class="col-4">
+                            <select class="form-control select2" id="cmbLeerkrachten">
+                                <option id="index">---Kies ne leerkracht---</option>
+                                @foreach (var leeraar in Model)
+                                {
+                                    <option value="@leeraar.leerkrachtID">@leeraar.achternaam @leeraar.voornaam</option>
+                                }
+                            </select>
+                        </form>
+                    </div>
+                </th>
+            </tr>
             </thead>
         </table>
     </div>
@@ -45,21 +45,24 @@
 
 <script>
     $(".select2").select2();
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#partialView").load("PartialAlleLeerkrachten");
     });
-    $("#cmbLeerkrachten").change(function () {
-        $("#partialView").load("PartialComboToezichters", { leerkrachtID: $(this).find('option:selected').val() });
-        $("input[type='radio']").attr("checked" , false );
-    });
-    $('.mt-1').change(function () {
-        if ($(this).attr('id') == 'isAlles') {
+    $("#cmbLeerkrachten").change(function() {
+        console.log();
+        if ($(this).children(":selected").attr("id") !== "index") {
+            $("#partialView").load("PartialComboToezichters", { leerkrachtID: $(this).find('option:selected').val() });
+            $("input[type='radio']").attr("checked", false);
+        } else {
             $("#partialView").load("PartialAlleLeerkrachten");
         }
-        else if ($(this).attr('id') == 'isGeenToez') {
+    });
+    $('.mt-1').change(function() {
+        if ($(this).attr('id') == 'isAlles') {
+            $("#partialView").load("PartialAlleLeerkrachten");
+        } else if ($(this).attr('id') == 'isGeenToez') {
             $("#partialView").load("PartialGeenToezichters");
-        }
-        else if ($(this).attr('id') == 'isToez') {
+        } else if ($(this).attr('id') == 'isToez') {
             $("#partialView").load("PartialToezichters");
         }
     });
@@ -81,6 +84,3 @@
     //    });
     //});
 </script>
-<div class="containerCenterHor left-allignToNav pt-4">
-    <button asp-action="" class="btn btn-primary btnCenter"> Bevestig </button>
-</div>

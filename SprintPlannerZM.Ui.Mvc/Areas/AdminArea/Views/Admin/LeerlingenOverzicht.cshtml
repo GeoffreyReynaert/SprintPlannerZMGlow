@@ -12,11 +12,13 @@
         <form>
             <select class="form-control select2 textBoxLayout" id="cmbKlassen">
                 <option id="klasIndex">---Kies ne klas---</option>
-                @foreach (var klas in Model)
-                {
-                    <option value="@klas.klasID">@klas.klasnaam</option>
-                }
-            </select>
+                @foreach (var klas in Model){
+                    if (klas.klasnaam != "0")
+                    {
+                        <option value="@klas.klasID">@klas.klasnaam</option>
+                        }
+                    }
+                    </select>
         </form>
         <form>
             <select class="form-control select2 textBoxLayout" id="cmbLeerlingen">
@@ -35,17 +37,24 @@
 
 <div id="partialView"></div>
 
+
 <script>
     $('.select2').select2();
     $(document).ready(function() {
         $("#partialView").load("PartialAlleLeerlingen");
     });
     $("#cmbKlassen").change(function() {
-        $("#partialView").load("PartialLeerlingenByKlas", { klasID: $(this).find('option:selected').val() });
-        console.log($(this).find('option:selected').val());
+        if ($(this).children(":selected").attr("id") !== "klasIndex") {
+            $("#partialView").load("PartialLeerlingenByKlas", { klasID: $(this).find('option:selected').val() });
+        } else {
+            $("#partialView").load("PartialAlleLeerlingen");
+        }
     });
     $("#cmbLeerlingen").change(function() {
-        $("#partialView").load("PartialComboLeerlingen", { leerlingID: $(this).find('option:selected').val() });
-        console.log($(this).find('option:selected').val());
+        if ($(this).children(":selected").attr("id") !== "leerlingIndex") {
+            $("#partialView").load("PartialComboLeerlingen", { leerlingID: $(this).find('option:selected').val() });
+        } else {
+            $("#partialView").load("PartialAlleLeerlingen");
+        }
     });
 </script>

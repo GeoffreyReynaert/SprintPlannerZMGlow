@@ -2,6 +2,8 @@
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using System;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 {
@@ -124,6 +126,21 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         {
             var leerling = _leerlingService.Get(leerlingID);
             return PartialView("LeerlingOverzicht", leerling);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateLeerlingen(string leerlingenLijst)
+        {
+            var leerlingLijst = JArray.Parse(leerlingenLijst);
+            var count = 0;
+            foreach (var leerling in leerlingLijst)
+            {
+                count++;
+                var student = leerling.ToObject<Leerling>();
+                _leerlingService.Update(student.leerlingID, student);
+                Console.WriteLine(count);
+            }
+            return RedirectToAction();
         }
 
         public IActionResult Klasverdeling()
