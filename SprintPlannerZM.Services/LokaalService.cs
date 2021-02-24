@@ -20,6 +20,11 @@ namespace SprintPlannerZM.Services
             return _database.Lokaal.SingleOrDefault(l => l.lokaalID == id);
         }
 
+        public Lokaal GetByName(string lokaalnaam)
+        {
+            return _database.Lokaal.SingleOrDefault(l => l.lokaalnaam.Equals(lokaalnaam));
+        }
+
         public IList<Lokaal> Find()
         {
             return _database.Lokaal.ToList();
