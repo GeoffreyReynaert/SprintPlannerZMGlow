@@ -67,7 +67,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
           !               Titularissen en klassen   ||            ! 
           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Connectie met Soap Api
           !        klassen, Studenten, leerkrachten, vakken       !
-          !           en de relatie die dezze verbind             !  Berichten weergave via partial en ajax call
+          !           en de relatie die deze verbind             !  Berichten weergave via partial en ajax call
           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         [HttpGet]
@@ -288,41 +288,44 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         {
             IList<Lokaal> lokalen = new List<Lokaal>();
             List<string> berichten = new List<string>();
-            var xlsStream = xlsFile.OpenReadStream();
-
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var reader = ExcelReaderFactory.CreateReader(xlsStream))
+            if (xlsFile != null)
             {
-                do
+                var xlsStream = xlsFile.OpenReadStream();
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                using (var reader = ExcelReaderFactory.CreateReader(xlsStream))
                 {
-                    while (reader.Read()) //Each ROW
+                    do
                     {
-                        Lokaal lokaal = new Lokaal();
-                        for (int column = 0; column < reader.FieldCount; column++)
+                        while (reader.Read()) //Each ROW
                         {
-                            if (column == 0) //Lokaalnaam
+                            Lokaal lokaal = new Lokaal();
+                            for (int column = 0; column < reader.FieldCount; column++)
                             {
-                                lokaal.lokaalnaam = reader.GetValue(column).ToString();//Get Value returns object
+                                if (column == 0) //Lokaalnaam
+                                {
+                                    lokaal.lokaalnaam = reader.GetValue(column).ToString(); //Get Value returns object
+                                }
+                                else if (column == 1) //afkorting
+                                {
+                                    lokaal.naamafkorting =
+                                        reader.GetValue(column).ToString(); //Get Value returns object
+                                }
                             }
-                            else if (column == 1) //afkorting
-                            {
-                                lokaal.naamafkorting = reader.GetValue(column).ToString();//Get Value returns object
-                            }
+                            lokalen.Add(lokaal);
                         }
-                        lokalen.Add(lokaal);
-                    }
-                } while (reader.NextResult()); //Move to NEXT SHEET
-            }
-
-            foreach (var lokaal in lokalen)
-            {
-                if (!lokaal.lokaalnaam.Equals("lokaalnaam"))
-                {
-                    _lokaalService.Create(lokaal);
-                    berichten.Add(lokaal.lokaalnaam + " " + lokaal.naamafkorting + " is created");
+                    } while (reader.NextResult()); //Move to NEXT SHEET
                 }
-
+                foreach (var lokaal in lokalen)
+                {
+                    if (!lokaal.lokaalnaam.Equals("lokaalnaam"))
+                    {
+                        _lokaalService.Create(lokaal);
+                        berichten.Add(lokaal.lokaalnaam + " " + lokaal.naamafkorting + " is created");
+                    }
+                }
+                return View("ImportPagina", berichten);
             }
+            berichten.Add("Opgelet! U heeft Geen bestand verzonden");
             return View("ImportPagina", berichten);
         }
 
