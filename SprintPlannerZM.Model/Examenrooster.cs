@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SprintPlannerZM.Model
@@ -11,7 +12,7 @@ namespace SprintPlannerZM.Model
         public byte[] examendoc { get; set; }
         public byte[] examendoc2 { get; set; }
         public string tijd { get; set; }
-        public string datum { get; set; }
+        public DateTime datum { get; set; }
         public Vak Vak { get; set; }
         public IList<Leerlingverdeling> Leerlingverdelingen { get; set; }
     }

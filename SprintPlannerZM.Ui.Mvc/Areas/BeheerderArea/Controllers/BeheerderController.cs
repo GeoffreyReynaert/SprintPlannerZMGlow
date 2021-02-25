@@ -377,15 +377,13 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                         rooster.Vak = _vakService.GetBySubString("Maatschapp", klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + " MAVO tis gelukt");
                                     }
-                                    else if (reader.GetValue(column).ToString().Contains("SCHOOLTAAL")
-                                    ) // kan nog hieronder bij de rest just for testing purposes
+                                    else if (reader.GetValue(column).ToString().Contains("SCHOOLTAAL")) // OKAN EXAMENS
                                     {
-
                                         rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
                                             klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + "Schooltaal tis gelukt");
                                     }
-                                    else if (reader.GetValue(column).ToString().Contains("AA"))
+                                    else if (reader.GetValue(column).ToString().Contains("AA"))  // Terug naar AAR 25/02
                                     {
                                         //TODO Veranderen van AAR naar AA moet consitent blijven zoals bv 3 letters en moet vast liggen met charlotte 3 is nodig AA te weinig
 
@@ -441,15 +439,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                                               "Integrale opdrachten tis gelukt ");
                                         }
                                     }
-                                    else if (reader.GetValue(column).ToString().Contains("INSTROOM") ||
-                                             reader.GetValue(column).ToString().Contains("FOUTLOOS") ||
-                                             reader.GetValue(column).ToString().Contains("WELKWEG") ||
-                                             reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT") ||
-                                             reader.GetValue(column).ToString().Contains("STUDIE") ||
-                                             reader.GetValue(column).ToString().Contains("SPRINT") ||
-                                             reader.GetValue(column).ToString().Contains("RESERVE") ||
-                                             reader.GetValue(column).ToString().Contains("FG")
-                                    ) //7de jaar vind het juiste vak niet 
+                                    else if (reader.GetValue(column).ToString().Contains("INSTROOM") || // OKAN Weten niet wat het juist is  maar normaal taal
+                                             reader.GetValue(column).ToString().Contains("FOUTLOOS") || // OKAN TAAL
+                                             reader.GetValue(column).ToString().Contains("WELKWEG") || //OKAN TAAL MELKWEG (25/02)
+                                            reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT") || // OKAN TAAL
+                                             reader.GetValue(column).ToString().Contains("STUDIE") || // GEwoon studie om op school te blijven 
+                                             reader.GetValue(column).ToString().Contains("SPRINT") || // voor sprint 
+                                             reader.GetValue(column).ToString().Contains("RESERVE") || // geen nut 
+                                             reader.GetValue(column).ToString().Contains("FG")) //7de jaar functioneerings gesprek geen nut 
                                     {
                                         //TODO instroom bestaat niet als vak in smartschool wat is dit ? momenteel omzeild
 
@@ -494,8 +491,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
                                 else if (column == 5) // datum van examen
                                 {
-                                    rooster.datum = reader.GetValue(column).ToString();
-                                    Console.WriteLine("datum :" + reader.GetValue(column));
+                                    var splitPieceDatum = reader.GetValue(column).ToString().Split(" ")[1];
+                                    DateTime date = DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null);
+                                    rooster.datum = date;
+                                    Console.WriteLine("datum :" + date);
                                 } // datum van examen
 
                                 else if (column == 6

@@ -1,72 +1,36 @@
-﻿
+﻿@model IList<SprintPlannerZM.Model.Examenrooster>
+@{
+    var count = 0;
+    var idMaker = "";
+}
 <br />
 <section class="left-allignToNav pt-5 containerAgenda">
     <div class="tbl-headerAgenda">
         <table>
             <thead>
-            <span class="text-center text-white"><b><h5>Januari</h5></b></span>
-            <tr>
-                <!--class h6 om zo via bootstrap title ook responsive maken-->
-                <th class="h6">Zondag</th>
-                <th class="h6">Maandag</th>
-                <th class="h6">Dinsdag</th>
-                <th class="h6">Woensdag</th>
-                <th class="h6">Donderdag</th>
-                <th class="h6">Vrijdag</th>
-                <th class="h6">Zaterdag</th>
-            </tr>
+                <span class="text-center text-white">
+                    <b>
+                        <h5>Januari @Model[0].datum</h5>
+                    </b>
+                </span>
             </thead>
         </table>
     </div>
     <div class="tbl-contentAgenda">
-        <table>
-            <tbody>
-                <tr>
-                    <td><div class="card-body cardBodyCSS"></div></td>
-                    <td><div class="card-body cardBodyCSS"></div></td>
-                    <td><div class="card-body cardBodyCSS"></div></td>
-                    <td><div class="card-body cardBodyCSS"></div></td>
-                    <td><div class="card-body cardBodyCSS align-items-center"><h1>1</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                    <td><div class="card-body cardBodyCSS align-items-center"><h1>2</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                    <td><div class="card-body cardBodyCSS align-items-center"><h1>3</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                </tr>
-            <tr>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>4</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>5</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>6</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>7</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>8</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>9</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>10</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-            </tr>
-            <tr>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>11</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>12</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>13</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>14</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>15</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>16</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>17</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-            </tr>
-            <tr>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>18</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>19</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>20</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>21</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>22</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>23</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-                <td><div class="card-body cardBodyCSS align-items-center"><h1>24</h1><input type="checkbox" id="vehicle1" class="mt-3" name="vehicle1" value="4"></div></td>
-            </tr>
-            </tbody>
-        </table>
-
+        <div id="planner">
+            @foreach (var examen in Model)
+            {
+                count++;
+                idMaker = "position" + count;
+                <div class="card-body cardBodyCSS align-items-center cardMargin" id="@idMaker">
+                <h6>@examen.datum</h6><a  type="button" asp-controller="Admin" asp-action="LeerlingVerdeling" asp-route-datum="@examen.datum" class="btn btn-center btn-gen">Genereer</a>
+            </div>
+            }
+        </div>
     </div>
 </section>
 
 <div class="containerCenterHor left-allignToNav pt-4">
     <button asp-action="" class="btn btn-primary mr-3 "> Genereer </button>
-    <button asp-action="" class="btn btn-primary ml-3 "> Bevestig </button>
+    <button asp-action="" class="btn btn-primary ml-3 "> Consulteer </button>
 </div>
-
-
-

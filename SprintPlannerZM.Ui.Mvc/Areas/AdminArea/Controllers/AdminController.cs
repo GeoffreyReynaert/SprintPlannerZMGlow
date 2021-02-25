@@ -3,6 +3,7 @@ using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Newtonsoft.Json.Linq;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
@@ -76,7 +77,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             if (leerling.mklas == true || leerling.typer == true || leerling.sprinter == true)
             {
                 if (ExistsAsHulpLeerling(leerling.leerlingID))
-                { 
+                {
                     Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
                 }
                 else
@@ -114,6 +115,31 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return PartialView("PartialLeerlingenByKlas", leerlingen);
         }
 
+        public IActionResult LeerlingVerdeling(string datum)
+        {
+
+            IList<>
+            var hulpLeerlingen = _hulpleerlingService.Find();
+            var splitPieceDatum = datum.Split(" ")[0];
+            var examensPerDatum = _examenroosterService.FindByDatum(DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null));
+
+            foreach (var leerling in hulpLeerlingen)
+            {
+                foreach (var vak in leerling.Klas.Vakken)
+                {
+                    foreach (var rooster in examensPerDatum)
+                    {
+                        if (rooster.vakID==vak.vakID)
+                        {
+                            Console.WriteLine("Deze leerling :"+ leerling.Leerling.voorNaam + " heeft het vak "+vak.vaknaam + "als examen op" + rooster.datum  );
+                        }
+                    }
+                }
+            }
+            var examenroosters = _examenroosterService.FindDistinct();
+            return View("Klasverdeling", examenroosters);
+        }
+
         [HttpPost]
         public IActionResult PartialComboLeerlingen(int leerlingID)
         {
@@ -137,6 +163,18 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             {
                 count++;
                 var student = leerling.ToObject<Leerling>();
+                if (student.mklas || student.typer || student.sprinter)
+                {
+                    if (ExistsAsHulpLeerling(student.leerlingID))
+                    {
+                        Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
+                    }
+                    else
+                    {
+                        Hulpleerling hulpleerling = new Hulpleerling { klasID = student.KlasID, leerlingID = student.leerlingID };
+                        _hulpleerlingService.Create(hulpleerling);
+                    }
+                }
                 _leerlingService.Update(student.leerlingID, student);
                 Console.WriteLine(count);
             }
@@ -145,7 +183,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         public IActionResult Klasverdeling()
         {
-            return View();
+            var examenroosters = _examenroosterService.FindDistinct();
+            return View(examenroosters);
         }
 
         public IActionResult Toezichters()

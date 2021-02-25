@@ -1,4 +1,5 @@
-﻿using SprintPlannerZM.Model;
+﻿using System;
+using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,35 @@ namespace SprintPlannerZM.Services
             var vak = _database.Vak.SingleOrDefault(v => v.vakID == examenrooster.vakID);
             examenrooster.Vak = vak;
             return examenrooster;
+        }
+
+
+
+        //Enkel voor de leerlingenverdeling
+        public IList<Examenrooster> FindByDatum(DateTime date)
+        {
+            var examenroosters = _database.Examenrooster.Where(e => e.datum == date).ToList();
+
+            foreach (var rooster in examenroosters)
+            {
+                rooster.Vak = _database.Vak.SingleOrDefault(v => v.vakID == rooster.vakID); ;
+            }
+            return examenroosters;
+        }
+
+        public IList<Examenrooster> FindDistinct()
+        {
+            var examenRoosters = _database.Examenrooster.Select(e => e.datum).Distinct().OrderBy(e => e.Date).ToList();
+            IList<Examenrooster> examens = new List<Examenrooster>();
+            foreach (var String in examenRoosters)
+            {
+                var rooster = new Examenrooster()
+                {
+                    datum = String
+                };
+                examens.Add(rooster);
+            }
+            return examens;
         }
 
         public IList<Examenrooster> Find()
