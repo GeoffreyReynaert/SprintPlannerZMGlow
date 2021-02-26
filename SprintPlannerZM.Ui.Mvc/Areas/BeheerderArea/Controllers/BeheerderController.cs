@@ -494,8 +494,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
                                 else if (column == 5) // datum van examen
                                 {
-                                    rooster.datum = reader.GetValue(column).ToString();
-                                    Console.WriteLine("datum :" + reader.GetValue(column));
+                                    var splitPieceDatum = reader.GetValue(column).ToString().Split(" ")[1];
+                                    DateTime date = DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null);
+                                    rooster.datum = date;
+                                    Console.WriteLine("datum :" + date);
                                 } // datum van examen
 
                                 else if (column == 6

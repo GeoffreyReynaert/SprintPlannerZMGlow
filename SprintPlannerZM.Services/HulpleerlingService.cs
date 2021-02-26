@@ -25,8 +25,8 @@ namespace SprintPlannerZM.Services
         public Hulpleerling GetbyLeerlingId(long leerlingID)
         {
             var hulpLln = _database.Hulpleerling.FirstOrDefault(l => l.leerlingID == leerlingID);
-            hulpLln.Klas = _database.Klas.SingleOrDefault(k => k.klasID == hulpLln.klasID);
-            hulpLln.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == hulpLln.hulpleerlingID).ToList();
+            //hulpLln.Klas = _database.Klas.SingleOrDefault(k => k.klasID == hulpLln.klasID);
+            //hulpLln.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == hulpLln.hulpleerlingID).ToList();
             return hulpLln;
         }
 

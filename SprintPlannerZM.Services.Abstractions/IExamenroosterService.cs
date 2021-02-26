@@ -7,6 +7,7 @@ namespace SprintPlannerZM.Services.Abstractions
     {
         Examenrooster Get(int id);
         IList<Examenrooster> Find();
+        IList<Examenrooster> findDistinct();
         Examenrooster Create(Examenrooster examenrooster);
         Examenrooster Update(int id, Examenrooster examenrooster);
         bool Delete(int id);

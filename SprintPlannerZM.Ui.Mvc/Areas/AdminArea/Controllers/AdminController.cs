@@ -70,25 +70,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View(klassen);
         }
 
-        [HttpPost]
-        public IActionResult LeerlingenOverzicht(Leerling leerling)
-        {
-            if (leerling.mklas == true || leerling.typer == true || leerling.sprinter == true)
-            {
-                if (ExistsAsHulpLeerling(leerling.leerlingID))
-                { 
-                    Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
-                }
-                else
-                {
-                    Hulpleerling hulpleerling = new Hulpleerling { klasID = leerling.KlasID, leerlingID = leerling.leerlingID };
-                    _hulpleerlingService.Create(hulpleerling);
-                }
-            }
-            _leerlingService.Update(leerling.leerlingID, leerling);
-            return RedirectToAction();
-        }
-
         public IActionResult AlleLeerlingen()
         {
             var klassen = _klasService.Find();
@@ -137,6 +118,18 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             {
                 count++;
                 var student = leerling.ToObject<Leerling>();
+                if (student.mklas || student.typer || student.sprinter)
+                {
+                    if (ExistsAsHulpLeerling(student.leerlingID))
+                    {
+                        Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
+                    }
+                    else
+                    {
+                        Hulpleerling hulpleerling = new Hulpleerling { klasID = student.KlasID, leerlingID = student.leerlingID };
+                        _hulpleerlingService.Create(hulpleerling);
+                    }
+                }
                 _leerlingService.Update(student.leerlingID, student);
                 Console.WriteLine(count);
             }
@@ -145,7 +138,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         public IActionResult Klasverdeling()
         {
-            return View();
+            var examenroosters = _examenroosterService.findDistinct();
+            return View(examenroosters);
         }
 
         public IActionResult Toezichters()

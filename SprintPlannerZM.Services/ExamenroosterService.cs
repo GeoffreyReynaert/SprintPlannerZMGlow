@@ -1,7 +1,9 @@
-﻿using SprintPlannerZM.Model;
+﻿using System;
+using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualBasic;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
@@ -32,6 +34,21 @@ namespace SprintPlannerZM.Services
                 rooster.Vak = _database.Vak.SingleOrDefault(v => v.vakID == rooster.vakID);
             }
             return examenRoosters;
+        }
+
+        public IList<Examenrooster> findDistinct()
+        {
+            var examenRoosters = _database.Examenrooster.Select(e => e.datum).Distinct().OrderBy(e=>e.Date).ToList();
+            IList<Examenrooster> examens = new List<Examenrooster>();
+            foreach (var String in examenRoosters)
+            {
+                var rooster = new Examenrooster()
+                {
+                    datum = String
+                };
+                examens.Add(rooster);
+            }
+            return examens;
         }
 
         public Examenrooster Create(Examenrooster examenrooster)
