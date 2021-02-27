@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using SprintPlannerZM.Model;
 
@@ -8,8 +9,10 @@ namespace SprintPlannerZM.Services.Abstractions
     {
         Leerling Get(long id);
         Leerling GetToImport(long id);
+        Leerling GetFullLeerling(long id);
         IList<Leerling> Find();
-        Task<IList<Leerling>> FindAsync();
+        //Task<IList<Leerling>> FindAsync();
+        Task<IQueryable<Leerling>> FindAsyncPagingQueryable();
         IList<Leerling> FindByKlasID(int klasid);
         Leerling Create(Leerling leerling);
         Leerling Update(long id, Leerling leerling);

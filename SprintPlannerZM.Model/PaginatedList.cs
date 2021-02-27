@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea
+namespace SprintPlannerZM.Model
 {
     public class PaginatedList<T> : List<T>
     {
@@ -38,8 +38,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea
         public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
         {
             var count = await source.CountAsync();
-            var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items =await  source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
+
     }
 }

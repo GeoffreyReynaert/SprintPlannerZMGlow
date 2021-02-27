@@ -554,33 +554,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
 
-        [HttpGet] // get van de gekozen item
-        public IActionResult LeerlingEdit(int id)
-        {
-            //if (id == 0)
-            //{
-            //    return RedirectToAction("BeherenLeerling");
-            //}
-            var leerling = _leerlingService.Get(id);
-            return View(leerling);
-        }
-
-
-        [HttpPost] // Post van de wijziging
-        public IActionResult LeerlingEdit(Leerling leerling)
-        {
-            _leerlingService.Update(leerling.leerlingID, leerling);
-            var berichten = new List<string> { "leerling " + leerling.familieNaam + " is gewijzigd" };
-
-            return RedirectToActionPermanent("BeherenGegevens", berichten);
-
-        }
-
-
+ 
 
 
         //Nieuwe en efficientere manier met pages veel snellere respons en beter in meerdere opzichten
-        public async Task<IActionResult> TesterNamePaging(string sortOrder, string currentFilter, string searchString,string search2String, int? pageNumber)
+        public async Task<IActionResult> LeerlingBeheer(string sortOrder, string currentFilter, string searchString,string search2String, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -597,8 +575,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             ViewData["nameFilter"] = searchString;
             ViewData["klasFilter"] = search2String;
 
-            var students = (from s in _leerlingService.FindAsync().Result select s);
-
+            var students = await _leerlingService.FindAsyncPagingQueryable();
+            
             if (!String.IsNullOrEmpty(searchString))
             {
                 students = students.Where(s => s.familieNaam.ToLower().Contains(searchString.ToLower())
@@ -629,8 +607,37 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                     students = students.OrderBy(s => s.familieNaam);
                     break;
             }
-            return View("TesterNamePaging", students);
+
+
+            return View( await PaginatedList<Leerling>.CreateAsync(students.AsQueryable(), pageNumber ?? 1, 15));
         }
+
+
+        public IActionResult GetLeerlingDetails(int id)
+        {
+            var leerling = _leerlingService.GetFullLeerling(id);
+            return View("GetLeerlingDetails", leerling);
+        }
+
+
+        [HttpGet] // get van de gekozen leerling
+        public IActionResult LeerlingEdit(int id)
+        {
+            var leerling = _leerlingService.Get(id);
+            return View(leerling);
+        }
+
+
+        [HttpPost] // Post van de wijziging
+        public IActionResult LeerlingEdit(Leerling leerling)
+        {
+            _leerlingService.Update(leerling.leerlingID, leerling);
+            //var berichten = new List<string> { "leerling " + leerling.familieNaam + " is gewijzigd" };
+
+            return RedirectToAction("LeerlingBeheer"/*berichten*/);
+
+        }
+
 
 
         /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Query;
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
@@ -22,7 +24,26 @@ namespace SprintPlannerZM.Services
         {
             var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
             leerling.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerling.KlasID);
-                        leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == leerling.leerlingID);
+            leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == leerling.leerlingID);
+            leerling.hulpleerling.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == leerling.hulpleerling.hulpleerlingID).ToList();
+            //niet mogelijk bij import niewe get odig met hulpleerling inbegrepen en null check
+
+            return leerling;
+        }
+        public Leerling GetFullLeerling(long id)
+        {
+            var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
+            leerling.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerling.KlasID);
+            leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == leerling.leerlingID);
+            if (leerling.hulpleerling != null)
+            {
+                leerling.hulpleerling.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == leerling.hulpleerling.hulpleerlingID).ToList();
+                foreach (var sprint in leerling.hulpleerling.Sprintvakken)
+                {
+                    sprint.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprint.vakID);
+                }
+            }
+
             //niet mogelijk bij import niewe get odig met hulpleerling inbegrepen en null check
 
             return leerling;
@@ -32,14 +53,14 @@ namespace SprintPlannerZM.Services
         public Leerling GetToImport(long id)
         {
             var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
-      
+
             return leerling;
         }
 
 
         public IList<Leerling> Find()
         {
-            var leerlingen =_database.Leerling.OrderBy(l => l.familieNaam).ToList();
+            var leerlingen = _database.Leerling.OrderBy(l => l.familieNaam).ToList();
             foreach (var leerling in leerlingen)
             {
                 leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == leerling.leerlingID);
@@ -52,34 +73,25 @@ namespace SprintPlannerZM.Services
 
 
         //hier wil je pa
-        public async Task<IList<Leerling>> FindAsync()
-        {
-            var leerlingen = await _database.Leerling.ToListAsync();
-            foreach (var leerling in leerlingen)
-            {
-                leerling.hulpleerling =await  _database.Hulpleerling.SingleOrDefaultAsync(h => h.hulpleerlingID == leerling.leerlingID);
-                leerling.Klas =await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
-            }
-
-            return  leerlingen;
-        }
-
-        //hier
-        //public async Task<PaginatedList<Leerling>> FindAsync(PaginatedList<Leerling> paging)
+        //public async Task<IList<Leerling>> FindAsync()
         //{
-        //    PaginatedList<Leerling> leerlingen = await _database.Leerling.
-        //        Skip(paging.PageIndex * 10) //als je bv standaard 10 per pagina toont
-        //        .Take(10) //die 10 mss een variable van maken dage kunt meegeven als pageSize fzo  en kkzo kunde da doen :p ni meer ni min , 
-        //        .ToListAsync();
+        //    var leerlingen = await _database.Leerling.ToListAsync();
         //    foreach (var leerling in leerlingen)
         //    {
-        //        leerling.hulpleerling = await _database.Hulpleerling.SingleOrDefaultAsync(h => h.hulpleerlingID == leerling.leerlingID);
-        //        leerling.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
+        //        leerling.hulpleerling =await  _database.Hulpleerling.SingleOrDefaultAsync(h => h.hulpleerlingID == leerling.leerlingID);
+        //        leerling.Klas =await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
         //    }
 
-        //    return leerlingen;
+        //    return  leerlingen;
         //}
 
+
+        public async Task<IQueryable<Leerling>> FindAsyncPagingQueryable()
+        {
+            var leerlingen = from a in _database.Leerling
+                             select a;
+            return leerlingen;
+        }
 
 
 

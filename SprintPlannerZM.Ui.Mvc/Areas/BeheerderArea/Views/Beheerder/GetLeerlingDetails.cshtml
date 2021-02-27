@@ -1,0 +1,23 @@
+﻿@model SprintPlannerZM.Model.Leerling
+
+@Model.voorNaam @Model.familieNaam
+@Model.Klas.klasnaam @Model.KlasID
+@if (Model.hulpleerling != null)
+{
+    <span>
+        Hulpleerling ID
+        @Model.hulpleerling.hulpleerlingID
+    </span>
+
+    @Model.sprinter @Model.typer @Model.mklas
+    <span>
+        sprintvakken
+        @foreach (var sprintvak in @Model.hulpleerling.Sprintvakken)
+        {
+
+            @sprintvak.sprintvakID @sprintvak.Vak.vaknaam
+
+        }
+    </span>
+
+}

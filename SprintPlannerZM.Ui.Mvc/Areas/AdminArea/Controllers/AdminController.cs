@@ -269,50 +269,5 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             return dbHulpLeerling != null;
         }
-        public async Task<IActionResult> TesterNamePaging(string sortOrder, string currentFilter, string searchString, int? pageNumber)
-        {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["KlasSortParm"] = sortOrder == "klas" ? "klas_desc" : "klas";
-
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-            ViewData["nameFilter"] = searchString;
-            ViewData["CurrentFilter"] = searchString;
-
-            var students = (from s in _leerlingService.FindAsync().Result select s);
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                students = students.Where(s => s.familieNaam.Contains(searchString)
-                                               || s.voorNaam.Contains(searchString));
-            }
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    students = students.OrderByDescending(s => s.familieNaam);
-                    break;
-                //case "famName_desc":
-                //    students = students.OrderByDescending(s => s.familieNaam);
-                //    break;
-                case "klas":
-                    students = students.OrderBy(s => s.Klas.klasnaam);
-                    break;
-                case "klas_desc":
-                    students = students.OrderByDescending(s => s.Klas.klasnaam);
-                    break;
-                default:
-                    students = students.OrderBy(s => s.familieNaam);
-                    break;
-            }
-            //return View("TesterNamePaging", students);
-            return null;
-        }
     }
 }

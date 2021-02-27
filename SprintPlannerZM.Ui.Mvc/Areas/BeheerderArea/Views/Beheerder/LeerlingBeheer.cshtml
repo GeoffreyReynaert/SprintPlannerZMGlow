@@ -1,30 +1,30 @@
-﻿@model IEnumerable<SprintPlannerZM.Model.Leerling>
+﻿@model SprintPlannerZM.Model.PaginatedList<SprintPlannerZM.Model.Leerling>
 
 @{
     ViewData["Title"] = "TesterNamePaging";
 }
 
-<h2>Index</h2>
+<h2>Leerlingen</h2>
 
 <p>
     <a asp-action="">Create New</a>
 </p>
 
-<form asp-action="TesterNamePaging" method="get">
+<form asp-action="LeerlingBeheer" method="get">
     <div class="form-actions no-color">
         <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["nameFilter"]" />
+            vienden met Naam of voornaam: <input type="text" name="SearchString" value="@ViewData["nameFilter"]" />
             <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="TesterNamePaging">Back to Full List</a>
+            <a asp-action="LeerlingBeheer">Back to Full List</a>
         </p>
     </div>
 </form>
-<form asp-action="TesterNamePaging" method="get">
+<form asp-action="LeerlingBeheer" method="get">
     <div class="form-actions no-color">
         <p>
-            Find by name: <input type="text" name="Search2String" value="@ViewData["klasFilter"]" />
+            Vinden met klas naam: <input type="text" name="Search2String" value="@ViewData["klasFilter"]" />
             <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="TesterNamePaging">Back to Full List</a>
+            <a asp-action="LeerlingBeheer">Back to Full List</a>
         </p>
     </div>
 </form>
@@ -33,13 +33,13 @@
     <thead>
         <tr>
             <th>
-                <a asp-action="TesterNamePaging" asp-route-sortOrder="@ViewData["NameSortParm"]"asp-route-currentFilter="@ViewData["CurrentFilter"]">Familienaam</a>
+                <a asp-action="LeerlingBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]"asp-route-currentFilter="@ViewData["CurrentFilter"]">Familienaam</a>
             </th>
             <th>
                 Voornaam
             </th>
             <th>
-                <a asp-action="TesterNamePaging" asp-route-sortOrder="@ViewData["KlasSortParm"]"asp-route-currentFilter="@ViewData["CurrentFilter"]">Klas naam</a>
+                <a asp-action="LeerlingBeheer" asp-route-sortOrder="@ViewData["KlasSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Klas ID</a>
             </th>
             <th></th>
         </tr>
@@ -55,34 +55,33 @@
                     @Html.DisplayFor(modelItem => item.voorNaam)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Klas.klasnaam)
+                    @Html.DisplayFor(modelItem => item.KlasID) 
                 </td>
                 <td>
-                    <a asp-action="" asp-route-id="@item.leerlingID">Edit</a> |
-                    <a asp-action="" asp-route-id="@item.leerlingID">Details</a> |
-                    <a asp-action="" asp-route-id="@item.leerlingID">Delete</a>
+                    <a asp-action="LeerlingEdit" asp-route-id="@item.leerlingID">Edit</a> |
+                    <a asp-action="GetLeerlingDetails" asp-route-id="@item.leerlingID">Details</a> |
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-@*@{
+<div id="ModalDetails"></div>
+@{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action="TesterNamePaging"
+<a asp-action="LeerlingBeheer"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-default @prevDisabled">
     Previous
 </a>
-<a asp-action="TesterNamePaging"
+<a asp-action="LeerlingBeheer"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-default @nextDisabled">
     Next
-</a>*@
+</a>

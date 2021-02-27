@@ -74,20 +74,10 @@ const getLeerlingen = () => {
         success: function (response) {
             alert("Dank u voor het wachten ");
             $("#beheerWeergave").html(response);
-            getLeerlingenLijst();
         }
     });
 }; 
 
-const getLeerlingenLijst = () => {
-    $.ajax({
-        type: "GET",
-        url: 'GetLeerlingLijst',
-        success: function (response) {
-            $("#cmbLijsten").html(response);
-        }
-    });
-};
 
 const getLeerkrachten = () => {
     $.ajax({
