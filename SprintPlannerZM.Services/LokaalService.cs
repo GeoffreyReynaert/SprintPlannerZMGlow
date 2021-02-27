@@ -2,6 +2,7 @@
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace SprintPlannerZM.Services
@@ -28,6 +29,11 @@ namespace SprintPlannerZM.Services
         public IList<Lokaal> Find()
         {
             return _database.Lokaal.ToList();
+        }
+
+        public IList<Lokaal> FindForSprint()
+        {
+            return _database.Lokaal.Where(l => l.lokaaltype.Equals("sprint")).ToList();
         }
 
         public Lokaal Create(Lokaal lokaal)

@@ -7,6 +7,7 @@ namespace SprintPlannerZM.Services.Abstractions
     {
         Sprintlokaal Get(int id);
         IList<Sprintlokaal> Find();
+        IList<Sprintlokaal> FindByExamID(int examID);
         Sprintlokaal Create(Sprintlokaal sprintlokaal);
         Sprintlokaal Update(int id, Sprintlokaal sprintlokaal);
         bool Delete(int id);

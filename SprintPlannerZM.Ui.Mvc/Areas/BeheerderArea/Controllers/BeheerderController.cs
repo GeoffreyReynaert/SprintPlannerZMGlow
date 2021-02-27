@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 // ReSharper disable CommentTypo
 
@@ -199,7 +200,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                         {
                             leerkrachtID = number + 1,
                             vaknaam = element.Element("vaknaam").Value,
-                            klasID = dbLeerling.KlasID
+                            klasID = dbLeerling.KlasID,
+                            sprint = true
                         };
                         vakken.Add(soapVak);
                     }
@@ -209,7 +211,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                         {
                             leerkrachtID = long.Parse(element.Element("stamboeknummer").Value),
                             vaknaam = element.Element("vaknaam").Value,
-                            klasID = dbLeerling.KlasID
+                            klasID = dbLeerling.KlasID,
+                            sprint=true
                         };
                         vakken.Add(soapVak);
                     }
@@ -571,6 +574,62 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
             return RedirectToActionPermanent("BeherenGegevens", berichten);
 
+        }
+
+
+
+
+        //Nieuwe en efficientere manier met pages veel snellere respons en beter in meerdere opzichten
+        public async Task<IActionResult> TesterNamePaging(string sortOrder, string currentFilter, string searchString,string search2String, int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["KlasSortParm"] = sortOrder == "klas" ? "klas_desc" : "klas";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["nameFilter"] = searchString;
+            ViewData["klasFilter"] = search2String;
+
+            var students = (from s in _leerlingService.FindAsync().Result select s);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                students = students.Where(s => s.familieNaam.ToLower().Contains(searchString.ToLower())
+                                               || s.voorNaam.ToLower().Contains(searchString.ToLower()));
+            }
+
+            if (!String.IsNullOrEmpty(search2String))
+            {
+                students = students.Where(s => s.Klas.klasnaam.ToLower().Contains(search2String.ToLower()));
+            }
+
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    students = students.OrderByDescending(s => s.familieNaam);
+                    break;
+                //case "famName_desc":
+                //    students = students.OrderByDescending(s => s.familieNaam);
+                //    break;
+                case "klas":
+                    students = students.OrderBy(s => s.Klas.klasnaam);
+                    break;
+                case "klas_desc":
+                    students = students.OrderByDescending(s => s.Klas.klasnaam);
+                    break;
+                default:
+                    students = students.OrderBy(s => s.familieNaam);
+                    break;
+            }
+            return View("TesterNamePaging", students);
         }
 
 

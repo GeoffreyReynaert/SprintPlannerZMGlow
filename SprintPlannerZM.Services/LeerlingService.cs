@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
@@ -25,6 +28,7 @@ namespace SprintPlannerZM.Services
             return leerling;
         }
 
+
         public Leerling GetToImport(long id)
         {
             var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
@@ -43,6 +47,39 @@ namespace SprintPlannerZM.Services
             }
             return leerlingen;
         }
+
+
+
+
+        //hier wil je pa
+        public async Task<IList<Leerling>> FindAsync()
+        {
+            var leerlingen = await _database.Leerling.ToListAsync();
+            foreach (var leerling in leerlingen)
+            {
+                leerling.hulpleerling =await  _database.Hulpleerling.SingleOrDefaultAsync(h => h.hulpleerlingID == leerling.leerlingID);
+                leerling.Klas =await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
+            }
+
+            return  leerlingen;
+        }
+
+        //hier
+        //public async Task<PaginatedList<Leerling>> FindAsync(PaginatedList<Leerling> paging)
+        //{
+        //    PaginatedList<Leerling> leerlingen = await _database.Leerling.
+        //        Skip(paging.PageIndex * 10) //als je bv standaard 10 per pagina toont
+        //        .Take(10) //die 10 mss een variable van maken dage kunt meegeven als pageSize fzo  en kkzo kunde da doen :p ni meer ni min , 
+        //        .ToListAsync();
+        //    foreach (var leerling in leerlingen)
+        //    {
+        //        leerling.hulpleerling = await _database.Hulpleerling.SingleOrDefaultAsync(h => h.hulpleerlingID == leerling.leerlingID);
+        //        leerling.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
+        //    }
+
+        //    return leerlingen;
+        //}
+
 
 
 

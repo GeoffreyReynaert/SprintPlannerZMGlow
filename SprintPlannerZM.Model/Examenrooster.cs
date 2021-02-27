@@ -15,5 +15,6 @@ namespace SprintPlannerZM.Model
         public DateTime datum { get; set; }
         public Vak Vak { get; set; }
         public IList<Leerlingverdeling> Leerlingverdelingen { get; set; }
+        public IList<Sprintlokaal> Sprintlokalen { get; set; }
     }
 }

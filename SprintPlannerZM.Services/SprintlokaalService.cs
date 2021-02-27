@@ -24,6 +24,13 @@ namespace SprintPlannerZM.Services
             return _database.Sprintlokaal.ToList();
         }
 
+
+        public IList<Sprintlokaal> FindByExamID(int examID)
+        {
+            return _database.Sprintlokaal.Where(s=>s.examenID == examID).ToList();
+        }
+
+
         public Sprintlokaal Create(Sprintlokaal sprintlokaal)
         {
             _database.Sprintlokaal.Add(sprintlokaal);

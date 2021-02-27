@@ -3,6 +3,10 @@ using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Newtonsoft.Json.Linq;
 
@@ -117,21 +121,47 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         public IActionResult LeerlingVerdeling(string datum)
         {
-
-            IList<>
             var hulpLeerlingen = _hulpleerlingService.Find();
             var splitPieceDatum = datum.Split(" ")[0];
             var examensPerDatum = _examenroosterService.FindByDatum(DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null));
-
+            var lokalenVoorSprint = _lokaalService.FindForSprint();
             foreach (var leerling in hulpLeerlingen)
             {
                 foreach (var vak in leerling.Klas.Vakken)
                 {
                     foreach (var rooster in examensPerDatum)
                     {
-                        if (rooster.vakID==vak.vakID)
+                        if (rooster.vakID == vak.vakID)
                         {
-                            Console.WriteLine("Deze leerling :"+ leerling.Leerling.voorNaam + " heeft het vak "+vak.vaknaam + "als examen op" + rooster.datum  );
+                            Console.WriteLine("Deze leerling :" + leerling.Leerling.voorNaam + " heeft het vak " + vak.vaknaam + "als examen op" + rooster.datum);
+                        }
+                    }
+                }
+            }
+            foreach (var leerling in hulpLeerlingen)
+            {
+                foreach (var sprintexam in leerling.Sprintvakken)
+                {
+                    foreach (var geplandExamen in examensPerDatum)
+                    {
+                        if (geplandExamen.vakID == sprintexam.vakID)
+                        {
+                            var lokaal = new Lokaal();
+                            Console.WriteLine("Sprintvak keuze ID " + sprintexam.sprintvakID + " voor vak " +
+                                                                     sprintexam.Vak.vaknaam + " voor leerling " + leerling.Leerling.voorNaam +" " +leerling.Klas.klasnaam +
+                                                                     " staat vast op" + geplandExamen.datum );
+                            foreach (var gekozenLokaal in lokalenVoorSprint)
+                            {
+                                var aantalReservatiesPerlokaal = _sprintlokaalService.FindByExamID(geplandExamen.examenID).Count;
+                                if (gekozenLokaal.naamafkorting.Equals("225")&& gekozenLokaal.lokaaltype.Equals("sprint")&& aantalReservatiesPerlokaal <= gekozenLokaal.capaciteit)
+                                {
+                                    lokaal = gekozenLokaal;
+                                    var sprintlokaal = new Sprintlokaal() { tijd = geplandExamen.tijd, datum = geplandExamen.datum, lokaalID = lokaal.lokaalID };
+                                    sprintlokaal = _sprintlokaalService.Create(sprintlokaal);
+                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = leerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalID, examenID = geplandExamen.examenID };
+                                    leerlingverdeling = _leerlingverdelingService.Create(leerlingverdeling);
+                                }
+                            }
                         }
                     }
                 }
@@ -238,6 +268,51 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             dbHulpLeerling = _hulpleerlingService.GetbyLeerlingId(id);
 
             return dbHulpLeerling != null;
+        }
+        public async Task<IActionResult> TesterNamePaging(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["KlasSortParm"] = sortOrder == "klas" ? "klas_desc" : "klas";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["nameFilter"] = searchString;
+            ViewData["CurrentFilter"] = searchString;
+
+            var students = (from s in _leerlingService.FindAsync().Result select s);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                students = students.Where(s => s.familieNaam.Contains(searchString)
+                                               || s.voorNaam.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    students = students.OrderByDescending(s => s.familieNaam);
+                    break;
+                //case "famName_desc":
+                //    students = students.OrderByDescending(s => s.familieNaam);
+                //    break;
+                case "klas":
+                    students = students.OrderBy(s => s.Klas.klasnaam);
+                    break;
+                case "klas_desc":
+                    students = students.OrderByDescending(s => s.Klas.klasnaam);
+                    break;
+                default:
+                    students = students.OrderBy(s => s.familieNaam);
+                    break;
+            }
+            //return View("TesterNamePaging", students);
+            return null;
         }
     }
 }
