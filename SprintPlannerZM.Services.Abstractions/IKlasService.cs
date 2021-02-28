@@ -7,13 +7,13 @@ namespace SprintPlannerZM.Services.Abstractions
 {
     public interface IKlasService
     {
-        Klas Get(int id);
+        Task<Klas> GetAsync(int id);
         Klas GetByKlasName(string id);
         Klas GetBySubString(string klasnaam);
         IList<Klas> Find();
         Task<IQueryable<Klas>> FindAsyncPagingQueryable();
-        Klas Create(Klas klas);
-        Klas Update(int id, Klas klas);
-        bool Delete(int id);
+        Task<Klas> CreateAsync(Klas klas);
+        Task<Klas> UpdateAsync(int id, Klas klas);
+        //Task<bool> Delete(int id);
     }
 }

@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 // ReSharper disable CommentTypo
 
@@ -57,18 +56,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             return View();
         }
 
-        public IActionResult BeherenGegevens()
-        {
-            return View();
-        }
-
-
 
         /*!!!!!!!!!!!!  Importeren van start gegevens   !!!!!!!!!!!
-          !               Titularissen en klassen   ||            ! 
+          !               Titularissen en klassen                 ! 
           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Connectie met Soap Api
           !        klassen, Studenten, leerkrachten, vakken       !
-          !           en de relatie die deze verbind             !  Berichten weergave via partial en ajax call
+          !           en de relatie die deze verbind              !  Berichten weergave via partial en ajax call
           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         [HttpGet]
@@ -97,7 +90,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             var leerkacht = new Leerkracht() { leerkrachtID = 1, voornaam = "isEen", achternaam = "foutOpvanger", email = "test.test", status = false };
             var klas = new Klas() { klasID = 1, klasnaam = "0", titularisID = 1 };
             _leerkrachtService.Create(leerkacht);
-            _klasService.Create(klas);
+            await _klasService.CreateAsync(klas);
 
             var i = 1;
             foreach (var soapLeerkrachtEnKlas in titularisenMetKlas)
@@ -106,7 +99,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 Klas klasMetTitul = KlasMaker(soapLeerkrachtEnKlas);
 
                 _leerkrachtService.Create(titularis);
-                _klasService.Create(klasMetTitul);
+               await _klasService.CreateAsync(klasMetTitul);
                 geschrevenResults.Add("Klas " + i + "/" + titularisenMetKlas.Count + " met ID " + klasMetTitul.klasID + " klasnaam " + klasMetTitul.klasnaam + "/r/n"
                                       + " met titularisID " + klasMetTitul.titularisID + " naam " + titularis.achternaam + " " + titularis.voornaam);
                 i++;
@@ -212,7 +205,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                             leerkrachtID = long.Parse(element.Element("stamboeknummer").Value),
                             vaknaam = element.Element("vaknaam").Value,
                             klasID = dbLeerling.KlasID,
-                            sprint=true
+                            sprint = true
                         };
                         vakken.Add(soapVak);
                     }
@@ -332,7 +325,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             return View("ImportPagina", berichten);
         }
 
-        public IActionResult ImportExamens()
+        public async Task<IActionResult> ImportExamens()
         {
             IList<Examenrooster> examenroosters = new List<Examenrooster>();
             List<string> berichten = new List<string>();
@@ -365,7 +358,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     klas = _klasService.GetBySubString(reader.GetValue(column).ToString());
                                     if (klas == null)
                                     {
-                                        klas = _klasService.Get(1);
+                                        klas = await _klasService.GetAsync(1);
                                     }
 
                                     Console.WriteLine(reader.GetValue(column).ToString());
@@ -541,13 +534,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         !       Leerkr, Leerl, Klas, Vak, Lokalen en klassen    ! 
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
         !                                                       !
-        !                 Beheer Leerling                       !  
+        !                 Beheer Leerling                       !  werkend met paging 
+        !                                                       !     //Nieuwe en efficientere manier met pages veel snellere respons en beter in meerdere opzichten
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
 
 
-        //Nieuwe en efficientere manier met pages veel snellere respons en beter in meerdere opzichten
-        public async Task<IActionResult> LeerlingBeheer(string sortOrder, string currentFilter, string searchString,string search2String, int? pageNumber)
+        
+        public async Task<IActionResult> LeerlingBeheer(string sortOrder, string currentFilter, string searchString, string search2String, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -565,7 +559,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             ViewData["klasFilter"] = search2String;
 
             var students = await _leerlingService.FindAsyncPagingQueryable();
-            
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 students = students.Where(s => s.familieNaam.ToLower().Contains(searchString.ToLower())
@@ -595,7 +589,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             }
 
 
-            return View( await PaginatedList<Leerling>.CreateAsync(students.AsQueryable(), pageNumber ?? 1, 15));
+            return View(await PaginatedList<Leerling>.CreateAsync(students.AsQueryable(), pageNumber ?? 1, 15));
         }
 
 
@@ -620,14 +614,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             _leerlingService.Update(leerling.leerlingID, leerling);
             //var berichten = new List<string> { "leerling " + leerling.familieNaam + " is gewijzigd" };
 
-            return RedirectToAction("LeerlingBeheer"/*berichten*/);
+            return RedirectToAction("LeerlingBeheer");
 
         }
 
 
 
         /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
-           !                 Beheer Leerkracht                     ! 
+           !                 Beheer Leerkracht                     ! werkend met paging
            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
 
@@ -697,14 +691,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult LeerkrachtEdit(Leerkracht leerkracht)
         {
             _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
-            return View("BeherenGegevens");
+            return RedirectToAction("LeerkrachtBeheer");
         }
 
 
 
 
-        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
-           !                     Beheer Vak                        ! 
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+           !                     Beheer Vak                        ! werkend met paging
            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         public async Task<IActionResult> VakBeheer(string sortOrder, string currentFilter, string searchString, string search2String, int? pageNumber)
@@ -775,12 +769,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         {
             _vakService.Update(vak.vakID, vak);
 
-            return View("VakBeheer");
+            return RedirectToAction("VakBeheer");
         }
 
 
-        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
-           !                     Beheer Klas                        ! 
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Compleet async en LinQ => 1 query
+           !                     Beheer Klas                        ! werkend met paging
            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
 
@@ -822,29 +816,30 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
 
-        public IActionResult KlasDetails(int id)
+        public async Task<IActionResult> KlasDetails(int id)
         {
-            var leerling = _klasService.Get(id);
+            var leerling = await _klasService.GetAsync(id);
             return View("KlasDetails", leerling);
         }
 
 
         [HttpGet]
-        public IActionResult KlasEdit(int id)
+        public async Task<IActionResult> KlasEdit(int id)
         {
             if (id == 0)
             {
                 return RedirectToAction("KlasBeheer");
             }
-            var klas = _klasService.Get(id);
+            var klas = await _klasService.GetAsync(id);
             return View(klas);
         }
 
+
         [HttpPost]
-        public IActionResult KlasEdit(Klas klas)
+        public async Task<IActionResult> KlasEdit(Klas klas)
         {
-            _klasService.Update(klas.klasID, klas);
-            return View("KlasBeheer");
+           await _klasService.UpdateAsync(klas.klasID, klas);
+            return RedirectToAction("KlasBeheer");
         }
 
 
@@ -916,7 +911,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult LokaalEdit(Lokaal lokaal)
         {
             _lokaalService.Update(lokaal.lokaalID, lokaal);
-            return View("lokaalBeheer");
+            return RedirectToAction("lokaalBeheer");
         }
 
 
@@ -964,16 +959,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             return klasMetTitul;
         }
 
-
-
-
-        [HttpGet]
-        public IActionResult GetLeerlingLijst()
-        {
-            var leerlingen = _leerlingService.Find();
-
-            return PartialView("PartialLeerlingenLijst", leerlingen);
-        }
 
     }
 

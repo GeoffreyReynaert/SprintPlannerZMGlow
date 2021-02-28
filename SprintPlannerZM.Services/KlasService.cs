@@ -18,13 +18,14 @@ namespace SprintPlannerZM.Services
             _database = database;
         }
 
-        public Klas Get(int id)
+        public async Task<Klas> GetAsync(int id)
         {
             var klas = _database.Klas
                 .Where(k => k.klasID == id)
                 .Include(k => k.Leerkracht)
                 .Include(k => k.Leerlingen)
                 .Include(k => k.Vakken)
+                .ThenInclude(v=>v.Leerkracht)
                 .SingleOrDefault();
             return klas;
         }
@@ -134,18 +135,19 @@ namespace SprintPlannerZM.Services
             return klassen;
         }
 
-        public Klas Create(Klas klas)
+        public async Task<Klas> CreateAsync(Klas klas)
         {
-            var dbLeerkracht = _database.Klas.SingleOrDefault(l => l.klasID == klas.klasID);
+            var dbLeerkracht =  _database.Klas.SingleOrDefault(l => l.klasID == klas.klasID);
             if (dbLeerkracht == null)
             {
-                _database.Klas.Add(klas);
-                _database.SaveChanges();
+                 _database.Klas.Add(klas);
+                 _database.SaveChanges();
             }
             return klas;
         }
 
-        public Klas Update(int id, Klas klas)
+
+        public async Task<Klas> UpdateAsync(int id, Klas klas)
         {
             {
                 var klasToUpd = _database.Klas.SingleOrDefault(l => l.klasID == id);
@@ -157,19 +159,19 @@ namespace SprintPlannerZM.Services
             }
         }
 
-        public bool Delete(int id)
-        {
-            {
-                var dbKlas = Get(id);
-                if (dbKlas == null)
-                {
-                    return false;
-                }
-                _database.Klas.Remove(dbKlas);
-                _database.SaveChanges();
-                return true;
-            }
-        }
+        //public async Task<bool> Delete(int id)
+        //{
+        //    {
+        //        var dbKlas = await GetAsync(id);
+        //        if (dbKlas == null)
+        //        {
+        //            return false;
+        //        }
+        //        _database.Klas.Remove(dbKlas);
+        //        _database.SaveChanges();
+        //        return true;
+        //    }
+        //}
     }
 }
 

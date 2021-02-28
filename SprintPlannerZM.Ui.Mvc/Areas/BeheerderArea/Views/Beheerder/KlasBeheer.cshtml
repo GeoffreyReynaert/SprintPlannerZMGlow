@@ -23,41 +23,41 @@
 
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                <a asp-action="KlasBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">klas naam</a>
-            </th>
-            <th>
-                aantal leerlingen
-            </th>
-            <th>
-                aantal hulp leerlingen
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            <a asp-action="KlasBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">klas naam</a>
+        </th>
+        <th>
+            aantal leerlingen
+        </th>
+        <th>
+            aantal hulp leerlingen
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.klasnaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Leerlingen.Count)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Hulpleerlingen.Count)
-                </td>
-                <td>
-                    <a asp-action="KlasEdit" asp-route-id="@item.klasID">Edit</a> |
-                    <a asp-action="KlasDetails" asp-route-id="@item.klasID">Details</a> |
-                </td>
-            </tr>
-        }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.klasnaam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Leerlingen.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hulpleerlingen.Count)
+            </td>
+            <td>
+                <a asp-action="KlasEdit" asp-route-id="@item.klasID">Edit</a> |
+                <a asp-action="KlasDetails" asp-route-id="@item.klasID">Details</a> |
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
-<div id="ModalDetails"></div>
+
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
@@ -77,3 +77,4 @@
    class="btn btn-primary @nextDisabled">
     Volgende
 </a>
+<div class=" left-allignToNav  pb-5 mb-5"></div>
