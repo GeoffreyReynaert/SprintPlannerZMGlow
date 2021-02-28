@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Query;
@@ -20,16 +21,19 @@ namespace SprintPlannerZM.Services
             _database = database;
         }
 
+        //Geoffrey
         public Leerling Get(long id)
         {
-            var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
-            leerling.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerling.KlasID);
-            leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == leerling.leerlingID);
-            leerling.hulpleerling.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == leerling.hulpleerling.hulpleerlingID).ToList();
-            //niet mogelijk bij import niewe get odig met hulpleerling inbegrepen en null check
+            var leerling = _database.Leerling
+                .Where(l => l.leerlingID == id)
+                .Include(l => l.Klas)
+                .Include(l => l.hulpleerling)
+                .ThenInclude(h => h.Sprintvakken)
+                .SingleOrDefault();
 
             return leerling;
         }
+
         public Leerling GetFullLeerling(long id)
         {
             var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
@@ -43,7 +47,6 @@ namespace SprintPlannerZM.Services
                     sprint.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprint.vakID);
                 }
             }
-
             //niet mogelijk bij import niewe get odig met hulpleerling inbegrepen en null check
 
             return leerling;
@@ -71,42 +74,51 @@ namespace SprintPlannerZM.Services
 
 
 
-
-        //hier wil je pa
-        //public async Task<IList<Leerling>> FindAsync()
-        //{
-        //    var leerlingen = await _database.Leerling.ToListAsync();
-        //    foreach (var leerling in leerlingen)
-        //    {
-        //        leerling.hulpleerling =await  _database.Hulpleerling.SingleOrDefaultAsync(h => h.hulpleerlingID == leerling.leerlingID);
-        //        leerling.Klas =await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
-        //    }
-
-        //    return  leerlingen;
-        //}
-
-
+        //Geoffrey
+        //Voor Paging Queryable Leerling beheer
         public async Task<IQueryable<Leerling>> FindAsyncPagingQueryable()
         {
-            var leerlingen = from a in _database.Leerling
-                             select a;
-            return leerlingen;
+
+            var leerlings =  _database.Leerling
+                .Join(_database.Klas,l=> l.KlasID, klas => klas.klasID,(leerling,klas) => new Leerling
+                {
+                    Klas = klas,
+                    familieNaam = leerling.familieNaam,
+                    voorNaam = leerling.voorNaam,
+                    leerlingID = leerling.leerlingID
+                })
+                .AsQueryable();
+
+            return leerlings;
         }
 
 
 
         public IList<Leerling> FindByKlasID(int klasid)
         {
-            var leerlingenPerKlas = _database.Leerling.Where(l => l.KlasID == klasid).OrderBy(l => l.familieNaam).ToList();
+            var leerlingenPerKlas =
+                _database.Leerling.Where(l => l.KlasID == klasid).OrderBy(l => l.familieNaam).ToList();
             foreach (var leerlingperklas in leerlingenPerKlas)
             {
-                leerlingperklas.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == leerlingperklas.leerlingID);
+                leerlingperklas.hulpleerling =
+                    _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == leerlingperklas.leerlingID);
                 leerlingperklas.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerlingperklas.KlasID);
             }
+
             return leerlingenPerKlas;
         }
 
-        public Leerling Create(Leerling leerling)
+        //public IList<Leerling> FindByKlasID(int klasid)
+            //{
+            //    var leerlingenPerKlas = _database.Leerling.Where(l => l.KlasID == klasid)
+            //        .Include(l => _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == l.leerlingID))
+            //        .Include(l => _database.Klas.SingleOrDefault(k => k.klasID == l.KlasID))
+            //        .OrderBy(l => l.familieNaam).ToList();
+
+            //    return leerlingenPerKlas;
+            //}
+
+            public Leerling Create(Leerling leerling)
         {
             var dbLeerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == leerling.leerlingID);
             if (dbLeerling == null)
@@ -138,7 +150,7 @@ namespace SprintPlannerZM.Services
                 {
                     return false;
                 }
-                _database.Leerling.Remove(dbLeerling);
+                //_database.Leerling.Remove(dbLeerling);
                 _database.SaveChanges();
                 return true;
             }
