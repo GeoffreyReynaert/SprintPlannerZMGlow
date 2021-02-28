@@ -626,7 +626,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
 
 
-        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
            !                 Beheer Leerkracht                     ! 
            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
@@ -675,13 +675,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             return View(await PaginatedList<Leerkracht>.CreateAsync(leerkrachten.AsQueryable(), pageNumber ?? 1, 15));
         }
 
-
         public IActionResult LeerkrachtDetails(long id)
         {
             var leerkracht = _leerkrachtService.Get(id);
             return View("LeerkrachtDetails", leerkracht);
         }
-
 
         [HttpGet]
         public IActionResult LeerkrachtEdit(long id)
@@ -709,12 +707,56 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
            !                     Beheer Vak                        ! 
            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
-        [HttpGet]
-        public async Task<IActionResult> BeherenVak()
+        public async Task<IActionResult> VakBeheer(string sortOrder, string currentFilter, string searchString, string search2String, int? pageNumber)
         {
-            var vakken = _vakService.Find();
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["KlasSortParm"] = sortOrder == "aantal" ? "id_desc" : "id";
 
-            return PartialView("PartialBeherenVak", vakken);
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["nameFilter"] = searchString;
+            ViewData["klasFilter"] = search2String;
+            var vakken = await _vakService.FindAsyncPagingQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                vakken = vakken.Where(s => s.vaknaam.ToLower().Contains(searchString.ToLower()));
+            }
+            if (!String.IsNullOrEmpty(search2String))
+            {
+                vakken = vakken.Where(s => s.klas.klasnaam.ToLower().Contains(search2String.ToLower()));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    vakken = vakken.OrderByDescending(s => s.vaknaam);
+                    break;
+                case "id":
+                    vakken = vakken.OrderBy(s => s.klasID);
+                    break;
+                case "id_desc":
+                    vakken = vakken.OrderByDescending(s => s.klasID);
+                    break;
+                default:
+                    vakken = vakken.OrderBy(s => s.vaknaam);
+                    break;
+            }
+
+
+            return View(await PaginatedList<Vak>.CreateAsync(vakken.AsQueryable(), pageNumber ?? 1, 15));
+        }
+
+        public IActionResult VakDetails(int id)
+        {
+            var leerkracht = _vakService.Get(id);
+            return View("VakDetails", leerkracht);
         }
 
         [HttpGet]
@@ -722,7 +764,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         {
             if (id == 0)
             {
-                return RedirectToAction("BeherenVak");
+                return RedirectToAction("VakBeheer");
             }
             var vak = _vakService.Get(id);
             return View(vak);
@@ -732,8 +774,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult VakEdit(Vak vak)
         {
             _vakService.Update(vak.vakID, vak);
-            var berichten = new List<string> { "vak " + vak.vaknaam + " is gewijzigd" };
-            return View("BeherenGegevens", berichten);
+
+            return View("VakBeheer");
         }
 
 
@@ -743,20 +785,56 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
 
 
-        [HttpGet]
-        public async Task<IActionResult> BeherenKlas()
+        public async Task<IActionResult> KlasBeheer(string sortOrder, string currentFilter, string searchString, string search2String, int? pageNumber)
         {
-            var klassen = _klasService.Find();
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
-            return PartialView("PartialBeherenKlas", klassen);
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["nameFilter"] = searchString;
+
+            var klassen = await _klasService.FindAsyncPagingQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                klassen = klassen.Where(k => k.klasnaam.ToLower().Contains(searchString.ToLower()));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    klassen = klassen.OrderByDescending(k => k.klasnaam);
+                    break;
+                default:
+                    klassen = klassen.OrderBy(k => k.klasnaam);
+                    break;
+            }
+
+
+            return View(await PaginatedList<Klas>.CreateAsync(klassen.AsQueryable(), pageNumber ?? 1, 15));
         }
+
+
+        public IActionResult KlasDetails(int id)
+        {
+            var leerling = _klasService.Get(id);
+            return View("KlasDetails", leerling);
+        }
+
 
         [HttpGet]
         public IActionResult KlasEdit(int id)
         {
             if (id == 0)
             {
-                return RedirectToAction("BeherenKlas");
+                return RedirectToAction("KlasBeheer");
             }
             var klas = _klasService.Get(id);
             return View(klas);
@@ -766,8 +844,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult KlasEdit(Klas klas)
         {
             _klasService.Update(klas.klasID, klas);
-            var berichten = new List<string> { "klas " + klas.klasnaam + " is gewijzigd" };
-            return View("BeherenGegevens", berichten);
+            return View("KlasBeheer");
         }
 
 

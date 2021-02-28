@@ -1,0 +1,32 @@
+﻿
+@model SprintPlannerZM.Model.Klas
+
+@Model.klasnaam @Model.klasID
+<br /> titularis :
+@Model.Leerkracht.achternaam met id @Model.titularisID
+<br />
+
+<br />
+Aantal leerlingen  @Model.Leerlingen.Count
+<br />
+Deze klas heeft volgende vakken
+<br />
+@foreach (var vak in @Model.Vakken)
+{
+    <span> vak  @vak.vaknaam  met leerkracht  @vak.Leerkracht.achternaam</span>
+    <br />
+}
+Deze klas heeft volgende leerlingen
+<br />
+@foreach (var leerling in @Model.Leerlingen)
+{
+    <span>
+        vak  @leerling.familieNaam  @leerling.voorNaam  @if (@leerling.hulpleerlingID == null)
+        {<span>geen hulpleerling</span>
+        }
+        else
+        { <span>is een hulpleerling met id @leerling.hulpleerlingID</span>
+        }
+    </span>
+    <br />
+}

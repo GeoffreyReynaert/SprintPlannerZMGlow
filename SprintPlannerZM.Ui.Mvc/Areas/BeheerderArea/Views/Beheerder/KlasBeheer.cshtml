@@ -1,0 +1,79 @@
+﻿@model SprintPlannerZM.Model.PaginatedList<SprintPlannerZM.Model.Klas>
+
+
+@{
+    ViewData["Title"] = "KlasBeheer";
+}
+
+<h2>Klassen</h2>
+
+<p>
+    <a asp-action="">Create New</a>
+</p>
+
+<form asp-action="KlasBeheer" method="get">
+    <div class="form-actions no-color">
+        <p>
+            vienden met Naam of voornaam: <input type="text" name="SearchString" value="@ViewData["nameFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="KlasBeheer">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="KlasBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">klas naam</a>
+            </th>
+            <th>
+                aantal leerlingen
+            </th>
+            <th>
+                aantal hulp leerlingen
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.klasnaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Leerlingen.Count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hulpleerlingen.Count)
+                </td>
+                <td>
+                    <a asp-action="KlasEdit" asp-route-id="@item.klasID">Edit</a> |
+                    <a asp-action="KlasDetails" asp-route-id="@item.klasID">Details</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div id="ModalDetails"></div>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="KlasBeheer"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @prevDisabled">
+    Vorige
+</a>
+<a asp-action="KlasBeheer"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @nextDisabled">
+    Volgende
+</a>

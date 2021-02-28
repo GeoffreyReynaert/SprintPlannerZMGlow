@@ -1,10 +1,10 @@
-﻿using System;
-using SprintPlannerZM.Model;
+﻿using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
@@ -59,6 +59,19 @@ namespace SprintPlannerZM.Services
             }
             return vakken;
         }
+
+
+        public async Task<IQueryable<Vak>> FindAsyncPagingQueryable()
+        {
+            var vakken = _database.Vak
+                .Include(v=>v.klas)
+                .Include(v=>v.Leerkracht)
+                .Include(v=>v.Sprintvakken)
+                .AsQueryable();
+
+            return vakken;
+        }
+
 
         public Vak Create(Vak vak)
         {

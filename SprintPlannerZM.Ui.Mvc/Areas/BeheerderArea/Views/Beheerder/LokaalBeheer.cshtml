@@ -1,7 +1,5 @@
 ﻿@model SprintPlannerZM.Model.PaginatedList<SprintPlannerZM.Model.Lokaal>
 
-
-
 @{
     ViewData["Title"] = "LokaalBeheer";
 }
@@ -9,7 +7,7 @@
 <h2>Lokalen</h2>
 
 <p>
-    <a asp-action="">Create New</a>
+    <a class="btn btn-secondary" asp-action="">Nieuw Aanmaken</a>
 </p>
 
 <form asp-action="LokaalBeheer" method="get">
@@ -63,7 +61,6 @@
         }
     </tbody>
 </table>
-<div id="ModalDetails"></div>
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
@@ -74,12 +71,12 @@
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-primary @prevDisabled">
-    Previous
+    Vorige
 </a>
 <a asp-action="LokaalBeheer"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-primary @nextDisabled">
-    Next
+    Volgende
 </a>

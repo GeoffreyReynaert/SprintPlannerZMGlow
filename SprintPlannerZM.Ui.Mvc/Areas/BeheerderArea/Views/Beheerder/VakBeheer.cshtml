@@ -1,0 +1,88 @@
+﻿@model SprintPlannerZM.Model.PaginatedList<SprintPlannerZM.Model.Vak>
+
+
+@{
+    ViewData["Title"] ="VakBeheer";
+}
+
+<h2>Vakken</h2>
+
+<p>
+    <a asp-action="">Create New</a>
+</p>
+
+<form asp-action="VakBeheer" method="get">
+    <div class="form-actions no-color">
+        <p>
+            zoeken op vaknaam: <input type="text" name="SearchString" value="@ViewData["nameFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="VakBeheer">Back to Full List</a>
+        </p>
+    </div>
+</form>
+<form asp-action="VakBeheer" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Zoeken op klas naam: <input type="text" name="Search2String" value="@ViewData["klasFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="VakBeheer">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="VakBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">vak Naam</a>
+            </th>
+            <th>
+                klas naam
+            </th>
+            <th>
+                <a asp-action="VakBeheer" asp-route-sortOrder="@ViewData["KlasSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Klas ID</a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.vaknaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.klas.klasnaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.klasID)
+                </td>
+                <td>
+                    <a asp-action="VakEdit" asp-route-id="@item.vakID">Edit</a> |
+                    <a asp-action="VakDetails" asp-route-id="@item.vakID">Details</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div id="ModalDetails"></div>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="VakBeheer"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @prevDisabled">
+    Vorige
+</a>
+<a asp-action="VakBeheer"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @nextDisabled">
+    Volgende
+</a>

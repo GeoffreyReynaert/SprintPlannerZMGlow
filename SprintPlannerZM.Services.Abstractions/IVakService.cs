@@ -1,5 +1,7 @@
 ﻿using SprintPlannerZM.Model;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SprintPlannerZM.Services.Abstractions
 {
@@ -8,7 +10,7 @@ namespace SprintPlannerZM.Services.Abstractions
         Vak Get(int id);
         Vak GetBySubString(string vakNaam, int klasID);
         IList<Vak> Find();
-        //IList<Vak> FindBySubstring(string vakNaam, int klasID);
+        Task<IQueryable<Vak>> FindAsyncPagingQueryable();
         Vak Create(Vak vak);
         Vak Update(int id, Vak vak);
         bool Delete(int id);

@@ -3,6 +3,7 @@ using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
@@ -118,6 +119,17 @@ namespace SprintPlannerZM.Services
                 .Include(k => k.Leerlingen)
                 .Include(k => k.Vakken)
                 .OrderBy(k => k.klasnaam).ToList();
+
+            return klassen;
+        }
+
+        public async Task<IQueryable<Klas>> FindAsyncPagingQueryable()
+        {
+            var klassen = _database.Klas
+                .Include(k => k.Leerkracht)
+                .Include(k => k.Leerlingen)
+                .Include(k => k.Vakken)
+                .AsQueryable();
 
             return klassen;
         }

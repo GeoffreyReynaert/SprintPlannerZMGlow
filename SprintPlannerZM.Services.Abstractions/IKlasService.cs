@@ -1,5 +1,7 @@
 ﻿using SprintPlannerZM.Model;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SprintPlannerZM.Services.Abstractions
 {
@@ -9,6 +11,7 @@ namespace SprintPlannerZM.Services.Abstractions
         Klas GetByKlasName(string id);
         Klas GetBySubString(string klasnaam);
         IList<Klas> Find();
+        Task<IQueryable<Klas>> FindAsyncPagingQueryable();
         Klas Create(Klas klas);
         Klas Update(int id, Klas klas);
         bool Delete(int id);

@@ -77,13 +77,7 @@ namespace SprintPlannerZM.Services
         {
 
             var leerlings = _database.Leerling
-                .Join(_database.Klas, l => l.KlasID, klas => klas.klasID, (leerling, klas) => new Leerling
-                {
-                    Klas = klas,
-                    familieNaam = leerling.familieNaam,
-                    voorNaam = leerling.voorNaam,
-                    leerlingID = leerling.leerlingID
-                })
+                .Include(l=>l.Klas)
                 .AsQueryable();
 
             return leerlings;
