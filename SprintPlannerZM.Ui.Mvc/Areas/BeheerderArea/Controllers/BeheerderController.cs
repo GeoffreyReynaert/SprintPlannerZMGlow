@@ -539,22 +539,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
         /*!!!!!!!!!!!!     Beheren van  gegevens      !!!!!!!!!!!
         !       Leerkr, Leerl, Klas, Vak, Lokalen en klassen    ! 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
         !                                                       !
-        !                 Beheer Leerling                       !  Berichten weergave via partial en ajax call
+        !                 Beheer Leerling                       !  
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
-
-        [HttpGet]  //get van de lijst
-        public async Task<IActionResult> BeherenLeerling()
-        {
-            var leerlingen = _leerlingService.Find();
-
-            return PartialView("PartialBeherenLeerling", leerlingen);
-        }
-
-
- 
 
 
         //Nieuwe en efficientere manier met pages veel snellere respons en beter in meerdere opzichten
@@ -594,9 +583,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 case "name_desc":
                     students = students.OrderByDescending(s => s.familieNaam);
                     break;
-                //case "famName_desc":
-                //    students = students.OrderByDescending(s => s.familieNaam);
-                //    break;
                 case "klas":
                     students = students.OrderBy(s => s.Klas.klasnaam);
                     break;
@@ -613,10 +599,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
 
-        public IActionResult GetLeerlingDetails(int id)
+        public IActionResult LeerlingDetails(int id)
         {
             var leerling = _leerlingService.GetFullLeerling(id);
-            return View("GetLeerlingDetails", leerling);
+            return View("LeerlingDetails", leerling);
         }
 
 
@@ -644,32 +630,79 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
            !                 Beheer Leerkracht                     ! 
            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
-        [HttpGet]
-        public async Task<IActionResult> BeherenLeerkracht()
-        {
-            var leerkrachten = _leerkrachtService.Find();
 
-            return PartialView("PartialBeherenLeerkracht", leerkrachten);
+        public async Task<IActionResult> LeerkrachtBeheer(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["aantal"] = sortOrder == "aantal" ? "aantal_desc" : "aantal";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["nameFilter"] = searchString;
+
+            var leerkrachten = await _leerkrachtService.FindAsyncPagingQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                leerkrachten = leerkrachten.Where(s => s.achternaam.ToLower().Contains(searchString.ToLower())
+                                               || s.voornaam.ToLower().Contains(searchString.ToLower()));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    leerkrachten = leerkrachten.OrderByDescending(s => s.achternaam);
+                    break;
+                case "aantal":
+                    leerkrachten = leerkrachten.OrderBy(s => s.Vakken.Count);
+                    break;
+                case "aantal_desc":
+                    leerkrachten = leerkrachten.OrderByDescending(s => s.Vakken.Count);
+                    break;
+                default:
+                    leerkrachten = leerkrachten.OrderBy(s => s.achternaam);
+                    break;
+            }
+
+
+            return View(await PaginatedList<Leerkracht>.CreateAsync(leerkrachten.AsQueryable(), pageNumber ?? 1, 15));
         }
+
+
+        public IActionResult LeerkrachtDetails(long id)
+        {
+            var leerkracht = _leerkrachtService.Get(id);
+            return View("LeerkrachtDetails", leerkracht);
+        }
+
 
         [HttpGet]
         public IActionResult LeerkrachtEdit(long id)
         {
             if (id == 0)
             {
-                return RedirectToAction("BeherenLeerkracht");
+                return RedirectToAction("LeerkrachtBeheer");
             }
             var leerkracht = _leerkrachtService.Get(id);
             return View(leerkracht);
         }
 
+
         [HttpPost]
         public IActionResult LeerkrachtEdit(Leerkracht leerkracht)
         {
             _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
-            var berichten = new List<string> { "leerkracht " + leerkracht.achternaam + " is gewijzigd" };
-            return View("BeherenGegevens", berichten);
+            return View("BeherenGegevens");
         }
+
+
 
 
         /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HttpGet AJAX
@@ -746,20 +779,57 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
 
 
-        [HttpGet]
-        public async Task<IActionResult> BeherenLokalen()
+        public async Task<IActionResult> LokaalBeheer(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            var lokalen = _lokaalService.Find();
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
-            return PartialView("PartialBeherenLokalen", lokalen);
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["nameFilter"] = searchString;
+
+            var lokalen = await _lokaalService.FindAsyncPagingQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                lokalen = lokalen.Where(s => s.lokaalnaam.ToLower().Contains(searchString.ToLower()));
+
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    lokalen = lokalen.OrderByDescending(s => s.lokaalnaam);
+                    break;
+                default:
+                    lokalen = lokalen.OrderBy(s => s.lokaalID);
+                    break;
+            }
+
+
+            return View(await PaginatedList<Lokaal>.CreateAsync(lokalen.AsQueryable(), pageNumber ?? 1, 15));
         }
+
+        [HttpGet]
+        public IActionResult LokaalDetails(int id)
+        {
+            var lokaal = _lokaalService.Get(id);
+            return View("LokaalDetails", lokaal);
+        }
+
 
         [HttpGet]
         public IActionResult LokaalEdit(int id)
         {
             if (id == 0)
             {
-                return RedirectToAction("BeherenLokalen");
+                return RedirectToAction("LokaalBeheer");
             }
             var lokaal = _lokaalService.Get(id);
             return View(lokaal);
@@ -769,8 +839,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult LokaalEdit(Lokaal lokaal)
         {
             _lokaalService.Update(lokaal.lokaalID, lokaal);
-            var berichten = new List<string> { "lokaal " + lokaal.lokaalnaam + " is gewijzigd" };
-            return View("BeherenGegevens", berichten);
+            return View("lokaalBeheer");
         }
 
 

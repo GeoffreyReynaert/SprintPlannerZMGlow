@@ -264,8 +264,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         public bool ExistsAsHulpLeerling(long id)
         {
-            Hulpleerling dbHulpLeerling = new Hulpleerling();
-            dbHulpLeerling = _hulpleerlingService.GetbyLeerlingId(id);
+            var dbHulpLeerling = _hulpleerlingService.GetbyLeerlingId(id);
 
             return dbHulpLeerling != null;
         }

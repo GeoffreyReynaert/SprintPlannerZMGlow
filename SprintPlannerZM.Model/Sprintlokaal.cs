@@ -5,6 +5,11 @@ namespace SprintPlannerZM.Model
 {
     public class Sprintlokaal
     {
+        public Sprintlokaal()
+        {
+            Leerlingverdelingen = new List<Leerlingverdeling>();
+        }
+
         public int sprintlokaalID { get; set; }
         public string tijd { get; set; }
         public DateTime datum { get; set; }

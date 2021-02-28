@@ -12,6 +12,7 @@ namespace SprintPlannerZM.Services.Abstractions
     {
         Leerkracht Get(long id);
         IList<Leerkracht> Find();
+        Task<IQueryable<Leerkracht>> FindAsyncPagingQueryable();
         Leerkracht Create(Leerkracht leerkracht);
         Leerkracht Update(long id, Leerkracht leerkracht);
         bool Delete(long id);

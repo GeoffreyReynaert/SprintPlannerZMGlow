@@ -3,6 +3,7 @@ using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
@@ -15,20 +16,24 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
+
         public Klas Get(int id)
         {
-            var klas = _database.Klas.SingleOrDefault(k => k.klasID == id);
-            klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
-            klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
-            klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
-
+            var klas = _database.Klas
+                .Where(k => k.klasID == id)
+                .Include(k => k.Leerkracht)
+                .Include(k => k.Leerlingen)
+                .Include(k => k.Vakken)
+                .SingleOrDefault();
             return klas;
         }
 
+
         public Klas GetByKlasName(string name)
         {
-            var klas = _database.Klas.SingleOrDefault(k => k.klasnaam.Equals(name));
-            klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+            var klas = _database.Klas.Where(k => k.klasnaam.Equals(name))
+                .Include(k => k.Leerlingen)
+                .SingleOrDefault();
             return klas;
         }
 
@@ -78,11 +83,7 @@ namespace SprintPlannerZM.Services
                      klasnaam.Substring(0, 3).Equals("6KA"))
 
             {
-                //if (klasnaam.Substring(0, 4).Equals("5BHV") ||
-                //    klasnaam.Substring(0, 4).Equals("5BHZ") ||
-                //    klasnaam.Substring(0, 4).Equals("5KAB") ||
-                //    klasnaam.Substring(0, 4).Equals("5KAV"))
-                //{
+
                 klas = _database.Klas.SingleOrDefault(l =>
                     l.klasnaam.Substring(0, 4).Equals(klasnaam.Substring(0, 4)));
             }
@@ -110,17 +111,14 @@ namespace SprintPlannerZM.Services
         }
 
 
-
         public IList<Klas> Find()
         {
-            var klassen = _database.Klas.OrderBy(k => k.klasnaam).ToList();
+            var klassen = _database.Klas
+                .Include(k => k.Leerkracht)
+                .Include(k => k.Leerlingen)
+                .Include(k => k.Vakken)
+                .OrderBy(k => k.klasnaam).ToList();
 
-            foreach (var klas in klassen)
-            {
-                klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
-                klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
-                klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
-            }
             return klassen;
         }
 
@@ -162,3 +160,28 @@ namespace SprintPlannerZM.Services
         }
     }
 }
+
+
+
+//public Klas OldGet(int id)
+//{
+//    var klas = _database.Klas.SingleOrDefault(k => k.klasID == id);
+//    klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+//    klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
+//    klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
+
+//    return klas;
+//}
+
+//public IList<Klas> Find()
+//{
+//var klassen = _database.Klas.OrderBy(k => k.klasnaam).ToList();
+
+//    foreach (var klas in klassen)
+//{
+//    klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+//    klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
+//    klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
+//}
+//return klassen;
+//}

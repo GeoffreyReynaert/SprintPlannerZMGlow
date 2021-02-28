@@ -1,7 +1,7 @@
 ﻿@model SprintPlannerZM.Model.PaginatedList<SprintPlannerZM.Model.Leerling>
 
 @{
-    ViewData["Title"] = "TesterNamePaging";
+    ViewData["Title"] = "LeerlingBeheer";
 }
 
 <h2>Leerlingen</h2>
@@ -59,7 +59,7 @@
                 </td>
                 <td>
                     <a asp-action="LeerlingEdit" asp-route-id="@item.leerlingID">Edit</a> |
-                    <a asp-action="GetLeerlingDetails" asp-route-id="@item.leerlingID">Details</a> |
+                    <a asp-action="LeerlingDetails" asp-route-id="@item.leerlingID">Details</a> |
                 </td>
             </tr>
         }

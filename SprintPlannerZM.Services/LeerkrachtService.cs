@@ -3,6 +3,8 @@ using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
@@ -35,6 +37,17 @@ namespace SprintPlannerZM.Services
             }
             return _database.Leerkracht.OrderBy(l => l.achternaam).ToList();
         }
+
+
+        public async Task<IQueryable<Leerkracht>> FindAsyncPagingQueryable()
+        {
+            var leerkrachten = _database.Leerkracht
+                .Include( l => l.Vakken)
+                .AsQueryable();
+
+            return leerkrachten;
+        }
+
 
         public Leerkracht Create(Leerkracht leerkracht)
         {

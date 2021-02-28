@@ -24,11 +24,10 @@ namespace SprintPlannerZM.Services
         //Geoffrey
         public Leerling Get(long id)
         {
+
             var leerling = _database.Leerling
                 .Where(l => l.leerlingID == id)
                 .Include(l => l.Klas)
-                .Include(l => l.hulpleerling)
-                .ThenInclude(h => h.Sprintvakken)
                 .SingleOrDefault();
 
             return leerling;
@@ -47,7 +46,6 @@ namespace SprintPlannerZM.Services
                     sprint.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprint.vakID);
                 }
             }
-            //niet mogelijk bij import niewe get odig met hulpleerling inbegrepen en null check
 
             return leerling;
         }
@@ -74,13 +72,12 @@ namespace SprintPlannerZM.Services
 
 
 
-        //Geoffrey
         //Voor Paging Queryable Leerling beheer
         public async Task<IQueryable<Leerling>> FindAsyncPagingQueryable()
         {
 
-            var leerlings =  _database.Leerling
-                .Join(_database.Klas,l=> l.KlasID, klas => klas.klasID,(leerling,klas) => new Leerling
+            var leerlings = _database.Leerling
+                .Join(_database.Klas, l => l.KlasID, klas => klas.klasID, (leerling, klas) => new Leerling
                 {
                     Klas = klas,
                     familieNaam = leerling.familieNaam,
@@ -91,7 +88,6 @@ namespace SprintPlannerZM.Services
 
             return leerlings;
         }
-
 
 
         public IList<Leerling> FindByKlasID(int klasid)
@@ -108,17 +104,8 @@ namespace SprintPlannerZM.Services
             return leerlingenPerKlas;
         }
 
-        //public IList<Leerling> FindByKlasID(int klasid)
-            //{
-            //    var leerlingenPerKlas = _database.Leerling.Where(l => l.KlasID == klasid)
-            //        .Include(l => _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == l.leerlingID))
-            //        .Include(l => _database.Klas.SingleOrDefault(k => k.klasID == l.KlasID))
-            //        .OrderBy(l => l.familieNaam).ToList();
 
-            //    return leerlingenPerKlas;
-            //}
-
-            public Leerling Create(Leerling leerling)
+        public Leerling Create(Leerling leerling)
         {
             var dbLeerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == leerling.leerlingID);
             if (dbLeerling == null)
@@ -150,10 +137,20 @@ namespace SprintPlannerZM.Services
                 {
                     return false;
                 }
-                //_database.Leerling.Remove(dbLeerling);
+                _database.Leerling.Remove(dbLeerling);
                 _database.SaveChanges();
                 return true;
             }
         }
     }
 }
+
+//{
+//leerling = _database.Leerling
+//    .Where(l => l.leerlingID == id)
+//    .Include(l => l.Klas)
+//    .Include(l => l.hulpleerling)
+//    .ThenInclude(h => h.Sprintvakken)
+//    .ThenInclude(s => s.Vak)
+//    .SingleOrDefault();
+//}

@@ -6,6 +6,12 @@ namespace SprintPlannerZM.Model
 {
     public class Examenrooster
     {
+
+        public Examenrooster()
+        {
+            Leerlingverdelingen = new List<Leerlingverdeling>();
+            Sprintlokalen = new List<Sprintlokaal>();
+        }
         [Key]
         public int examenID { get; set; }
         public int vakID { get; set; }

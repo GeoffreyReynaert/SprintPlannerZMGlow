@@ -1,0 +1,18 @@
+﻿@using Microsoft.EntityFrameworkCore
+@model SprintPlannerZM.Model.Leerkracht
+
+@Model.voornaam @Model.achternaam <br/>
+@Model.leerkrachtID <br />
+@Model.email  <br />
+@Model.kluisNr <br />
+@Model.sprintToezichter <br />
+
+@if (Model.Vakken != null)
+{
+    <span> Vakken van de leeraar</span> <br />
+    @foreach (var vak in @Model.Vakken)
+    {
+        <span> @vak.vaknaam met id: @vak.vakID en klas id: @vak.klasID</span> <br />
+    }
+
+}

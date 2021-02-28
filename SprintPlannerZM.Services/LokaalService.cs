@@ -4,6 +4,8 @@ using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
@@ -35,6 +37,17 @@ namespace SprintPlannerZM.Services
         {
             return _database.Lokaal.Where(l => l.lokaaltype.Equals("sprint")).ToList();
         }
+
+
+        public async Task<IQueryable<Lokaal>> FindAsyncPagingQueryable()
+        {
+            var lokalen = _database.Lokaal
+                .Include(l => l.Sprintlokalen)
+                .AsQueryable();
+
+            return lokalen;
+        }
+
 
         public Lokaal Create(Lokaal lokaal)
         {
