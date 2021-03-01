@@ -18,13 +18,15 @@ namespace SprintPlannerZM.Services
         }
 
 
-        public Vak Get(int id)
+        public async Task<Vak> GetAsync(int id)
         {
-            var vak = _database.Vak.SingleOrDefault(v => v.vakID == id);
-            vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
-            vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
-            vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
-            vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
+            var vak = _database.Vak
+                .Include(v => v.klas)
+                .Include(v => v.Leerkracht)
+                .Include(v => v.Sprintvakken)
+                .Include(v=>v.Examenroosters)
+                .SingleOrDefault(v => v.vakID == id);
+
             return vak;
         }
 
@@ -93,10 +95,10 @@ namespace SprintPlannerZM.Services
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             {
-                var dbVak = Get(id);
+                var dbVak = await GetAsync(id);
                 if (dbVak == null)
                 {
                     return false;
@@ -108,3 +110,14 @@ namespace SprintPlannerZM.Services
         }
     }
 }
+
+
+//public Vak OldGet(int id)
+//{
+//var vak = _database.Vak.SingleOrDefault();
+//    vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+//    vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
+//    vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
+//    vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
+//    return vak;
+//}

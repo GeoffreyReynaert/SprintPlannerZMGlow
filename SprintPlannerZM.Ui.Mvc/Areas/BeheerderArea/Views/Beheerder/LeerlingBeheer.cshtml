@@ -4,27 +4,25 @@
     ViewData["Title"] = "LeerlingBeheer";
 }
 
-<h2>Leerlingen</h2>
-
-<p>
-    <a asp-action="">Create New</a>
-</p>
+<h2 class="pt-3">Leerlingen Beheer</h2>
 
 <form asp-action="LeerlingBeheer" method="get">
-    <div class="form-actions no-color">
+    <div class="">
         <p>
-            vienden met Naam of voornaam: <input type="text" name="SearchString" value="@ViewData["nameFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="LeerlingBeheer">Back to Full List</a>
+             <input type="text" name="SearchString" value="@ViewData["nameFilter"]"  placeholder="Familie of voornaam" />
+            <input type="submit" value="Zoek" class="btn btn-secondary"/> |
+            <a asp-action="LeerlingBeheer">Complete lijst</a> |
+
         </p>
     </div>
 </form>
 <form asp-action="LeerlingBeheer" method="get">
-    <div class="form-actions no-color">
+    <div class="">
         <p>
-            Vinden met klas naam: <input type="text" name="Search2String" value="@ViewData["klasFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="LeerlingBeheer">Back to Full List</a>
+            <input type="text" name="Search2String" value="@ViewData["klasFilter"]" placeholder="klasnaam" />
+            <input type="submit" value="Zoek" class="btn btn-secondary" /> |
+            <a asp-action="LeerlingBeheer">Complete lijst</a> |
+            <a asp-action="">Maak nieuwe Leerling</a>
         </p>
     </div>
 </form>
@@ -41,7 +39,9 @@
             <th>
                 <a asp-action="LeerlingBeheer" asp-route-sortOrder="@ViewData["KlasSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Klas ID</a>
             </th>
-            <th></th>
+            <th>
+                acties
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -85,3 +85,4 @@
    class="btn btn-primary @nextDisabled">
     Next
 </a>
+<div class=" left-allignToNav  pb-5 mb-5"></div>

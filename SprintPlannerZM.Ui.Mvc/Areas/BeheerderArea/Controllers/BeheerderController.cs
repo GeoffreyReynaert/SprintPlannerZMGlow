@@ -589,13 +589,13 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             }
 
 
-            return View(await PaginatedList<Leerling>.CreateAsync(students.AsQueryable(), pageNumber ?? 1, 15));
+            return View(await PaginatedList<Leerling>.CreateAsync(students.AsQueryable(), pageNumber ?? 1, 12));
         }
 
 
         public IActionResult LeerlingDetails(int id)
         {
-            var leerling = _leerlingService.GetFullLeerling(id);
+            var leerling = _leerlingService.Get(id);
             return View("LeerlingDetails", leerling);
         }
 
@@ -666,7 +666,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             }
 
 
-            return View(await PaginatedList<Leerkracht>.CreateAsync(leerkrachten.AsQueryable(), pageNumber ?? 1, 15));
+            return View(await PaginatedList<Leerkracht>.CreateAsync(leerkrachten.AsQueryable(), pageNumber ?? 1, 12));
         }
 
         public IActionResult LeerkrachtDetails(long id)
@@ -744,23 +744,23 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             }
 
 
-            return View(await PaginatedList<Vak>.CreateAsync(vakken.AsQueryable(), pageNumber ?? 1, 15));
+            return View(await PaginatedList<Vak>.CreateAsync(vakken.AsQueryable(), pageNumber ?? 1, 12));
         }
 
-        public IActionResult VakDetails(int id)
+        public async Task<IActionResult> VakDetails(int id)
         {
-            var leerkracht = _vakService.Get(id);
+            var leerkracht = await _vakService.GetAsync(id);
             return View("VakDetails", leerkracht);
         }
 
         [HttpGet]
-        public IActionResult VakEdit(int id)
+        public async Task<IActionResult> VakEdit(int id)
         {
             if (id == 0)
             {
                 return RedirectToAction("VakBeheer");
             }
-            var vak = _vakService.Get(id);
+            var vak = await _vakService.GetAsync(id);
             return View(vak);
         }
 
@@ -812,7 +812,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             }
 
 
-            return View(await PaginatedList<Klas>.CreateAsync(klassen.AsQueryable(), pageNumber ?? 1, 15));
+            return View(await PaginatedList<Klas>.CreateAsync(klassen.AsQueryable(), pageNumber ?? 1, 12));
         }
 
 
@@ -885,7 +885,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             }
 
 
-            return View(await PaginatedList<Lokaal>.CreateAsync(lokalen.AsQueryable(), pageNumber ?? 1, 15));
+            return View(await PaginatedList<Lokaal>.CreateAsync(lokalen.AsQueryable(), pageNumber ?? 1, 12));
         }
 
         [HttpGet]

@@ -106,6 +106,9 @@ table {
     background-color: rgb(0,155,168);
 }
 
+.text-align {
+    text-align: center
+}
 
 .tbl-contentAgenda {
     height: 450px;

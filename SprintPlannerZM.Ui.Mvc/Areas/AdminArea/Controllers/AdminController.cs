@@ -2,12 +2,6 @@
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Newtonsoft.Json.Linq;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers

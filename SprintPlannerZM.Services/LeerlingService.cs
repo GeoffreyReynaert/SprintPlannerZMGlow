@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Query;
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
@@ -21,15 +17,14 @@ namespace SprintPlannerZM.Services
             _database = database;
         }
 
-        //Geoffrey
         public Leerling Get(long id)
         {
-
             var leerling = _database.Leerling
                 .Where(l => l.leerlingID == id)
                 .Include(l => l.Klas)
+                .ThenInclude(k=>k.Vakken)
                 .SingleOrDefault();
-
+            //.Include(k=>k.hulpleerling)
             return leerling;
         }
 
@@ -64,7 +59,7 @@ namespace SprintPlannerZM.Services
             var leerlingen = _database.Leerling.OrderBy(l => l.familieNaam).ToList();
             foreach (var leerling in leerlingen)
             {
-                leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == leerling.leerlingID);
+                leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == leerling.leerlingID);
                 leerling.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerling.KlasID);
             }
             return leerlingen;

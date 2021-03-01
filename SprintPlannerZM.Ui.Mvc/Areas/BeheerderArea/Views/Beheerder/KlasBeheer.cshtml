@@ -5,18 +5,19 @@
     ViewData["Title"] = "KlasBeheer";
 }
 
-<h2>Klassen</h2>
+<h2 class="pt-3">Klassen Beheer</h2>
 
 <p>
-    <a asp-action="">Create New</a>
+   
 </p>
 
 <form asp-action="KlasBeheer" method="get">
     <div class="form-actions no-color">
         <p>
-            vienden met Naam of voornaam: <input type="text" name="SearchString" value="@ViewData["nameFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="KlasBeheer">Back to Full List</a>
+            <input type="text" name="SearchString" value="@ViewData["nameFilter"]"placeholder="klasnaam" />
+            <input type="submit" value="Zoek" class="btn btn-secondary" /> |
+            <a asp-action="KlasBeheer">Complete lijst</a> |
+            <a asp-action="">Maak nieuwe Klas</a>
         </p>
     </div>
 </form>
@@ -33,7 +34,9 @@
         <th>
             aantal hulp leerlingen
         </th>
-        <th></th>
+        <th>
+            acties
+        </th>
     </tr>
     </thead>
     <tbody>
