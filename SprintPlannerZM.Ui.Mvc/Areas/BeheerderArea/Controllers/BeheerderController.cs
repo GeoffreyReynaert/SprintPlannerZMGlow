@@ -89,7 +89,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             //opvangen soap fouten
             var leerkacht = new Leerkracht() { leerkrachtID = 1, voornaam = "isEen", achternaam = "foutOpvanger", email = "test.test", status = false };
             var klas = new Klas() { klasID = 1, klasnaam = "0", titularisID = 1 };
-            _leerkrachtService.Create(leerkacht);
+           await _leerkrachtService.Create(leerkacht);
             await _klasService.CreateAsync(klas);
 
             var i = 1;
@@ -98,7 +98,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 Leerkracht titularis = SoapNaarleerkrachtmaker(soapLeerkrachtEnKlas);
                 Klas klasMetTitul = KlasMaker(soapLeerkrachtEnKlas);
 
-                _leerkrachtService.Create(titularis);
+              await _leerkrachtService.Create(titularis);
                await _klasService.CreateAsync(klasMetTitul);
                 geschrevenResults.Add("Klas " + i + "/" + titularisenMetKlas.Count + " met ID " + klasMetTitul.klasID + " klasnaam " + klasMetTitul.klasnaam + "/r/n"
                                       + " met titularisID " + klasMetTitul.titularisID + " naam " + titularis.achternaam + " " + titularis.voornaam);
