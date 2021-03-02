@@ -1,0 +1,83 @@
+﻿@model SprintPlannerZM.Model.PaginatedList<SprintPlannerZM.Model.Lokaal>
+
+@{
+    ViewData["Title"] = "LokaalBeheer";
+}
+
+<h2 class="pt-3">Lokalen Beheer</h2>
+
+<form asp-action="LokaalBeheer" method="get">
+    <div class="">
+        <p>
+            <input type="text" name="SearchString" value="@ViewData["nameFilter"]" placeholder="lokaalnaam" />
+            <input type="submit" value="Search" class="btn btn-secondary" /> |
+            <a asp-action="LokaalBeheer">Complete lijst</a> |
+            <a asp-action="">Maak nieuwe Lokaal</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                lokaal ID
+            </th>
+            <th>
+                <a asp-action="LokaalBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Lokaal naam</a>
+            </th>
+            <th>
+                <a asp-action="LokaalBeheer" asp-route-sortOrder="@ViewData["aantal"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Aantal plaatsen</a>
+            </th>
+            <th>
+                Type lokaal
+            </th>
+            <th>
+                acties
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.lokaalID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.lokaalnaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.capaciteit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.lokaaltype)
+                </td>
+                <td>
+                    <a asp-action="LokaalEdit" asp-route-id="@item.lokaalID">Edit</a> |
+                    <a asp-action="LokaalDetails" asp-route-id="@item.lokaalID">Details</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="LokaalBeheer"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @prevDisabled">
+    Vorige
+</a>
+<a asp-action="LokaalBeheer"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @nextDisabled">
+    Volgende
+</a>
+<div class=" left-allignToNav  pb-5 mb-5"></div>

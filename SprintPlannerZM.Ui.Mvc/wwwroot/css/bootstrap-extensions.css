@@ -88,6 +88,14 @@ table {
 .tbl-header {
     background-color: #0c747d;
     border: #bf6b3c solid 2px;
+    
+}
+.tbl-introduction {
+    height: 150px;
+    overflow-x: auto;
+    margin-top: 0px;
+    border: #bf6b3c solid 2px;
+    background-color: rgb(0,155,168);
 }
 
 .tbl-content {
@@ -98,6 +106,9 @@ table {
     background-color: rgb(0,155,168);
 }
 
+.text-align {
+    text-align: center
+}
 
 .tbl-contentAgenda {
     height: 450px;

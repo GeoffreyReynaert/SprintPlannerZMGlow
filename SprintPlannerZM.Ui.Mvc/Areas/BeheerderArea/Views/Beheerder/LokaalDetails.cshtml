@@ -1,0 +1,22 @@
+﻿@model SprintPlannerZM.Model.Lokaal
+
+
+@Model.lokaalnaam met id: @Model.lokaalID
+<br />
+naam afkorting @Model.naamafkorting
+<br />
+<br />
+type lokaal: @Model.lokaaltype
+<br />
+sprint lokaal: @Model.sprintlokaal
+<br />
+
+@Model.capaciteit
+<br />
+@foreach (var reservaties in Model.Sprintlokalen)
+{
+<span>
+    lokaal met id @reservaties.lokaalID    gereserveerd op @reservaties.datum @reservaties.tijd voor examen met id @reservaties.examenID  <br />
+
+</span>
+}

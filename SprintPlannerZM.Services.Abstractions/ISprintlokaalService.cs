@@ -1,14 +1,16 @@
 ﻿using SprintPlannerZM.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SprintPlannerZM.Services.Abstractions
 {
     public interface ISprintlokaalService
     {
-        Sprintlokaal Get(int id);
-        IList<Sprintlokaal> Find();
-        Sprintlokaal Create(Sprintlokaal sprintlokaal);
-        Sprintlokaal Update(int id, Sprintlokaal sprintlokaal);
-        bool Delete(int id);
+        Task<Sprintlokaal> Get(int id);
+        Task<IList<Sprintlokaal>> Find();
+        Task<IList<Sprintlokaal>> FindByExamID(int examID);
+        Task<Sprintlokaal> Create(Sprintlokaal sprintlokaal);
+        Task<Sprintlokaal> Update(int id, Sprintlokaal sprintlokaal);
+        Task<bool> Delete(int id);
     }
 }

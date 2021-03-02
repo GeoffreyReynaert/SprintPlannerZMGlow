@@ -2,6 +2,8 @@
 using SprintPlannerZM.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
@@ -14,47 +16,47 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
-        public Beheerder Get(int id)
+        public async Task<Beheerder> GetAsync(int id)
         {
-            return _database.Beheerder.SingleOrDefault(d => d.beheerderID == id);
+            return await _database.Beheerder.SingleOrDefaultAsync(d => d.beheerderID == id);
         }
 
-        public IList<Beheerder> Find()
+        public async Task<IList<Beheerder>> FindAsync()
         {
-            return _database.Beheerder.ToList();
+            return await _database.Beheerder.ToListAsync();
         }
 
-        public Beheerder Create(Beheerder beheerder)
+        public async Task<Beheerder> CreateAsync(Beheerder beheerder)
         {
-            _database.Beheerder.Add(beheerder);
-            _database.SaveChanges();
+           await _database.Beheerder.AddAsync(beheerder);
+           await _database.SaveChangesAsync();
             return beheerder;
         }
 
-        public Beheerder Update(int id, Beheerder beheerder)
+        public async Task<Beheerder> UpdateAsync(int id, Beheerder beheerder)
         {
             {
-                var dBeheerder = Get(id);
+                var dBeheerder = await GetAsync(id);
                 if (dBeheerder == null)
                 {
                     return beheerder;
                 }
                 _database.Beheerder.Update(dBeheerder);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return beheerder;
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             {
-                var dBeheerder = Get(id);
+                var dBeheerder = await GetAsync(id);
                 if (dBeheerder == null)
                 {
                     return false;
                 }
                 _database.Beheerder.Remove(dBeheerder);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return true;
             }
         }

@@ -36,11 +36,8 @@ $(function () {
 
     $("#importTitulEnKlas").on("click", getMessages);
     $("#ImportKlasVakLeerkrLeerlEnRelaties").on("click", getMessagesFromRelationImport);
-    $("#beherenLeerlingen").on("click", getLeerlingen);
-    $("#beherenLeerkrachten").on("click", getLeerkrachten);
     $("#beherenKlassen").on("click", getKlassen);
     $("#beherenVakken").on("click", getVakken);
-    $("#beherenLokalen").on("click", getLokalen);
 
     //bij laden van de index
     //  $(document).ready(getPlayerInfo);
@@ -67,37 +64,6 @@ const getMessagesFromRelationImport = () => {
     });
 };
 
-const getLeerlingen = () => {
-    $.ajax({
-        type: "GET",
-        url: 'BeherenLeerling',
-        success: function (response) {
-            alert("Dank u voor het wachten ");
-            $("#beheerWeergave").html(response);
-            getLeerlingenLijst();
-        }
-    });
-}; 
-
-const getLeerlingenLijst = () => {
-    $.ajax({
-        type: "GET",
-        url: 'GetLeerlingLijst',
-        success: function (response) {
-            $("#cmbLijsten").html(response);
-        }
-    });
-};
-
-const getLeerkrachten = () => {
-    $.ajax({
-        type: "GET",
-        url: 'BeherenLeerkracht',
-        success: function (response) {
-            $("#beheerWeergave").html(response);
-        }
-    });
-};
 
 const getVakken = () => {
     $.ajax({
@@ -119,13 +85,4 @@ const getKlassen = () => {
     });
 };
 
-const getLokalen = () => {
-    $.ajax({
-        type: "GET",
-        url: 'BeherenLokalen',
-        success: function (response) {
-            $("#beheerWeergave").html(response);
-        }
-    });
-};
 

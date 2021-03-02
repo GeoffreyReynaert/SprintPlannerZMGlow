@@ -3,16 +3,16 @@
     var count = 0;
     var idMaker = "";
 }
-<br/>
+<br />
 <section class="left-allignToNav pt-5 containerAgenda">
     <div class="tbl-headerAgenda">
         <table>
             <thead>
-            <span class="text-center text-white">
-                <b>
-                    <h5>Januari @Model[0].datum</h5>
-                </b>
-            </span>
+                <span class="text-center text-white">
+                    <b>
+                        <h5>Januari @Model[0].datum</h5>
+                    </b>
+                </span>
             </thead>
         </table>
     </div>
@@ -21,10 +21,10 @@
             @foreach (var examen in Model)
             {
                 count++;
-                idMaker = "position" + count; 
+                idMaker = "position" + count;
                 <div class="card-body cardBodyCSS align-items-center cardMargin" id="@idMaker">
-                    <h6>@examen.datum</h6><a class="btn btn-center btn-gen">Genereer</a>
-                </div>
+                <h6>@examen.datum</h6><a  type="button" asp-controller="Admin" asp-action="LeerlingVerdeling" asp-route-datum="@examen.datum" class="btn btn-center btn-gen">Genereer</a>
+            </div>
             }
         </div>
     </div>

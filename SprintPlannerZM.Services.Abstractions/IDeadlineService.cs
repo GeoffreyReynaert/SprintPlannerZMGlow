@@ -1,14 +1,15 @@
 ﻿using SprintPlannerZM.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SprintPlannerZM.Services.Abstractions
 {
     public interface IDeadlineService
     {
-        Deadline Get(int id);
-        IList<Deadline> Find();
-        Deadline Create(Deadline deadline);
-        Deadline Update(int id, Deadline deadline);
-        bool Delete(int id);
+        Task<Deadline> Get(int id);
+        Task<IList<Deadline>> Find();
+        Task<Deadline> Create(Deadline deadline);
+        Task<Deadline> Update(int id, Deadline deadline);
+        Task<bool> Delete(int id);
     }
 }

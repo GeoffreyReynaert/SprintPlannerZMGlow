@@ -2,7 +2,10 @@
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
@@ -15,47 +18,63 @@ namespace SprintPlannerZM.Services
             _database = database;
         }
 
-        public Lokaal Get(int id)
+        public async Task<Lokaal> GetAsync(int id)
         {
-            return _database.Lokaal.SingleOrDefault(l => l.lokaalID == id);
+            return await _database.Lokaal.SingleOrDefaultAsync(l => l.lokaalID == id);
         }
 
-        public Lokaal GetByName(string lokaalnaam)
+        public async Task<Lokaal> GetByNameAsync(string lokaalnaam)
         {
-            return _database.Lokaal.SingleOrDefault(l => l.lokaalnaam.Equals(lokaalnaam));
+            return await _database.Lokaal.SingleOrDefaultAsync(l => l.lokaalnaam.Equals(lokaalnaam));
         }
 
-        public IList<Lokaal> Find()
+        public async Task<IList<Lokaal>> FindAsync()
         {
-            return _database.Lokaal.ToList();
+            return await _database.Lokaal.ToListAsync();
         }
 
-        public Lokaal Create(Lokaal lokaal)
+        public async Task<IList<Lokaal>> FindForSprintAsync()
         {
-            _database.Lokaal.Add(lokaal);
-            _database.SaveChanges();
+            return await _database.Lokaal.Where(l => l.lokaaltype.Equals("sprint")).ToListAsync();
+        }
+
+
+        public async Task<IQueryable<Lokaal>> FindAsyncPagingQueryable()
+        {
+            var lokalen =  _database.Lokaal
+                .Include(l => l.Sprintlokalen)
+                .AsQueryable();
+
+            return lokalen;
+        }
+
+
+        public async Task<Lokaal> CreateAsync(Lokaal lokaal)
+        {
+            await _database.Lokaal.AddAsync(lokaal);
+            await _database.SaveChangesAsync();
             return lokaal;
         }
 
-        public Lokaal Update(int id, Lokaal lokaal)
+        public async Task<Lokaal> UpdateAsync(int id, Lokaal lokaal)
         {
             {
-                var lokaalToUpd = _database.Lokaal.SingleOrDefault(l => l.lokaalID == id);
+                var lokaalToUpd = await _database.Lokaal.SingleOrDefaultAsync(l => l.lokaalID == id);
                 lokaalToUpd.lokaalnaam = lokaal.lokaalnaam;
                 lokaalToUpd.naamafkorting = lokaal.naamafkorting;
                 lokaalToUpd.sprintlokaal = lokaal.sprintlokaal;
                 lokaalToUpd.capaciteit = lokaal.capaciteit;
                 lokaalToUpd.lokaaltype = lokaal.lokaaltype;
                 _database.Lokaal.Update(lokaalToUpd);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return lokaalToUpd;
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             {
-                var dblokaal = Get(id);
+                var dblokaal = await GetAsync(id);
                 if (dblokaal == null)
                 {
                     return false;

@@ -3,6 +3,8 @@ using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
@@ -15,20 +17,25 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
-        public Klas Get(int id)
-        {
-            var klas = _database.Klas.SingleOrDefault(k => k.klasID == id);
-            klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
-            klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
-            klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
 
+        public async Task<Klas> GetAsync(int id)
+        {
+            var klas =await _database.Klas
+                .Where(k => k.klasID == id)
+                .Include(k => k.Leerkracht)
+                .Include(k => k.Leerlingen)
+                .Include(k => k.Vakken)
+                .ThenInclude(v=>v.Leerkracht)
+                .SingleOrDefaultAsync();
             return klas;
         }
 
-        public Klas GetByKlasName(string name)
+
+        public async Task<Klas> GetByKlasName(string name)
         {
-            var klas = _database.Klas.SingleOrDefault(k => k.klasnaam.Equals(name));
-            klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+            var klas = await _database.Klas.Where(k => k.klasnaam.Equals(name))
+                .Include(k => k.Leerlingen)
+                .SingleOrDefaultAsync();
             return klas;
         }
 
@@ -78,11 +85,7 @@ namespace SprintPlannerZM.Services
                      klasnaam.Substring(0, 3).Equals("6KA"))
 
             {
-                //if (klasnaam.Substring(0, 4).Equals("5BHV") ||
-                //    klasnaam.Substring(0, 4).Equals("5BHZ") ||
-                //    klasnaam.Substring(0, 4).Equals("5KAB") ||
-                //    klasnaam.Substring(0, 4).Equals("5KAV"))
-                //{
+
                 klas = _database.Klas.SingleOrDefault(l =>
                     l.klasnaam.Substring(0, 4).Equals(klasnaam.Substring(0, 4)));
             }
@@ -109,54 +112,90 @@ namespace SprintPlannerZM.Services
             return klas;
         }
 
-        public IList<Klas> Find()
-        {
-            var klassen = _database.Klas.OrderBy(k => k.klasnaam).ToList();
 
-            foreach (var klas in klassen)
-            {
-                klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
-                klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
-                klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
-            }
+        public async Task<IList<Klas>> Find()
+        {
+            var klassen = await _database.Klas
+                .Include(k => k.Leerkracht)
+                .Include(k => k.Leerlingen)
+                .Include(k => k.Vakken)
+                .OrderBy(k => k.klasnaam).ToListAsync();
+
+             return  klassen;
+        }
+
+        public async Task<IQueryable<Klas>> FindAsyncPagingQueryable()
+        {
+            var klassen = _database.Klas
+                .Include(k => k.Leerkracht)
+                .Include(k => k.Leerlingen)
+                .Include(k => k.Vakken)
+                .AsQueryable();
+
             return klassen;
         }
 
-        public Klas Create(Klas klas)
+        public async Task<Klas> CreateAsync(Klas klas)
         {
-            var dbLeerkracht = _database.Klas.SingleOrDefault(l => l.klasID == klas.klasID);
+            var dbLeerkracht = await _database.Klas.SingleOrDefaultAsync(l => l.klasID == klas.klasID);
             if (dbLeerkracht == null)
             {
-                _database.Klas.Add(klas);
-                _database.SaveChanges();
+                await _database.Klas.AddAsync(klas);
+                await _database.SaveChangesAsync();
             }
             return klas;
         }
 
-        public Klas Update(int id, Klas klas)
+
+        public async Task<Klas> UpdateAsync(int id, Klas klas)
         {
             {
-                var klasToUpd = _database.Klas.SingleOrDefault(l => l.klasID == id);
+                var klasToUpd = await _database.Klas.SingleOrDefaultAsync(l => l.klasID == id);
                 klasToUpd.klasnaam = klas.klasnaam;
                 klasToUpd.titularisID = klas.titularisID;
-                _database.Klas.Update(klasToUpd);
-                _database.SaveChanges();
+                 _database.Klas.Update(klasToUpd);
+                await _database.SaveChangesAsync();
                 return klasToUpd;
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             {
-                var dbKlas = Get(id);
+                var dbKlas = await GetAsync(id);
                 if (dbKlas == null)
                 {
                     return false;
                 }
                 _database.Klas.Remove(dbKlas);
-                _database.SaveChanges();
+                await _database.SaveChangesAsync();
                 return true;
             }
         }
     }
 }
+
+
+
+//public Klas OldGet(int id)
+//{
+//    var klas = _database.Klas.SingleOrDefault(k => k.klasID == id);
+//    klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+//    klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
+//    klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
+
+//    return klas;
+//}
+
+//public IList<Klas> Find()
+//{
+//var klassen = _database.Klas.OrderBy(k => k.klasnaam).ToList();
+
+//    foreach (var klas in klassen)
+//{
+//    klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+//    klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
+//    klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
+//}
+//return klassen;
+//}
