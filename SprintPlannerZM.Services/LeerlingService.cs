@@ -23,10 +23,13 @@ namespace SprintPlannerZM.Services
                 .Where(l => l.leerlingID == id)
                 .Include(l => l.Klas)
                 .ThenInclude(k=>k.Vakken)
+                .Include(k => k.hulpleerling).DefaultIfEmpty()
                 .SingleOrDefault();
-            //.Include(k=>k.hulpleerling)
+
             return leerling;
         }
+
+
 
         public Leerling GetFullLeerling(long id)
         {
@@ -143,3 +146,4 @@ namespace SprintPlannerZM.Services
 //    .ThenInclude(s => s.Vak)
 //    .SingleOrDefault();
 //}
+

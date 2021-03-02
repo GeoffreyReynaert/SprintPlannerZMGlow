@@ -2,6 +2,7 @@
 using SprintPlannerZM.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
@@ -14,27 +15,27 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
-        public Beheerder Get(int id)
+        public async Task<Beheerder> GetAsync(int id)
         {
-            return _database.Beheerder.SingleOrDefault(d => d.beheerderID == id);
+            return  _database.Beheerder.SingleOrDefault(d => d.beheerderID == id);
         }
 
-        public IList<Beheerder> Find()
+        public async Task<IList<Beheerder>> FindAsync()
         {
             return _database.Beheerder.ToList();
         }
 
-        public Beheerder Create(Beheerder beheerder)
+        public async Task<Beheerder> CreateAsync(Beheerder beheerder)
         {
             _database.Beheerder.Add(beheerder);
             _database.SaveChanges();
             return beheerder;
         }
 
-        public Beheerder Update(int id, Beheerder beheerder)
+        public async Task<Beheerder> UpdateAsync(int id, Beheerder beheerder)
         {
             {
-                var dBeheerder = Get(id);
+                var dBeheerder = await GetAsync(id);
                 if (dBeheerder == null)
                 {
                     return beheerder;
@@ -45,10 +46,10 @@ namespace SprintPlannerZM.Services
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             {
-                var dBeheerder = Get(id);
+                var dBeheerder = await GetAsync(id);
                 if (dBeheerder == null)
                 {
                     return false;

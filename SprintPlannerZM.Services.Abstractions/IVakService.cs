@@ -8,11 +8,11 @@ namespace SprintPlannerZM.Services.Abstractions
     public interface IVakService
     {
         Task<Vak> GetAsync(int id);
-        Vak GetBySubString(string vakNaam, int klasID);
-        IList<Vak> Find();
+        Task<Vak> GetBySubString(string vakNaam, int klasID);
+        Task<IList<Vak>> Find();
         Task<IQueryable<Vak>> FindAsyncPagingQueryable();
-        Vak Create(Vak vak);
-        Vak Update(int id, Vak vak);
+        Task<Vak> Create(Vak vak);
+        Task<Vak> UpdateAsync(int id, Vak vak);
         Task<bool> Delete(int id);
     }
 }
