@@ -1,14 +1,15 @@
 ﻿using SprintPlannerZM.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SprintPlannerZM.Services.Abstractions
 {
     public interface ISprintvakService
     {
-        Sprintvak Get(int id);
-        IList<Sprintvak> Find();
-        Sprintvak Create(Sprintvak sprintvak);
-        Sprintvak Update(int id, Sprintvak sprintvak);
-        bool Delete(int id);
+        Task<Sprintvak> GetAsync(int id);
+        Task<IList<Sprintvak>> FindAsync();
+        Task<Sprintvak> CreateAsync(Sprintvak sprintvak);
+        Task<Sprintvak> UpdateAsync(int id, Sprintvak sprintvak);
+        Task<bool> DeleteAsync(int id);
     }
 }

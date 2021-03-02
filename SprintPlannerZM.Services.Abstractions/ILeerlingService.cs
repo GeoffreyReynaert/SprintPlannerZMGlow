@@ -7,14 +7,14 @@ namespace SprintPlannerZM.Services.Abstractions
 {
     public interface ILeerlingService
     {
-        Leerling Get(long id);
-        Leerling GetToImport(long id);
-        Leerling GetFullLeerling(long id);
-        IList<Leerling> Find();
+        Task<Leerling> Get(long id);
+        Task<Leerling> GetToImport(long id);
+        Task<Leerling> GetFullLeerling(long id);
+        Task<IList<Leerling>> Find();
         Task<IQueryable<Leerling>> FindAsyncPagingQueryable();
-        IList<Leerling> FindByKlasID(int klasid);
-        Leerling Create(Leerling leerling);
-        Leerling Update(long id, Leerling leerling);
-        bool Delete(int id);
+        Task<IList<Leerling>> FindByKlasID(int klasid);
+        Task<Leerling> Create(Leerling leerling);
+        Task<Leerling> Update(long id, Leerling leerling);
+        Task<bool> Delete(int id);
     }
 }

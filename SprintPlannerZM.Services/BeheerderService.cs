@@ -3,6 +3,7 @@ using SprintPlannerZM.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
@@ -17,18 +18,18 @@ namespace SprintPlannerZM.Services
         }
         public async Task<Beheerder> GetAsync(int id)
         {
-            return  _database.Beheerder.SingleOrDefault(d => d.beheerderID == id);
+            return await _database.Beheerder.SingleOrDefaultAsync(d => d.beheerderID == id);
         }
 
         public async Task<IList<Beheerder>> FindAsync()
         {
-            return _database.Beheerder.ToList();
+            return await _database.Beheerder.ToListAsync();
         }
 
         public async Task<Beheerder> CreateAsync(Beheerder beheerder)
         {
-            _database.Beheerder.Add(beheerder);
-            _database.SaveChanges();
+           await _database.Beheerder.AddAsync(beheerder);
+           await _database.SaveChangesAsync();
             return beheerder;
         }
 
@@ -41,7 +42,7 @@ namespace SprintPlannerZM.Services
                     return beheerder;
                 }
                 _database.Beheerder.Update(dBeheerder);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return beheerder;
             }
         }
@@ -55,7 +56,7 @@ namespace SprintPlannerZM.Services
                     return false;
                 }
                 _database.Beheerder.Remove(dBeheerder);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return true;
             }
         }

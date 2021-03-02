@@ -3,6 +3,8 @@ using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
@@ -17,10 +19,10 @@ namespace SprintPlannerZM.Services
             _database = database;
         }
 
-        public Examenrooster Get(int id)
+        public async Task<Examenrooster> Get(int id)
         {
-            var examenrooster = _database.Examenrooster.SingleOrDefault(e => e.examenID == id);
-            var vak = _database.Vak.SingleOrDefault(v => v.vakID == examenrooster.vakID);
+            var examenrooster =await _database.Examenrooster.SingleOrDefaultAsync(e => e.examenID == id);
+            var vak =await _database.Vak.SingleOrDefaultAsync(v => v.vakID == examenrooster.vakID);
             examenrooster.Vak = vak;
             return examenrooster;
         }
@@ -28,21 +30,23 @@ namespace SprintPlannerZM.Services
 
 
         //Enkel voor de leerlingenverdeling
-        public IList<Examenrooster> FindByDatum(DateTime date)
+        public async Task<IList<Examenrooster>> FindByDatum(DateTime date)
         {
-            var examenroosters = _database.Examenrooster.Where(e => e.datum == date).ToList();
+            var examenroosters =await _database.Examenrooster.Where(e => e.datum == date).ToListAsync();
 
             foreach (var rooster in examenroosters)
             {
-                rooster.Vak = _database.Vak.SingleOrDefault(v => v.vakID == rooster.vakID); ;
+                rooster.Vak = await _database.Vak.SingleOrDefaultAsync(v => v.vakID == rooster.vakID); ;
             }
             return examenroosters;
         }
 
-        public IList<Examenrooster> FindDistinct()
+        //ADMIN leerlingverdeling
+        public async Task<IList<Examenrooster>> FindDistinct()
         {
-            var examenRoosters = _database.Examenrooster.Select(e => e.datum).Distinct().OrderBy(e => e.Date).ToList();
             IList<Examenrooster> examens = new List<Examenrooster>();
+            var examenRoosters = await _database.Examenrooster.Select(e => e.datum).Distinct().OrderBy(e => e.Date).ToListAsync();
+            
             foreach (var String in examenRoosters)
             {
                 var rooster = new Examenrooster()
@@ -54,49 +58,49 @@ namespace SprintPlannerZM.Services
             return examens;
         }
 
-        public IList<Examenrooster> Find()
+        public async Task<IList<Examenrooster>> Find()
         {
-            var examenRoosters = _database.Examenrooster.ToList();
+            var examenRoosters = await _database.Examenrooster.ToListAsync();
             foreach (var rooster in examenRoosters)
             {
-                rooster.Vak = _database.Vak.SingleOrDefault(v => v.vakID == rooster.vakID);
+                rooster.Vak =await _database.Vak.SingleOrDefaultAsync(v => v.vakID == rooster.vakID);
             }
             return examenRoosters;
         }
 
-        public Examenrooster Create(Examenrooster examenrooster)
+        public async Task<Examenrooster> Create(Examenrooster examenrooster)
         {
-            _database.Examenrooster.Add(examenrooster);
-            _database.SaveChanges();
+           await _database.Examenrooster.AddAsync(examenrooster);
+           await _database.SaveChangesAsync();
             return examenrooster;
         }
 
-        public Examenrooster Update(int id, Examenrooster examenrooster)
+        public async Task<Examenrooster> Update(int id, Examenrooster examenrooster)
         {
             {
-                var dbExamenrooster = Get(id);
+                var dbExamenrooster =await Get(id);
                 if (dbExamenrooster == null)
                 {
                     return examenrooster;
                 }
 
                 _database.Examenrooster.Update(dbExamenrooster);
-                _database.SaveChanges();
+                await _database.SaveChangesAsync();
                 return examenrooster;
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             {
-                var dbExamenrooster = Get(id);
+                var dbExamenrooster =await Get(id);
                 if (dbExamenrooster == null)
                 {
                     return false;
                 }
 
                 _database.Examenrooster.Remove(dbExamenrooster);
-                _database.SaveChanges();
+                _database.SaveChangesAsync();
                 return true;
             }
         }

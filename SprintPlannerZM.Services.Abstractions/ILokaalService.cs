@@ -7,13 +7,13 @@ namespace SprintPlannerZM.Services.Abstractions
 {
     public interface ILokaalService
     {
-        Lokaal Get(int id);
-        Lokaal GetByName(string lokaalnaam);
-        IList<Lokaal> Find();
+        Task<Lokaal> GetAsync(int id);
+        Task<Lokaal> GetByNameAsync(string lokaalnaam);
+        Task<IList<Lokaal>> FindAsync();
         Task<IQueryable<Lokaal>> FindAsyncPagingQueryable();
-        IList<Lokaal> FindForSprint();
-        Lokaal Create(Lokaal lokaal);
-        Lokaal Update(int id, Lokaal lokaal);
-        bool Delete(int id);
+        Task<IList<Lokaal>> FindForSprintAsync();
+        Task<Lokaal> CreateAsync(Lokaal lokaal);
+        Task<Lokaal> UpdateAsync(int id, Lokaal lokaal);
+        Task<bool> Delete(int id);
     }
 }

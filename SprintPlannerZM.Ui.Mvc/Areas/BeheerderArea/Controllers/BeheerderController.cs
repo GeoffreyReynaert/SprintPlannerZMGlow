@@ -132,7 +132,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 if (element2.Element("internnummer").Value != "")
                 {
                     Console.WriteLine(element2.Parent.Parent.Element("klasnaam").Value);
-                    var dbKlas = _klasService.GetByKlasName(element2.Parent.Parent.Element("klasnaam").Value);
+                    var dbKlas = await _klasService.GetByKlasName(element2.Parent.Parent.Element("klasnaam").Value);
 
                     var soapLeerling = new Leerling
                     {
@@ -153,7 +153,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             {
                 geschrevenMessages.Add(leerling.voorNaam + " " + leerling.familieNaam);
                 geschrevenMessages.Add("leerling " + i + "/" + distinctLeerlingen.Count + " is toegevoegd");
-                _leerlingService.Create(leerling);
+                await _leerlingService.Create(leerling);
                 i++;
             }
 
@@ -172,7 +172,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 //voor elke leerling van het vak worden de id bijgehouden en gebruikt om de klas uit de db te halen
                 foreach (var leerling in element.Descendants("leerling"))
                 {
-                    stamboekNummer = Int64.Parse(leerling.Element("stamboeknummer").Value.ToString());
+                    stamboekNummer = Int64.Parse(leerling.Element("stamboeknummer").Value);
                     stamboekenList.Add(stamboekNummer);
                     Console.WriteLine(stamboekNummer);
                 }
@@ -180,15 +180,15 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 //indien er geen id's gevonden zijn en dus geen leerlingen in de klas
                 if (stamboekenList.Count != 0)
                 {
-                    dbLeerling = _leerlingService.GetToImport(stamboekenList[0]);
+                    dbLeerling = await _leerlingService.GetToImport(stamboekenList[0]);
                     if (dbLeerling == null)
                     {
-                        dbLeerling = _leerlingService.GetToImport(stamboekenList[1]);
+                        dbLeerling = await _leerlingService.GetToImport(stamboekenList[1]);
                     }
 
                     if (element.Element("stamboeknummer").Value.Equals("NULL"))
                     {
-                        var number = _leerkrachtService.Find().Count(l => l.leerkrachtID > 0 && l.leerkrachtID < 100);
+                        var number = _leerkrachtService.Find().Result.Count(l => l.leerkrachtID > 0 && l.leerkrachtID < 100);
                         var soapVak = new Vak()
                         {
                             leerkrachtID = number + 1,
@@ -217,7 +217,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
                 if (element.Element("stamboeknummer").Value.Equals("NULL"))
                 {
-                    var number = _leerkrachtService.Find().Count(l => l.leerkrachtID > 0 && l.leerkrachtID < 1000);
+                    var number = _leerkrachtService.Find().Result.Count(l => l.leerkrachtID > 0 && l.leerkrachtID < 1000);
                     var soapVakLeerkracht = new Leerkracht()
                     {
                         leerkrachtID = number + idMaker,
@@ -253,17 +253,18 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             {
                 geschrevenMessages.Add(leerkracht.voornaam + " " + leerkracht.achternaam);
                 geschrevenMessages.Add("leerkracht " + i + "/" + distinctLeerkrachten.Count + " is toegevoegd");
-                _leerkrachtService.Create(leerkracht);
+                await _leerkrachtService.Create(leerkracht);
                 i++;
             }
-
+            var vakSchoonmaak = new Vak { vaknaam = "schoonmaak", klasID = 1, leerkrachtID = 1 };
+            await _vakService.Create(vakSchoonmaak);
             i = 1;
             foreach (var vak in vakken)
             {
                 //vak.Klas=klassen.SingleOrDefault()
                 geschrevenMessages.Add(vak.vaknaam + " klasid: " + vak.klasID + " leerkrachtID: " + vak.leerkrachtID);
                 geschrevenMessages.Add("Vak " + i + "/" + vakken.Count + " is toegevoegd");
-                _vakService.Create(vak);
+              await  _vakService.Create(vak);
                 i++;
             }
 
@@ -315,7 +316,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 {
                     if (!lokaal.lokaalnaam.Equals("lokaalnaam"))
                     {
-                        _lokaalService.Create(lokaal);
+                        await _lokaalService.CreateAsync(lokaal);
                         berichten.Add(lokaal.lokaalnaam + " " + lokaal.naamafkorting + " is created");
                     }
                 }
@@ -335,8 +336,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                 file = Request.Form.Files[0];
 
                 var xlsStream = file.OpenReadStream();
-                var vakSchoonmaak = new Vak { vaknaam = "schoonmaak", klasID = 1, leerkrachtID = 1 };
-                _vakService.Create(vakSchoonmaak);
+
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
                 using (var reader = ExcelReaderFactory.CreateReader(xlsStream))
@@ -369,16 +369,16 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     if (reader.GetValue(column).ToString().Contains("SCHOONMAAK")
                                     ) // opvangen van poets tijd
                                     {
-                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(), 1);
+                                        rooster.Vak = await _vakService.GetBySubString(reader.GetValue(column).ToString(), 1);
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("MAVO"))
                                     {
-                                        rooster.Vak = _vakService.GetBySubString("Maatschapp", klas.klasID);
+                                        rooster.Vak = await _vakService.GetBySubString("Maatschapp", klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + " MAVO tis gelukt");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("SCHOOLTAAL")) // OKAN EXAMENS
                                     {
-                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                        rooster.Vak = await _vakService.GetBySubString(reader.GetValue(column).ToString(),
                                             klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + "Schooltaal tis gelukt");
                                     }
@@ -386,37 +386,36 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     {
                                         //TODO Veranderen van AAR naar AA moet consitent blijven zoals bv 3 letters en moet vast liggen met charlotte 3 is nodig AA te weinig
 
-                                        rooster.Vak = _vakService.GetBySubString("Aar", klas.klasID);
+                                        rooster.Vak = await _vakService.GetBySubString("Aar", klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + "Aardrijkskunde tis gelukt");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("NAT.WET."))
                                     {
-                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                        rooster.Vak = await _vakService.GetBySubString(reader.GetValue(column).ToString(),
                                             klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + "nat.wet tis gelukt");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("FRA"))
                                     {
-                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                        rooster.Vak = await _vakService.GetBySubString(reader.GetValue(column).ToString(),
                                             klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + "frans tis gelukt");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("STD.V/D PUBL"))
                                     {
-                                        rooster.Vak =
-                                            _vakService.GetBySubString("studie van de".ToString(), klas.klasID);
+                                        rooster.Vak = await _vakService.GetBySubString("studie van de".ToString(), klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) +
                                                           "studie van de publiciteit tis gelukt");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("WIS"))
                                     {
-                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                        rooster.Vak = await _vakService.GetBySubString(reader.GetValue(column).ToString(),
                                             klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + "wiskunde  tis gelukt ");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("KI"))
                                     {
-                                        rooster.Vak = _vakService.GetBySubString("kunst", klas.klasID);
+                                        rooster.Vak = await _vakService.GetBySubString("kunst", klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + "kunst initiatie tis gelukt ");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("IO3") ||
@@ -427,13 +426,13 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                         if (klas.klasID != 1
                                         ) // laatste van de input io opvangen die geen vak heeft nog klas
                                         {
-                                            rooster.Vak = _vakService.GetBySubString("integrale opdr", klas.klasID);
+                                            rooster.Vak = await _vakService.GetBySubString("integrale opdr", klas.klasID);
                                             Console.WriteLine(reader.GetValue(column) +
                                                               "Integrale opdrachten tis gelukt ");
                                         }
                                         else
                                         {
-                                            rooster.Vak = _vakService.GetBySubString("SCHOONMAAK", klas.klasID);
+                                            rooster.Vak = await _vakService.GetBySubString("SCHOONMAAK", klas.klasID);
                                             Console.WriteLine(reader.GetValue(column) +
                                                               "Integrale opdrachten tis gelukt ");
                                         }
@@ -449,28 +448,28 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     {
                                         //TODO instroom bestaat niet als vak in smartschool wat is dit ? momenteel omzeild
 
-                                        rooster.Vak = _vakService.GetBySubString("schoonmaak", 1);
+                                        rooster.Vak = await _vakService.GetBySubString("schoonmaak", 1);
                                         Console.WriteLine(reader.GetValue(column) + "Niet gekende vakken opgemaakt ");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("OAVI"))
                                     {
-                                        rooster.Vak = _vakService.GetBySubString("Ortho", klas.klasID);
+                                        rooster.Vak = await _vakService.GetBySubString("Ortho", klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + "ortho is gelukt ");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("PSYCHOLOGIE"))
                                     {
-                                        rooster.Vak = _vakService.GetBySubString("Beroeps", klas.klasID);
+                                        rooster.Vak = await _vakService.GetBySubString("Beroeps", klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) +
                                                           "Beroepsgerichte psychologie is gelukt ");
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("R EN E"))
                                     {
-                                        rooster.Vak = _vakService.GetBySubString("Religie", klas.klasID);
+                                        rooster.Vak = await _vakService.GetBySubString("Religie", klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + "Religie en ethiek is gelukt ");
                                     }
                                     else
                                     {
-                                        rooster.Vak = _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                        rooster.Vak = await _vakService.GetBySubString(reader.GetValue(column).ToString(),
                                             klas.klasID);
                                         Console.WriteLine(reader.GetValue(column).ToString());
                                     }
@@ -482,7 +481,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                 {
                                     if (reader.GetValue(column) != null)
                                     {
-                                        lokaal = _lokaalService.GetByName(reader.GetValue(column).ToString());
+                                        lokaal = await _lokaalService.GetByNameAsync(reader.GetValue(column).ToString());
                                         Console.WriteLine(reader.GetValue(column).ToString());
                                     }
 
@@ -515,7 +514,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
                 foreach (var rooster in examenroosters)
                 {
-                    _examenroosterService.Create(rooster);
+                    await _examenroosterService.Create(rooster);
                     berichten.Add("examen op " + rooster.tijd + " " + rooster.datum + " met id" + rooster.examenID +
                                   " is aangemaakt");
                 }
@@ -593,17 +592,17 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
 
-        public IActionResult LeerlingDetails(int id)
+        public async Task<IActionResult> LeerlingDetails(int id)
         {
-            var leerling = _leerlingService.Get(id);
+            var leerling = await _leerlingService.Get(id);
             return View("LeerlingDetails", leerling);
         }
 
 
         [HttpGet] // get van de gekozen leerling
-        public IActionResult LeerlingEdit(int id)
+        public async Task<IActionResult> LeerlingEdit(int id)
         {
-            var leerling = _leerlingService.Get(id);
+            var leerling = await _leerlingService.Get(id);
             return View(leerling);
         }
 
@@ -669,28 +668,28 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             return View(await PaginatedList<Leerkracht>.CreateAsync(leerkrachten.AsQueryable(), pageNumber ?? 1, 12));
         }
 
-        public IActionResult LeerkrachtDetails(long id)
+        public async Task<IActionResult> LeerkrachtDetails(long id)
         {
-            var leerkracht = _leerkrachtService.Get(id);
+            var leerkracht = await _leerkrachtService.Get(id);
             return View("LeerkrachtDetails", leerkracht);
         }
 
         [HttpGet]
-        public IActionResult LeerkrachtEdit(long id)
+        public async Task<IActionResult> LeerkrachtEdit(long id)
         {
             if (id == 0)
             {
                 return RedirectToAction("LeerkrachtBeheer");
             }
-            var leerkracht = _leerkrachtService.Get(id);
+            var leerkracht = await _leerkrachtService.Get(id);
             return View(leerkracht);
         }
 
 
         [HttpPost]
-        public IActionResult LeerkrachtEdit(Leerkracht leerkracht)
+        public async Task<IActionResult> LeerkrachtEdit(Leerkracht leerkracht)
         {
-            _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
+            await _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
             return RedirectToAction("LeerkrachtBeheer");
         }
 
@@ -765,9 +764,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
         [HttpPost]
-        public IActionResult VakEdit(Vak vak)
+        public async Task<IActionResult> VakEdit(Vak vak)
         {
-            _vakService.Update(vak.vakID, vak);
+          await  _vakService.UpdateAsync(vak.vakID, vak);
 
             return RedirectToAction("VakBeheer");
         }
@@ -889,28 +888,28 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
         [HttpGet]
-        public IActionResult LokaalDetails(int id)
+        public async Task<IActionResult> LokaalDetails(int id)
         {
-            var lokaal = _lokaalService.Get(id);
+            var lokaal = await _lokaalService.GetAsync(id);
             return View("LokaalDetails", lokaal);
         }
 
 
         [HttpGet]
-        public IActionResult LokaalEdit(int id)
+        public async Task<IActionResult> LokaalEdit(int id)
         {
             if (id == 0)
             {
                 return RedirectToAction("LokaalBeheer");
             }
-            var lokaal = _lokaalService.Get(id);
+            var lokaal = await _lokaalService.GetAsync(id);
             return View(lokaal);
         }
 
         [HttpPost]
-        public IActionResult LokaalEdit(Lokaal lokaal)
+        public async Task<IActionResult> LokaalEdit(Lokaal lokaal)
         {
-            _lokaalService.Update(lokaal.lokaalID, lokaal);
+            await _lokaalService.UpdateAsync(lokaal.lokaalID, lokaal);
             return RedirectToAction("lokaalBeheer");
         }
 

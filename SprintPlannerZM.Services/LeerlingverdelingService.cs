@@ -3,6 +3,8 @@ using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
@@ -14,47 +16,47 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
-        public Leerlingverdeling Get(int id)
+        public async Task<Leerlingverdeling> Get(int id)
         {
-            return _database.Leerlingverdeling.SingleOrDefault(l => l.leerlingverdelingID == id);
+            return await _database.Leerlingverdeling.SingleOrDefaultAsync(l => l.leerlingverdelingID == id);
         }
 
-        public IList<Leerlingverdeling> Find()
+        public async Task<IList<Leerlingverdeling>> Find()
         {
-            return _database.Leerlingverdeling.ToList();
+            return await _database.Leerlingverdeling.ToListAsync();
         }
 
-        public Leerlingverdeling Create(Leerlingverdeling leerlingverdeling)
+        public async Task<Leerlingverdeling> Create(Leerlingverdeling leerlingverdeling)
         {
-            _database.Leerlingverdeling.Add(leerlingverdeling);
-            _database.SaveChanges();
+           await _database.Leerlingverdeling.AddAsync(leerlingverdeling);
+           await _database.SaveChangesAsync();
             return leerlingverdeling;
         }
 
-        public Leerlingverdeling Update(int id, Leerlingverdeling leerlingverdeling)
+        public async Task<Leerlingverdeling> Update(int id, Leerlingverdeling leerlingverdeling)
         {
             {
-                var dbLeerlingverdeling = Get(id);
+                var dbLeerlingverdeling = await Get(id);
                 if (dbLeerlingverdeling == null)
                 {
                     return leerlingverdeling;
                 }
                 _database.Leerlingverdeling.Update(dbLeerlingverdeling);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return leerlingverdeling;
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             {
-                var dbLeerlingverdeling = Get(id);
+                var dbLeerlingverdeling = await Get(id);
                 if (dbLeerlingverdeling == null)
                 {
                     return false;
                 }
                 _database.Leerlingverdeling.Remove(dbLeerlingverdeling);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return true;
             }
         }

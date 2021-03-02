@@ -17,31 +17,31 @@ namespace SprintPlannerZM.Services
             _database = database;
         }
 
-        public Leerling Get(long id)
+        public async Task<Leerling> Get(long id)
         {
-            var leerling = _database.Leerling
+            var leerling = await _database.Leerling
                 .Where(l => l.leerlingID == id)
                 .Include(l => l.Klas)
-                .ThenInclude(k=>k.Vakken)
+                .ThenInclude(k => k.Vakken)
                 .Include(k => k.hulpleerling).DefaultIfEmpty()
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
 
             return leerling;
         }
 
 
 
-        public Leerling GetFullLeerling(long id)
+        public async Task<Leerling> GetFullLeerling(long id)
         {
-            var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
-            leerling.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerling.KlasID);
-            leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == leerling.leerlingID);
+            var leerling = await _database.Leerling.SingleOrDefaultAsync(l => l.leerlingID == id);
+            leerling.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
+            leerling.hulpleerling = await _database.Hulpleerling.SingleOrDefaultAsync(h => h.leerlingID == leerling.leerlingID);
             if (leerling.hulpleerling != null)
             {
-                leerling.hulpleerling.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == leerling.hulpleerling.hulpleerlingID).ToList();
+                leerling.hulpleerling.Sprintvakken = await _database.Sprintvak.Where(s => s.hulpleerlingID == leerling.hulpleerling.hulpleerlingID).ToListAsync();
                 foreach (var sprint in leerling.hulpleerling.Sprintvakken)
                 {
-                    sprint.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprint.vakID);
+                    sprint.Vak = await _database.Vak.SingleOrDefaultAsync(v => v.vakID == sprint.vakID);
                 }
             }
 
@@ -49,21 +49,21 @@ namespace SprintPlannerZM.Services
         }
 
 
-        public Leerling GetToImport(long id)
+        public async Task<Leerling> GetToImport(long id)
         {
-            var leerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
+            var leerling = await _database.Leerling.SingleOrDefaultAsync(l => l.leerlingID == id);
 
             return leerling;
         }
 
 
-        public IList<Leerling> Find()
+        public async Task<IList<Leerling>> Find()
         {
-            var leerlingen = _database.Leerling.OrderBy(l => l.familieNaam).ToList();
+            var leerlingen = await _database.Leerling.OrderBy(l => l.familieNaam).ToListAsync();
             foreach (var leerling in leerlingen)
             {
-                leerling.hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == leerling.leerlingID);
-                leerling.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerling.KlasID);
+                leerling.hulpleerling = await _database.Hulpleerling.SingleOrDefaultAsync(h => h.leerlingID == leerling.leerlingID);
+                leerling.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
             }
             return leerlingen;
         }
@@ -75,62 +75,62 @@ namespace SprintPlannerZM.Services
         {
 
             var leerlings = _database.Leerling
-                .Include(l=>l.Klas)
+                .Include(l => l.Klas)
                 .AsQueryable();
 
             return leerlings;
         }
 
 
-        public IList<Leerling> FindByKlasID(int klasid)
+        public async Task<IList<Leerling>> FindByKlasID(int klasid)
         {
             var leerlingenPerKlas =
-                _database.Leerling.Where(l => l.KlasID == klasid).OrderBy(l => l.familieNaam).ToList();
+               await _database.Leerling.Where(l => l.KlasID == klasid).OrderBy(l => l.familieNaam).ToListAsync();
             foreach (var leerlingperklas in leerlingenPerKlas)
             {
                 leerlingperklas.hulpleerling =
-                    _database.Hulpleerling.SingleOrDefault(h => h.hulpleerlingID == leerlingperklas.leerlingID);
-                leerlingperklas.Klas = _database.Klas.SingleOrDefault(k => k.klasID == leerlingperklas.KlasID);
+                   await _database.Hulpleerling.SingleOrDefaultAsync(h => h.hulpleerlingID == leerlingperklas.leerlingID);
+                leerlingperklas.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerlingperklas.KlasID);
             }
 
             return leerlingenPerKlas;
         }
 
 
-        public Leerling Create(Leerling leerling)
+        public async Task<Leerling> Create(Leerling leerling)
         {
-            var dbLeerling = _database.Leerling.SingleOrDefault(l => l.leerlingID == leerling.leerlingID);
+            var dbLeerling = await _database.Leerling.SingleOrDefaultAsync(l => l.leerlingID == leerling.leerlingID);
             if (dbLeerling == null)
             {
-                _database.Leerling.Add(leerling);
-                _database.SaveChanges();
+                await _database.Leerling.AddAsync(leerling);
+                await _database.SaveChangesAsync();
             }
             return leerling;
         }
 
-        public Leerling Update(long id, Leerling leerling)
+        public async Task<Leerling> Update(long id, Leerling leerling)
         {
             {
-                var leerlingToUpd = _database.Leerling.SingleOrDefault(l => l.leerlingID == id);
+                var leerlingToUpd = await _database.Leerling.SingleOrDefaultAsync(l => l.leerlingID == id);
                 leerlingToUpd.sprinter = leerling.sprinter;
                 leerlingToUpd.mklas = leerling.mklas;
                 leerlingToUpd.typer = leerling.typer;
                 _database.Leerling.Update(leerlingToUpd);
-                _database.SaveChanges();
+                await _database.SaveChangesAsync();
                 return leerling;
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             {
-                var dbLeerling = Get(id);
+                var dbLeerling = await Get(id);
                 if (dbLeerling == null)
                 {
                     return false;
                 }
                 _database.Leerling.Remove(dbLeerling);
-                _database.SaveChanges();
+                await _database.SaveChangesAsync();
                 return true;
             }
         }

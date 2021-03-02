@@ -8,9 +8,9 @@ namespace SprintPlannerZM.Services.Abstractions
     public interface IKlasService
     {
         Task<Klas> GetAsync(int id);
-        Klas GetByKlasName(string id);
+        Task<Klas> GetByKlasName(string id);
         Klas GetBySubString(string klasnaam);
-        IList<Klas> Find();
+        Task<IList<Klas>> Find();
         Task<IQueryable<Klas>> FindAsyncPagingQueryable();
         Task<Klas> CreateAsync(Klas klas);
         Task<Klas> UpdateAsync(int id, Klas klas);

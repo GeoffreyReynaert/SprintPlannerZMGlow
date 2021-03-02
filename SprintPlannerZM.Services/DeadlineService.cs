@@ -2,6 +2,8 @@
 using SprintPlannerZM.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
@@ -16,49 +18,49 @@ namespace SprintPlannerZM.Services
         _database = database;
     }
 
-    public Deadline Get(int id)
+    public async Task<Deadline> Get(int id)
     {
-        return _database.Deadline.SingleOrDefault(d => d.deadlineID == id);
+        return await _database.Deadline.SingleOrDefaultAsync(d => d.deadlineID == id);
     }
 
-    public IList<Deadline> Find()
+    public async Task<IList<Deadline>> Find()
     {
-        return _database.Deadline.ToList();
+        return await _database.Deadline.ToListAsync();
     }
 
-    public Deadline Create(Deadline deadline)
+    public async Task<Deadline> Create(Deadline deadline)
     {
-        _database.Deadline.Add(deadline);
-        _database.SaveChanges();
+       await _database.Deadline.AddAsync(deadline);
+       await _database.SaveChangesAsync();
         return deadline;
     }
 
-    public Deadline Update(int id, Deadline deadline)
+    public async Task<Deadline> Update(int id, Deadline deadline)
     {
         {
-            var dbDeadline = Get(id);
+            var dbDeadline =await Get(id);
             if (dbDeadline == null)
             {
                 return deadline;
             }
 
             _database.Deadline.Update(dbDeadline);
-            _database.SaveChanges();
+            await _database.SaveChangesAsync();
             return deadline;
         }
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
         {
-            var dbDeadline = Get(id);
+            var dbDeadline = await Get(id);
             if (dbDeadline == null)
             {
                 return false;
             }
 
             _database.Deadline.Remove(dbDeadline);
-            _database.SaveChanges();
+            await _database.SaveChangesAsync();
             return true;
         }
     }

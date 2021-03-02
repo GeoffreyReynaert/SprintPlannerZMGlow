@@ -20,22 +20,22 @@ namespace SprintPlannerZM.Services
 
         public async Task<Klas> GetAsync(int id)
         {
-            var klas = _database.Klas
+            var klas =await _database.Klas
                 .Where(k => k.klasID == id)
                 .Include(k => k.Leerkracht)
                 .Include(k => k.Leerlingen)
                 .Include(k => k.Vakken)
                 .ThenInclude(v=>v.Leerkracht)
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
             return klas;
         }
 
 
-        public Klas GetByKlasName(string name)
+        public async Task<Klas> GetByKlasName(string name)
         {
-            var klas = _database.Klas.Where(k => k.klasnaam.Equals(name))
+            var klas = await _database.Klas.Where(k => k.klasnaam.Equals(name))
                 .Include(k => k.Leerlingen)
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
             return klas;
         }
 
@@ -113,15 +113,15 @@ namespace SprintPlannerZM.Services
         }
 
 
-        public IList<Klas> Find()
+        public async Task<IList<Klas>> Find()
         {
-            var klassen = _database.Klas
+            var klassen = await _database.Klas
                 .Include(k => k.Leerkracht)
                 .Include(k => k.Leerlingen)
                 .Include(k => k.Vakken)
-                .OrderBy(k => k.klasnaam).ToList();
+                .OrderBy(k => k.klasnaam).ToListAsync();
 
-            return klassen;
+             return  klassen;
         }
 
         public async Task<IQueryable<Klas>> FindAsyncPagingQueryable()
@@ -137,11 +137,11 @@ namespace SprintPlannerZM.Services
 
         public async Task<Klas> CreateAsync(Klas klas)
         {
-            var dbLeerkracht =  _database.Klas.SingleOrDefault(l => l.klasID == klas.klasID);
+            var dbLeerkracht = await _database.Klas.SingleOrDefaultAsync(l => l.klasID == klas.klasID);
             if (dbLeerkracht == null)
             {
-                 _database.Klas.Add(klas);
-                 _database.SaveChanges();
+                await _database.Klas.AddAsync(klas);
+                await _database.SaveChangesAsync();
             }
             return klas;
         }
@@ -150,28 +150,28 @@ namespace SprintPlannerZM.Services
         public async Task<Klas> UpdateAsync(int id, Klas klas)
         {
             {
-                var klasToUpd = _database.Klas.SingleOrDefault(l => l.klasID == id);
+                var klasToUpd = await _database.Klas.SingleOrDefaultAsync(l => l.klasID == id);
                 klasToUpd.klasnaam = klas.klasnaam;
                 klasToUpd.titularisID = klas.titularisID;
-                _database.Klas.Update(klasToUpd);
-                _database.SaveChanges();
+                 _database.Klas.Update(klasToUpd);
+                await _database.SaveChangesAsync();
                 return klasToUpd;
             }
         }
 
-        //public async Task<bool> Delete(int id)
-        //{
-        //    {
-        //        var dbKlas = await GetAsync(id);
-        //        if (dbKlas == null)
-        //        {
-        //            return false;
-        //        }
-        //        _database.Klas.Remove(dbKlas);
-        //        _database.SaveChanges();
-        //        return true;
-        //    }
-        //}
+        public async Task<bool> Delete(int id)
+        {
+            {
+                var dbKlas = await GetAsync(id);
+                if (dbKlas == null)
+                {
+                    return false;
+                }
+                _database.Klas.Remove(dbKlas);
+                await _database.SaveChangesAsync();
+                return true;
+            }
+        }
     }
 }
 

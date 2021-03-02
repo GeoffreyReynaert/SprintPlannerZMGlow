@@ -3,6 +3,8 @@ using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
@@ -14,54 +16,54 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
-        public Sprintlokaal Get(int id)
+        public async Task<Sprintlokaal> Get(int id)
         {
-            return _database.Sprintlokaal.SingleOrDefault(s => s.sprintlokaalID == id);
+            return await _database.Sprintlokaal.SingleOrDefaultAsync(s => s.sprintlokaalID == id);
         }
 
-        public IList<Sprintlokaal> Find()
+        public async Task<IList<Sprintlokaal>> Find()
         {
-            return _database.Sprintlokaal.ToList();
-        }
-
-
-        public IList<Sprintlokaal> FindByExamID(int examID)
-        {
-            return _database.Sprintlokaal.Where(s=>s.examenID == examID).ToList();
+            return await _database.Sprintlokaal.ToListAsync();
         }
 
 
-        public Sprintlokaal Create(Sprintlokaal sprintlokaal)
+        public async Task<IList<Sprintlokaal>> FindByExamID(int examid)
         {
-            _database.Sprintlokaal.Add(sprintlokaal);
-            _database.SaveChanges();
+            return await _database.Sprintlokaal.Where(s=>s.examenID == examid).ToListAsync();
+        }
+
+
+        public async Task<Sprintlokaal> Create(Sprintlokaal sprintlokaal)
+        {
+           await _database.Sprintlokaal.AddAsync(sprintlokaal);
+           await _database.SaveChangesAsync();
             return sprintlokaal;
         }
 
-        public Sprintlokaal Update(int id, Sprintlokaal sprintlokaal)
+        public async Task<Sprintlokaal> Update(int id, Sprintlokaal sprintlokaal)
         {
             {
-                var dbSprintlokaal = Get(id);
+                var dbSprintlokaal =await Get(id);
                 if (dbSprintlokaal == null)
                 {
                     return sprintlokaal;
                 }
                 _database.Sprintlokaal.Update(dbSprintlokaal);
-                _database.SaveChanges();
+                await _database.SaveChangesAsync();
                 return sprintlokaal;
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             {
-                var dbSprintlokaal = Get(id);
+                var dbSprintlokaal =await Get(id);
                 if (dbSprintlokaal == null)
                 {
                     return false;
                 }
                 _database.Sprintlokaal.Remove(dbSprintlokaal);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return true;
             }
         }
