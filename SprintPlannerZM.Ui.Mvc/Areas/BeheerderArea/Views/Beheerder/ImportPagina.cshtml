@@ -3,6 +3,8 @@
 <div class="containerllnoverzicht pt-5">
     <button id="importTitulEnKlas" class="btn btn-secondary" data-toggle="modal" data-target="#wachttijdModal">Stap1 titularis/klas</button>
     <button id="ImportKlasVakLeerkrLeerlEnRelaties" class="btn btn-secondary" data-toggle="modal" data-target="#wachttijdModal">Stap2 leerl/leerkr/vak</button>
+</div>
+<div class="containerllnoverzicht pt-2">
     @using (Html.BeginForm("XlsUpload", "Beheerder", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <span>

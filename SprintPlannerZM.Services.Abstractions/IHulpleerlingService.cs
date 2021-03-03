@@ -1,15 +1,16 @@
 ﻿using SprintPlannerZM.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SprintPlannerZM.Services.Abstractions
 {
     public interface IHulpleerlingService
     {
-        Hulpleerling Get(int id);
-        Hulpleerling GetbyLeerlingId(long id);
-        IList<Hulpleerling> Find();
-        Hulpleerling Create(Hulpleerling hulpleerling);
-        Hulpleerling Update(int id, Hulpleerling hulpleerling);
-        bool Delete(int id);
+        Task<Hulpleerling> Get(int id);
+        Task<Hulpleerling> GetbyLeerlingId(long id);
+        Task<IList<Hulpleerling>> Find();
+        Task<Hulpleerling> Create(Hulpleerling hulpleerling);
+        Task<Hulpleerling> Update(int id, Hulpleerling hulpleerling);
+        Task<bool> Delete(int id);
     }
 }

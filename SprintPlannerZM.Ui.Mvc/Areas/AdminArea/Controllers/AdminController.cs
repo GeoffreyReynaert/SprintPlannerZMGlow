@@ -2,8 +2,6 @@
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -56,13 +54,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         public IActionResult Index()
         {
-            //var vakResult = _beheerderService.Find();
+    
             return View("Index");
         }
 
         [HttpGet]
-        //Alle leerlingen overzicht
-        public IActionResult LeerlingenOverzicht()
+        public async Task<IActionResult> LeerlingenOverzicht()
         {
             //var klassen = _klasService.Find();
             //foreach (var klas in klassen)
@@ -131,38 +128,92 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         //    return View("LeerlingenOverzicht", klassen);
         //}
         public IActionResult PartialAlleLeerlingen()
+        public async Task<IActionResult> PartialAlleLeerlingen()
         {
-            var klassen = _klasService.Find();
+            var klassen = await _klasService.Find();
             foreach (var klas in klassen)
             {
-                klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
+                klas.Leerlingen = await _leerlingService.FindByKlasID(klas.klasID);
             }
             return PartialView("PartialAlleLeerlingen", klassen);
         }
         [HttpPost]
-        public IActionResult PartialLeerlingenByKlas(int klasID)
+        public async Task<IActionResult> PartialLeerlingenByKlas(int klasID)
         {
-            var leerlingen = _leerlingService.FindByKlasID(klasID);
+            var leerlingen = await _leerlingService.FindByKlasID(klasID);
             return PartialView("PartialLeerlingenByKlas", leerlingen);
         }
 
-        [HttpPost]
-        public IActionResult PartialComboLeerlingen(int leerlingID)
+        public async Task<IActionResult> LeerlingVerdeling(string datum)
         {
-            var leerling = _leerlingService.Get(leerlingID);
+            var hulpLeerlingen = await _hulpleerlingService.Find();
+            var splitPieceDatum = datum.Split(" ")[0];
+            var examensPerDatum = await _examenroosterService.FindByDatum(DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null));
+            var lokalenVoorSprint = await _lokaalService.FindForSprintAsync();
+            foreach (var leerling in hulpLeerlingen)
+            {
+                foreach (var vak in leerling.Klas.Vakken)
+                {
+                    foreach (var rooster in examensPerDatum)
+                    {
+                        if (rooster.vakID == vak.vakID)
+                        {
+                            Console.WriteLine("Deze leerling :" + leerling.Leerling.voorNaam + " heeft het vak " + vak.vaknaam + "als examen op" + rooster.datum);
+                        }
+                    }
+                }
+            }
+            foreach (var leerling in hulpLeerlingen)
+            {
+                foreach (var sprintexam in leerling.Sprintvakken)
+                {
+                    foreach (var geplandExamen in examensPerDatum)
+                    {
+                        if (geplandExamen.vakID == sprintexam.vakID)
+                        {
+                            var lokaal = new Lokaal();
+                            Console.WriteLine("Sprintvak keuze ID " + sprintexam.sprintvakID + " voor vak " +
+                                                                     sprintexam.Vak.vaknaam + " voor leerling " + leerling.Leerling.voorNaam +" " +leerling.Klas.klasnaam +
+                                                                     " staat vast op" + geplandExamen.datum );
+                            foreach (var gekozenLokaal in lokalenVoorSprint)
+                            {
+                                var aantalReservatiesPerlokaal = _sprintlokaalService.FindByExamID(geplandExamen.examenID).Result.Count;
+                                if (gekozenLokaal.naamafkorting.Equals("225")&& gekozenLokaal.lokaaltype.Equals("sprint")&& aantalReservatiesPerlokaal <= gekozenLokaal.capaciteit)
+                                {
+                                    lokaal = gekozenLokaal;
+                                    var sprintlokaal = new Sprintlokaal() { tijd = geplandExamen.tijd, datum = geplandExamen.datum, lokaalID = lokaal.lokaalID };
+                                    sprintlokaal = await _sprintlokaalService.Create(sprintlokaal);
+                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = leerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalID, examenID = geplandExamen.examenID };
+                                    leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            var examenroosters = await _examenroosterService.FindDistinct();
+            return View("Klasverdeling", examenroosters);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PartialComboLeerlingen(int leerlingID)
+        {
+            var leerling = await _leerlingService.Get(leerlingID);
             return PartialView("PartialComboLeerlingen", leerling);
         }
 
         //Detail alle leerlingen naar leerling uit lijst
-        public IActionResult LeerlingOverzicht(int leerlingID)
+        public async Task<IActionResult> LeerlingOverzicht(int leerlingID)
         {
             var leerling = _leerlingService.Get(leerlingID);
             var klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
             return PartialView("LeerlingOverzicht", klas);
+            var leerling = await _leerlingService.Get(leerlingID);
+            return PartialView("LeerlingOverzicht", leerling);
         }
 
         [HttpPost]
-        public IActionResult UpdateLeerlingen(string leerlingenLijst)
+        public async Task<IActionResult> UpdateLeerlingen(string leerlingenLijst)
         {
             var leerlingLijst = JArray.Parse(leerlingenLijst);
             var count = 0;
@@ -170,67 +221,54 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             {
                 count++;
                 var student = leerling.ToObject<Leerling>();
-                if (student.mklas || student.typer || student.sprinter)
-                {
-                    if (ExistsAsHulpLeerling(student.leerlingID))
-                    {
-                        Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
-                    }
-                    else
-                    {
-                        Hulpleerling hulpleerling = new Hulpleerling { klasID = student.KlasID, leerlingID = student.leerlingID };
-                        _hulpleerlingService.Create(hulpleerling);
-                    }
-                }
                 _leerlingService.Update(student.leerlingID, student);
                 Console.WriteLine(count);
             }
             return RedirectToAction();
         }
 
-        public IActionResult Klasverdeling()
+        public async Task<IActionResult> Klasverdeling()
         {
-            var examenroosters = _examenroosterService.findDistinct();
-            return View(examenroosters);
+            return View();
         }
 
-        public IActionResult Toezichters()
+        public async Task<IActionResult> Toezichters()
         {
-            var leerkrachten = _leerkrachtService.Find();
+            var leerkrachten = await _leerkrachtService.Find();
             return View(leerkrachten);
         }
 
-        public IActionResult PartialAlleLeerkrachten()
+        public async Task<IActionResult> PartialAlleLeerkrachten()
         {
-            var leerkrachten = _leerkrachtService.Find();
+            var leerkrachten = await _leerkrachtService.Find();
             return PartialView("PartialAlleLeerkrachten", leerkrachten);
         }
 
         [HttpPost]
-        public IActionResult UpdateToezichter(long leerkrachtID)
+        public async Task<IActionResult> UpdateToezichter(long leerkrachtID)
         {
-            var leerkracht = _leerkrachtService.Get(leerkrachtID);
+            var leerkracht = await _leerkrachtService.Get(leerkrachtID);
             leerkracht.sprintToezichter = leerkracht.sprintToezichter != true;
             _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
             return RedirectToAction();
         }
 
-        public IActionResult PartialToezichters()
+        public async Task<IActionResult> PartialToezichters()
         {
-            var leerkrachten = _leerkrachtService.Find();
+            var leerkrachten = await _leerkrachtService.Find();
             return PartialView("PartialToezichters", leerkrachten);
         }
 
-        public IActionResult PartialGeenToezichters()
+        public async Task<IActionResult> PartialGeenToezichters()
         {
-            var leerkrachten = _leerkrachtService.Find();
+            var leerkrachten = await _leerkrachtService.Find();
             return PartialView("PartialGeenToezichters", leerkrachten);
         }
 
         [HttpPost]
-        public IActionResult PartialComboToezichters(long leerkrachtID)
+        public async Task<IActionResult> PartialComboToezichters(long leerkrachtID)
         {
-            var leerkracht = _leerkrachtService.Get(leerkrachtID);
+            var leerkracht = await _leerkrachtService.Get(leerkrachtID);
             return PartialView("PartialComboToezichters", leerkracht);
         }
 
@@ -241,8 +279,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         public bool ExistsAsHulpLeerling(long id)
         {
-            Hulpleerling dbHulpLeerling = new Hulpleerling();
-            dbHulpLeerling = _hulpleerlingService.GetbyLeerlingId(id);
+            var dbHulpLeerling = _hulpleerlingService.GetbyLeerlingId(id);
 
             return dbHulpLeerling != null;
         }

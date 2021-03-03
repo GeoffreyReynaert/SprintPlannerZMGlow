@@ -97,6 +97,10 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.Lokaal)
                 .WithMany(u => u.Sprintlokalen)
                 .HasForeignKey(a => a.lokaalID);
+            builder.Entity<Sprintlokaal>()
+                .HasOne(a => a.Examen)
+                .WithMany(u => u.Sprintlokalen)
+                .HasForeignKey(a => a.examenID);
         }
 
         private static void ConfigureLeerlingverdeling(this ModelBuilder builder)

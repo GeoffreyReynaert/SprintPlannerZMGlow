@@ -1,0 +1,17 @@
+﻿@model SprintPlannerZM.Model.Vak
+
+@Model.vaknaam @Model.vakID
+<br />
+@Model.Leerkracht.achternaam
+<br />
+@Model.klas.klasnaam met id @Model.klasID
+<br />
+sprint mogelijkheid @Model.sprint
+<br />
+Aantal leerlingen die dit vak als hulp leerling volgen: @Model.Sprintvakken.Count
+<br />
+
+@foreach (var sprintkeuze in @Model.Sprintvakken)
+{
+<span>  @sprintkeuze.hulpleerlingID   als sprint :@sprintkeuze.sprint     als typer :@sprintkeuze.typer    als mklas :@sprintkeuze.mklas</span>
+}

@@ -154,6 +154,12 @@ body {
     justify-content: center;
 }
 
+.mngmnt-background-div {
+    margin-top: 0px;
+    border: #bf6b3c solid 2px;
+    background-color: rgba(12, 116, 125, 0.64);
+}
+
 /* The switch&sliders toezichters - the box around the slider */
 .switch {
     position: relative;

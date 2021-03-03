@@ -4,6 +4,11 @@ namespace SprintPlannerZM.Model
 {
     public class Lokaal
     {
+        public  Lokaal()
+        {
+            Sprintlokalen =new List<Sprintlokaal>();
+        }
+
         public int lokaalID { get; set; }
         public string lokaalnaam { get; set; }
         public string naamafkorting { get; set; }

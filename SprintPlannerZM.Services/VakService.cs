@@ -1,10 +1,10 @@
-﻿using System;
-using SprintPlannerZM.Model;
+﻿using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
@@ -18,13 +18,15 @@ namespace SprintPlannerZM.Services
         }
 
 
-        public Vak Get(int id)
+        public async Task<Vak> GetAsync(int id)
         {
-            var vak = _database.Vak.SingleOrDefault(v => v.vakID == id);
-            vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
-            vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
-            vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
-            vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
+            var vak =await _database.Vak
+                .Include(v => v.klas)
+                .Include(v => v.Leerkracht)
+                .Include(v => v.Sprintvakken)
+                .Include(v => v.Examenroosters)
+                .SingleOrDefaultAsync(v => v.vakID == id);
+
             return vak;
         }
 
@@ -43,14 +45,14 @@ namespace SprintPlannerZM.Services
 
 
         //enkel voor importeren examens gebruikt
-        public Vak GetBySubString(string vakNaam, int klasID)
+        public async Task<Vak> GetBySubString(string vakNaam, int klasID)
         {
-            var klas = _database.Klas.SingleOrDefault(k => k.klasID == klasID);
+            var klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == klasID);
+            var vakkenPerKlas = await _database.Vak.Where(v => v.klasID == klasID).ToListAsync();
 
-            var vakkenPerKlas = _database.Vak.Where(v => v.klasID == klasID).ToList();
-            foreach (var vak in vakkenPerKlas )
+            foreach (var vak in vakkenPerKlas)
             {
-                if (vak.vaknaam.Substring(0,3).ToLower().Equals(vakNaam.Substring(0, 3).ToLower()))
+                if (vak.vaknaam.Substring(0, 3).ToLower().Equals(vakNaam.Substring(0, 3).ToLower()))
                 {
                     vak.klas = klas;
                     return vak;
@@ -60,52 +62,74 @@ namespace SprintPlannerZM.Services
             return null;
         }
 
-        public IList<Vak> Find()
+        public async Task<IList<Vak>> Find()
         {
-            var vakken = _database.Vak.ToList();
-            foreach (var vak in vakken)
-            {
-                vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
-                vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
-                vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
-                vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
-            }
+            var vakken = await _database.Vak
+                .Include(v => v.klas)
+                .Include(v => v.Leerkracht)
+                .Include(v => v.Sprintvakken)
+                .Include(v => v.Examenroosters)
+                .ToListAsync();
+
             return vakken;
         }
 
-        public Vak Create(Vak vak)
+
+        public async Task<IQueryable<Vak>> FindAsyncPagingQueryable()
         {
-            _database.Vak.Add(vak);
-            _database.SaveChanges();
+            var vakken =  _database.Vak
+                .Include(v => v.klas)
+                .Include(v => v.Leerkracht)
+                .Include(v => v.Sprintvakken)
+                .AsQueryable();
+
+            return vakken;
+        }
+
+
+        public async Task<Vak> Create(Vak vak)
+        {
+           await _database.Vak.AddAsync(vak);
+          await  _database.SaveChangesAsync();
             return vak;
         }
 
-        public Vak Update(int id, Vak vak)
+        public async Task<Vak> UpdateAsync(int id, Vak vak)
         {
             {
-                var vakToUpd = _database.Vak.SingleOrDefault(i => i.vakID == id);
+                var vakToUpd = await _database.Vak.SingleOrDefaultAsync(i => i.vakID == id);
                 vakToUpd.vaknaam = vak.vaknaam;
                 vakToUpd.vakID = vak.vakID;
                 vakToUpd.leerkrachtID = vak.leerkrachtID;
-                vakToUpd.sprint = vak.sprint;
-                _database.Vak.Update(vakToUpd);
-                _database.SaveChanges();
+                  _database.Vak.Update(vakToUpd);
+                await _database.SaveChangesAsync();
                 return vak;
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             {
-                var dbVak = Get(id);
+                var dbVak = await GetAsync(id);
                 if (dbVak == null)
                 {
                     return false;
                 }
                 _database.Vak.Remove(dbVak);
-                _database.SaveChanges();
+                await _database.SaveChangesAsync();
                 return true;
             }
         }
     }
 }
+
+
+//public Vak OldGet(int id)
+//{
+//var vak = _database.Vak.SingleOrDefault();
+//    vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+//    vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
+//    vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
+//    vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
+//    return vak;
+//}

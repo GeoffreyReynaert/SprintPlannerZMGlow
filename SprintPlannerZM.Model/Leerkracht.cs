@@ -4,6 +4,12 @@ namespace SprintPlannerZM.Model
 {
     public class Leerkracht
     {
+        public Leerkracht()
+        {
+            Klassen = new List<Klas>();
+            Vakken = new List<Vak>();
+            Sprintlokalen = new List<Sprintlokaal>();
+        }
         public long leerkrachtID { get; set; }
         public string voornaam { get; set; }
         public string achternaam { get; set; }

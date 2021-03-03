@@ -10,10 +10,11 @@ namespace SprintPlannerZM.Services.Abstractions
     public interface ILeerkrachtService
 
     {
-        Leerkracht Get(long id);
-        IList<Leerkracht> Find();
-        Leerkracht Create(Leerkracht leerkracht);
-        Leerkracht Update(long id, Leerkracht leerkracht);
-        bool Delete(long id);
+        Task<Leerkracht> Get(long id);
+        Task<IList<Leerkracht>> Find();
+        Task<IQueryable<Leerkracht>> FindAsyncPagingQueryable();
+        Task<Leerkracht> Create(Leerkracht leerkracht);
+        Task<Leerkracht> Update(long id, Leerkracht leerkracht);
+        Task<bool> Delete(long id);
     }
 }

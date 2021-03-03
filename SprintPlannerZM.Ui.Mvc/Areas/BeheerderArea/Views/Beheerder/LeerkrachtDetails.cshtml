@@ -1,0 +1,58 @@
+﻿@model SprintPlannerZM.Model.Leerkracht
+
+<section class="left-allignToNav pt-3">
+    <div class="tbl-header">
+        <table>
+            <thead>
+                <tr>
+                    <th class="h6">Leerkracht Overzicht @Model.voornaam @Model.achternaam</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tbl-introduction">
+        <div class="trBordercolor container">
+            <div class="">
+                <div class="pt-1">
+                    Stamboeknummer: @Model.leerkrachtID
+                    <br />email Smartschool: @Model.email
+                    <br />Kluis nummer @Model.kluisNr
+                    <br />
+                    @if (@Model.sprintToezichter == false)
+                    {
+                        <span>Toezichter : nee</span>
+                    }
+                    else
+                    {
+                        <span>Toezichter : ja</span>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tbl-header">
+        <table>
+            <thead>
+                <tr>
+                    <th class="h6">@Model.voornaam @Model.achternaam heeft volgende vakken</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tbl-content">
+        <div class="trBordercolor container">
+            <div class="">
+                <div class="pt-2">
+                    @foreach (var vak in @Model.Vakken)
+                    {
+                        <span> vak @vak.vaknaam voor klas(id) @vak.klasID </span>
+                        <br />
+                    }
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="containerDropdowns left-allignToNav tableFixFooter pb-5 mb-5"></div>

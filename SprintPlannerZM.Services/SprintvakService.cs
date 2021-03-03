@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SprintPlannerZM.Model;
-using SprintPlannerZM.Repository;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
@@ -14,54 +14,56 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
-
-        public Sprintvak Get(int id)
+        public async Task<Sprintvak> GetAsync(int id)
         {
-            var sprintvak = _database.Sprintvak.SingleOrDefault(s => s.sprintvakID == id);
-            sprintvak.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprintvak.vakID);
-            sprintvak.Hulpleerling =
-                _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == sprintvak.hulpleerlingID);
+            var sprintvak = await _database.Sprintvak.SingleOrDefaultAsync(s => s.sprintvakID == id);
+            sprintvak.Vak = await _database.Vak.SingleOrDefaultAsync(v => v.vakID == sprintvak.vakID);
+            sprintvak.Hulpleerling = await _database.Hulpleerling.SingleOrDefaultAsync(h => h.leerlingID == sprintvak.hulpleerlingID);
             return sprintvak;
         }
 
-        public IList<Sprintvak> Find()
+        public async Task<IList<Sprintvak>> FindAsync()
         {
-            var sprintvakken = _database.Sprintvak.ToList();
-            foreach (var sprintvak in sprintvakken)
-            {
-                sprintvak.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprintvak.vakID);
-                sprintvak.Hulpleerling =
-                    _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == sprintvak.hulpleerlingID);
-            }
-
-            return sprintvakken;
+           var sprintvakken =await _database.Sprintvak.ToListAsync();
+           foreach (var sprintvak in sprintvakken)
+           {
+               sprintvak.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprintvak.vakID);
+               sprintvak.Hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == sprintvak.hulpleerlingID);
+           }
+           return sprintvakken;
         }
 
-        public Sprintvak Create(Sprintvak sprintvak)
+        public async Task<Sprintvak> CreateAsync(Sprintvak sprintvak)
         {
             _database.Sprintvak.Add(sprintvak);
-            _database.SaveChanges();
+           await _database.SaveChangesAsync();
             return sprintvak;
         }
 
-        public Sprintvak Update(int id, Sprintvak sprintvak)
+        public async Task<Sprintvak> UpdateAsync(int id, Sprintvak sprintvak)
         {
             {
-                var dbSprintvak = Get(id);
-                if (dbSprintvak == null) return sprintvak;
+                var dbSprintvak = await GetAsync(id);
+                if (dbSprintvak == null)
+                {
+                    return sprintvak;
+                }
                 _database.Sprintvak.Update(dbSprintvak);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return sprintvak;
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             {
-                var dbSprintvak = Get(id);
-                if (dbSprintvak == null) return false;
+                var dbSprintvak =await GetAsync(id);
+                if (dbSprintvak == null)
+                {
+                    return false;
+                }
                 _database.Sprintvak.Remove(dbSprintvak);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return true;
             }
         }
