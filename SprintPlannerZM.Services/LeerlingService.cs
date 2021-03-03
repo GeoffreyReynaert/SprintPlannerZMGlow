@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
@@ -66,6 +67,16 @@ namespace SprintPlannerZM.Services
                 _database.SaveChanges();
             }
             return leerling;
+        }
+
+        public IQueryable<Leerling> FindAsyncPagingQueryable()
+        {
+
+            var leerlings = _database.Leerling
+                .Include(l => l.Klas)
+                .AsQueryable();
+
+            return leerlings;
         }
 
         public Leerling Update(long id, Leerling leerling)

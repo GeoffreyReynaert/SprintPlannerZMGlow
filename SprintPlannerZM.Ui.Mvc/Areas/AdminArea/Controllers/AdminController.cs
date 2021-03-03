@@ -3,6 +3,8 @@ using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
@@ -62,12 +64,61 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         //Alle leerlingen overzicht
         public IActionResult LeerlingenOverzicht()
         {
-            var klassen = _klasService.Find();
-            foreach (var klas in klassen)
+            //var klassen = _klasService.Find();
+            //foreach (var klas in klassen)
+            //{
+            //    klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
+            //}
+            //return View(klassen);
+            var leerlingen = _leerlingService.FindAsyncPagingQueryable();
+            return View(leerlingen);
+        }
+
+        public async Task<IActionResult> Sorting(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        {
+            ViewData["KlasSortParm"] = string.IsNullOrEmpty(sortOrder) ? "klasnaam_desc" : "";
+            ViewData["VoornaamSortParm"] = sortOrder == "voornaam_desc" ? "voornaam_desc" : "";
+            ViewData["FamilienaamSortParm"] = sortOrder == "familienaam_desc" ? "familienaam_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
             {
-                klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
+                pageNumber = 1;
             }
-            return View(klassen);
+            else
+            {
+                searchString = currentFilter;
+            }
+            var leerlingen = from l in _leerlingService.Find()
+                select l;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                leerlingen = leerlingen.Where(s => s.voorNaam.Contains(searchString)
+                                               || s.familieNaam.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "klasnaam_desc":
+                    leerlingen = leerlingen.OrderByDescending(l => l.Klas.klasnaam);
+                    break;
+                case "voornaam_desc":
+                    leerlingen = leerlingen.OrderBy(l => l.voorNaam);
+                    break;
+                case "familienaam_desc":
+                    leerlingen = leerlingen.OrderByDescending(l => l.familieNaam);
+                    break;
+                default:
+                    leerlingen = leerlingen.OrderBy(l => l.familieNaam);
+                    break;
+            }
+            const int pageSize = 3;
+            return View(await PaginatedList<Leerling>.CreateAsync(leerlingen.AsNoTracking(), pageNumber ?? 1, pageSize));
+        }
+
+        public ActionResult LeerlingAsync(Leerling[] model)
+        {
+            return View();
         }
 
         public IActionResult AlleLeerlingen()
@@ -106,7 +157,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         public IActionResult LeerlingOverzicht(int leerlingID)
         {
             var leerling = _leerlingService.Get(leerlingID);
-            return PartialView("LeerlingOverzicht", leerling);
+            var klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
+            return PartialView("LeerlingOverzicht", klas);
         }
 
         [HttpPost]

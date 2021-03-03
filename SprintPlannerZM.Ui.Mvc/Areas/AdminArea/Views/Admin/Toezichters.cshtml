@@ -49,7 +49,6 @@
         $("#partialView").load("PartialAlleLeerkrachten");
     });
     $("#cmbLeerkrachten").change(function() {
-        console.log();
         if ($(this).children(":selected").attr("id") !== "index") {
             $("#partialView").load("PartialComboToezichters", { leerkrachtID: $(this).find('option:selected').val() });
             $("input[type='radio']").attr("checked", false);

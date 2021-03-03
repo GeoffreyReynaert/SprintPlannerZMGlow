@@ -28,8 +28,21 @@ namespace SprintPlannerZM.Services
             return vak;
         }
 
+        public IList<Vak> GetByKlasId(int id)
+        {
+            var vakken = _database.Vak.Where(v => v.klasID == id).ToList();
+            foreach (var vak in vakken)
+            {
+                vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
+                vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
+                vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
+                vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
+            }
+            return vakken;
+        }
 
-      //enkel voor importeren examens gebruikt
+
+        //enkel voor importeren examens gebruikt
         public Vak GetBySubString(string vakNaam, int klasID)
         {
             var klas = _database.Klas.SingleOrDefault(k => k.klasID == klasID);
@@ -74,6 +87,7 @@ namespace SprintPlannerZM.Services
                 vakToUpd.vaknaam = vak.vaknaam;
                 vakToUpd.vakID = vak.vakID;
                 vakToUpd.leerkrachtID = vak.leerkrachtID;
+                vakToUpd.sprint = vak.sprint;
                 _database.Vak.Update(vakToUpd);
                 _database.SaveChanges();
                 return vak;

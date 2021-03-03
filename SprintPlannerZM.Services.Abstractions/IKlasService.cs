@@ -7,6 +7,7 @@ namespace SprintPlannerZM.Services.Abstractions
     {
         Klas Get(int id);
         Klas GetByKlasName(string id);
+        Klas GetSprintvakWithKlas(int id);
         Klas GetBySubString(string klasnaam);
         IList<Klas> Find();
         Klas Create(Klas klas);

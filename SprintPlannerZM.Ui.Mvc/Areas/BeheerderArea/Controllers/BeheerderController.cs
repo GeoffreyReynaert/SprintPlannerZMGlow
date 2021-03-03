@@ -199,7 +199,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                         {
                             leerkrachtID = number + 1,
                             vaknaam = element.Element("vaknaam").Value,
-                            klasID = dbLeerling.KlasID
+                            klasID = dbLeerling.KlasID,
+                            sprint = true
                         };
                         vakken.Add(soapVak);
                     }
@@ -209,7 +210,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                         {
                             leerkrachtID = long.Parse(element.Element("stamboeknummer").Value),
                             vaknaam = element.Element("vaknaam").Value,
-                            klasID = dbLeerling.KlasID
+                            klasID = dbLeerling.KlasID,
+                            sprint = true
                         };
                         vakken.Add(soapVak);
                     }

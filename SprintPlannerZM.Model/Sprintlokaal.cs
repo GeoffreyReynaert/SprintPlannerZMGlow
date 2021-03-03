@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SprintPlannerZM.Model
 {
@@ -6,7 +7,7 @@ namespace SprintPlannerZM.Model
     {
         public int sprintlokaalID { get; set; }
         public string tijd { get; set; }
-        public string datum { get; set; }
+        public DateTime datum { get; set; }
         public int lokaalID { get; set; }
         public long leerkrachtID { get; set; }
         public Lokaal Lokaal { get; set; }

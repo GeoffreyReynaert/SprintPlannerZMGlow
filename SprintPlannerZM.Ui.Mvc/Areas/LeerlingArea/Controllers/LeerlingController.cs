@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
@@ -52,9 +55,54 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
         {
             return View();
         }
+
         public IActionResult Keuzevak()
         {
-            return View();
+            var leerlingen = _leerlingService.Find();
+            return View(leerlingen);
+        }
+
+        [HttpPost]
+        public IActionResult PartialComboLeerlingen(int leerlingID)
+        {
+            var leerling = _leerlingService.Get(leerlingID);
+            leerling.Klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
+            return PartialView("PartialLeerling", leerling);
+        }
+
+        //[HttpPost]
+        //public IActionResult UpdateLeerlingen(string vakKeuzeLijst)
+        //{
+        //    var JvakKeuzeLijst = JArray.Parse(vakKeuzeLijst);
+        //    var count = 0;
+        //    foreach (var leerling in JvakKeuzeLijst)
+        //    {
+        //        count++;
+        //        var student = leerling.ToObject<Leerling>();
+        //        if (student.mklas || student.typer || student.sprinter)
+        //        {
+        //            if (ExistAsKeuzeVak(student.leerlingID))
+        //            {
+        //                Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
+        //            }
+        //            else
+        //            {
+        //                Hulpleerling hulpleerling = new Hulpleerling { klasID = student.KlasID, leerlingID = student.leerlingID };
+        //                _hulpleerlingService.Create(hulpleerling);
+        //            }
+        //        }
+        //        _leerlingService.Update(student.leerlingID, student);
+        //        Console.WriteLine(count);
+        //    }
+        //    return RedirectToAction();
+        //}
+
+        public bool ExistAsKeuzeVak(int id)
+        {
+            var KeuzeVak = new Sprintvak();
+            KeuzeVak = _sprintvakService.Get(id);
+
+            return KeuzeVak != null;
         }
     }
 }
