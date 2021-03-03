@@ -41,12 +41,12 @@
     var count = 0;
 }
 
-<form asp-action="Sorting" method="get">
-    <div class="form-actions no-color">
+<form asp-action="LeerlingenOverzicht" method="get">
+    <div>
         <p>
             Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" class="btn btn-primary mt-md-n2" />
-            <a asp-action="Sorting">Back to Full List</a>
+            <a asp-action="LeerlingenOverzicht">Back to Full List</a>
         </p>
     </div>
 </form>
@@ -56,8 +56,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="h6"><a asp-action="Sorting" asp-route-sortOrder="@ViewData["VoornaamSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Voornaam</a></th>
-                        <th class="h6"><a asp-action="Sorting" asp-route-sortOrder="@ViewData["FamilienaamSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Familienaam</a></th>
+                        <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["VoornaamSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Voornaam</a></th>
+                        <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["FamilienaamSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Familienaam</a></th>
                         <th class="h6">Sprint</th>
                         <th class="h6">Typer</th>
                         <th class="h6">Mklas</th>
@@ -101,14 +101,14 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action="Sorting"
+<a asp-action="LeerlingenOverzicht"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-primary mt-md-n2t @prevDisabled">
     Previous
 </a>
-<a asp-action="Sorting"
+<a asp-action="LeerlingenOverzicht"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"

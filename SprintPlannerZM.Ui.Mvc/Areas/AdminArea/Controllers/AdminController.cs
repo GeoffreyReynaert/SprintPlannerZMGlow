@@ -71,10 +71,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             //}
             //return View(klassen);
             var leerlingen = _leerlingService.FindAsyncPagingQueryable();
-            return View(leerlingen);
+            return View();
         }
 
-        public async Task<IActionResult> Sorting(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        public async Task<IActionResult> LeerlingenOverzicht(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
             ViewData["KlasSortParm"] = string.IsNullOrEmpty(sortOrder) ? "klasnaam_desc" : "";
             ViewData["VoornaamSortParm"] = sortOrder == "voornaam_desc" ? "voornaam_desc" : "";
@@ -113,23 +113,23 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                     break;
             }
             const int pageSize = 3;
-            return View(await PaginatedList<Leerling>.CreateAsync(leerlingen.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Leerling>.CreateAsync(leerlingen.AsQueryable(), pageNumber ?? 1, pageSize));
         }
 
         public ActionResult LeerlingAsync(Leerling[] model)
         {
-            return View();
+            return View("LeerlingOverzicht");
         }
 
-        public IActionResult AlleLeerlingen()
-        {
-            var klassen = _klasService.Find();
-            foreach (var klas in klassen)
-            {
-                klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
-            }
-            return View("LeerlingenOverzicht", klassen);
-        }
+        //public IActionResult AlleLeerlingen()
+        //{
+        //    var klassen = _klasService.Find();
+        //    foreach (var klas in klassen)
+        //    {
+        //        klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
+        //    }
+        //    return View("LeerlingenOverzicht", klassen);
+        //}
         public IActionResult PartialAlleLeerlingen()
         {
             var klassen = _klasService.Find();
