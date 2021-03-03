@@ -557,7 +557,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             ViewData["nameFilter"] = searchString;
             ViewData["klasFilter"] = search2String;
 
-            var students = await _leerlingService.FindAsyncPagingQueryable();
+            var students =  _leerlingService.FindAsyncPagingQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
             {

@@ -90,13 +90,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             
             return View("LeerlingenOverzicht", klassen);
         }
+
+
         public async Task<IActionResult> PartialAlleLeerlingen()
         {
             var klassen = await _klasService.Find();
-            foreach (var klas in klassen)
-            {
-                klas.Leerlingen = await _leerlingService.FindByKlasID(klas.klasID);
-            }
+           
             return PartialView("PartialAlleLeerlingen", klassen);
         }
         [HttpPost]
@@ -105,6 +104,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             var leerlingen = await _leerlingService.FindByKlasID(klasID);
             return PartialView("PartialLeerlingenByKlas", leerlingen);
         }
+
 
         public async Task<IActionResult> LeerlingVerdeling(string datum)
         {
@@ -188,7 +188,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         public async Task<IActionResult> Klasverdeling()
         {
-            return View();
+            var examens = await _examenroosterService.FindDistinct();
+            return View(examens);
         }
 
         public async Task<IActionResult> Toezichters()

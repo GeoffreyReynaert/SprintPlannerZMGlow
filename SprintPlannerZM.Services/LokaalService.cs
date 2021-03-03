@@ -20,12 +20,15 @@ namespace SprintPlannerZM.Services
 
         public async Task<Lokaal> GetAsync(int id)
         {
-            return await _database.Lokaal.SingleOrDefaultAsync(l => l.lokaalID == id);
+            return await _database.Lokaal.Where(l => l.lokaalID == id)
+                .SingleOrDefaultAsync();
         }
 
         public async Task<Lokaal> GetByNameAsync(string lokaalnaam)
         {
-            return await _database.Lokaal.SingleOrDefaultAsync(l => l.lokaalnaam.Equals(lokaalnaam));
+            return await _database.Lokaal
+                .Where(l => l.lokaalnaam.Equals(lokaalnaam))
+                .SingleOrDefaultAsync();
         }
 
         public async Task<IList<Lokaal>> FindAsync()
@@ -35,7 +38,9 @@ namespace SprintPlannerZM.Services
 
         public async Task<IList<Lokaal>> FindForSprintAsync()
         {
-            return await _database.Lokaal.Where(l => l.lokaaltype.Equals("sprint")).ToListAsync();
+            return await _database.Lokaal
+                .Where(l => l.lokaaltype.Equals("sprint"))
+                .ToListAsync();
         }
 
 
@@ -80,7 +85,7 @@ namespace SprintPlannerZM.Services
                     return false;
                 }
                 _database.Lokaal.Remove(dblokaal);
-                _database.SaveChanges();
+               await _database.SaveChangesAsync();
                 return true;
             }
         }

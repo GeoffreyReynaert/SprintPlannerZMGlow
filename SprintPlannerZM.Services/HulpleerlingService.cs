@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
@@ -18,33 +19,34 @@ namespace SprintPlannerZM.Services
         }
         public async Task<Hulpleerling> Get(int id)
         {
-            var hulpLln= await _database.Hulpleerling.SingleOrDefaultAsync(v => v.hulpleerlingID == id);
-            hulpLln.Klas =await _database.Klas.SingleOrDefaultAsync(k => k.klasID == hulpLln.klasID);
-            hulpLln.Sprintvakken =await _database.Sprintvak.Where(s => s.hulpleerlingID == hulpLln.hulpleerlingID).ToListAsync();
+            var hulpLln= await _database.Hulpleerling
+                .Where(v => v.hulpleerlingID == id)
+                .Include(v=>v.Klas)
+                .Include(v=>v.Sprintvakken)
+                .Include(h=>h.Leerling)
+                .SingleOrDefaultAsync();
+        
             return hulpLln;
         }
-
+        
         public async Task<Hulpleerling> GetbyLeerlingId(long leerlingID)
         {
             var hulpLln =await _database.Hulpleerling.FirstOrDefaultAsync(l => l.leerlingID == leerlingID);
-            //hulpLln.Klas = _database.Klas.SingleOrDefault(k => k.klasID == hulpLln.klasID);
-            //hulpLln.Sprintvakken = _database.Sprintvak.Where(s => s.hulpleerlingID == hulpLln.hulpleerlingID).ToList();
+
             return hulpLln;
         }
 
         public async Task<IList<Hulpleerling>> Find()
         {
-           var  hulpleerlingen = await _database.Hulpleerling.ToListAsync();
+           var  hulpleerlingen = await _database.Hulpleerling
+               .Include(h=>h.Leerling)
+               .Include(h => h.Klas)
+               .ThenInclude(k=>k.Vakken)
+               .Include(h => h.Sprintvakken)
+               .ThenInclude(s=>s.Vak)
+               .ToListAsync();
 
-            foreach (var hulpLln in hulpleerlingen)
-            {
-                hulpLln.Leerling = await _database.Leerling.SingleOrDefaultAsync(l => l.leerlingID == hulpLln.leerlingID);
-                hulpLln.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == hulpLln.klasID);
-                hulpLln.Klas.Vakken = await _database.Vak.Where(v => v.klasID == hulpLln.klasID).ToListAsync();
-                hulpLln.Sprintvakken = await _database.Sprintvak.Where(s => s.hulpleerlingID == hulpLln.hulpleerlingID).ToListAsync();
-            }
-
-            return hulpleerlingen;
+           return hulpleerlingen;
         }
 
         public async Task<Hulpleerling> Create(Hulpleerling hulpleerling)

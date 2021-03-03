@@ -18,18 +18,23 @@ namespace SprintPlannerZM.Services
         }
         public async Task<Sprintlokaal> Get(int id)
         {
-            return await _database.Sprintlokaal.SingleOrDefaultAsync(s => s.sprintlokaalID == id);
+            return await _database.Sprintlokaal
+                .Where(s => s.sprintlokaalID == id)
+                .SingleOrDefaultAsync();
         }
 
         public async Task<IList<Sprintlokaal>> Find()
         {
-            return await _database.Sprintlokaal.ToListAsync();
+            return await _database.Sprintlokaal
+                .ToListAsync();
         }
 
 
         public async Task<IList<Sprintlokaal>> FindByExamID(int examid)
         {
-            return await _database.Sprintlokaal.Where(s=>s.examenID == examid).ToListAsync();
+            return await _database.Sprintlokaal
+                .Where(s=>s.examenID == examid)
+                .ToListAsync();
         }
 
 

@@ -23,7 +23,9 @@ namespace SprintPlannerZM.Services
                 .Where(l => l.leerlingID == id)
                 .Include(l => l.Klas)
                 .ThenInclude(k => k.Vakken)
-                .Include(k => k.hulpleerling).DefaultIfEmpty()
+                .Include(k => k.hulpleerling)
+              //  .ThenInclude(h=>h.Sprintvakken)
+                .DefaultIfEmpty()
                 .SingleOrDefaultAsync();
 
             return leerling;
@@ -31,27 +33,11 @@ namespace SprintPlannerZM.Services
 
 
 
-        public async Task<Leerling> GetFullLeerling(long id)
-        {
-            var leerling = await _database.Leerling.SingleOrDefaultAsync(l => l.leerlingID == id);
-            leerling.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
-            leerling.hulpleerling = await _database.Hulpleerling.SingleOrDefaultAsync(h => h.leerlingID == leerling.leerlingID);
-            if (leerling.hulpleerling != null)
-            {
-                leerling.hulpleerling.Sprintvakken = await _database.Sprintvak.Where(s => s.hulpleerlingID == leerling.hulpleerling.hulpleerlingID).ToListAsync();
-                foreach (var sprint in leerling.hulpleerling.Sprintvakken)
-                {
-                    sprint.Vak = await _database.Vak.SingleOrDefaultAsync(v => v.vakID == sprint.vakID);
-                }
-            }
-
-            return leerling;
-        }
-
-
         public async Task<Leerling> GetToImport(long id)
         {
-            var leerling = await _database.Leerling.SingleOrDefaultAsync(l => l.leerlingID == id);
+            var leerling = await _database.Leerling
+                .Where(l => l.leerlingID == id)
+                .SingleOrDefaultAsync();
 
             return leerling;
         }
@@ -59,12 +45,13 @@ namespace SprintPlannerZM.Services
 
         public async Task<IList<Leerling>> Find()
         {
-            var leerlingen = await _database.Leerling.OrderBy(l => l.familieNaam).ToListAsync();
-            foreach (var leerling in leerlingen)
-            {
-                leerling.hulpleerling = await _database.Hulpleerling.SingleOrDefaultAsync(h => h.leerlingID == leerling.leerlingID);
-                leerling.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
-            }
+            var leerlingen = await _database.Leerling
+                .Include(l => l.Klas)
+                .ThenInclude(k => k.Vakken)
+                .Include(k => k.hulpleerling)
+                .OrderBy(l => l.familieNaam)
+                .ToListAsync();
+
             return leerlingen;
         }
 
@@ -73,24 +60,22 @@ namespace SprintPlannerZM.Services
         //Voor Paging Queryable Leerling beheer
         public  IQueryable<Leerling> FindAsyncPagingQueryable()
         {
-            var LeerlingenQuery = _database.Leerling
+            var leerlingenQuery = _database.Leerling
                 .Include(l => l.Klas)
                 .AsQueryable();
 
-            return LeerlingenQuery;
+            return leerlingenQuery;
         }
 
 
         public async Task<IList<Leerling>> FindByKlasID(int klasid)
         {
-            var leerlingenPerKlas =
-               await _database.Leerling.Where(l => l.KlasID == klasid).OrderBy(l => l.familieNaam).ToListAsync();
-            foreach (var leerlingperklas in leerlingenPerKlas)
-            {
-                leerlingperklas.hulpleerling =
-                   await _database.Hulpleerling.SingleOrDefaultAsync(h => h.hulpleerlingID == leerlingperklas.leerlingID);
-                leerlingperklas.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerlingperklas.KlasID);
-            }
+            var leerlingenPerKlas = await _database.Leerling
+                .Where(l => l.KlasID == klasid)
+                .Include(l=>l.hulpleerling)
+                .Include(l=>l.Klas)
+                .OrderBy(l => l.familieNaam)
+                .ToListAsync();
 
             return leerlingenPerKlas;
         }
@@ -98,7 +83,11 @@ namespace SprintPlannerZM.Services
 
         public async Task<Leerling> Create(Leerling leerling)
         {
-            var dbLeerling = await _database.Leerling.SingleOrDefaultAsync(l => l.leerlingID == leerling.leerlingID);
+            var dbLeerling = 
+                await _database.Leerling
+                    .Where(l => l.leerlingID == leerling.leerlingID)
+                    .SingleOrDefaultAsync();
+
             if (dbLeerling == null)
             {
                 await _database.Leerling.AddAsync(leerling);

@@ -18,12 +18,15 @@ namespace SprintPlannerZM.Services
         }
         public async Task<Leerlingverdeling> Get(int id)
         {
-            return await _database.Leerlingverdeling.SingleOrDefaultAsync(l => l.leerlingverdelingID == id);
+            return await _database.Leerlingverdeling
+                .Where(l => l.leerlingverdelingID == id)
+                .SingleOrDefaultAsync();
         }
 
         public async Task<IList<Leerlingverdeling>> Find()
         {
-            return await _database.Leerlingverdeling.ToListAsync();
+            return await _database.Leerlingverdeling
+                .ToListAsync();
         }
 
         public async Task<Leerlingverdeling> Create(Leerlingverdeling leerlingverdeling)

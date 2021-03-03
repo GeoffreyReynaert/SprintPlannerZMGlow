@@ -39,30 +39,30 @@
     </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.leerkrachtID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.achternaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.voornaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Vakken.Count)
-                </td>
-                <td>
-                    <a asp-action="LeerkrachtEdit" asp-route-id="@item.leerkrachtID">Edit</a> |
-                    <a asp-action="LeerkrachtDetails" asp-route-id="@item.leerkrachtID">Details</a> |
-                </td>
-            </tr>
-        }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.leerkrachtID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.achternaam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.voornaam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vakken.Count)
+            </td>
+            <td>
+                <a asp-action="LeerkrachtEdit" asp-route-id="@item.leerkrachtID">Edit</a> |
+                <a asp-action="LeerkrachtDetails" asp-route-id="@item.leerkrachtID">Details</a> |
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
-<div id="ModalDetails"></div>
+<div></div>
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";

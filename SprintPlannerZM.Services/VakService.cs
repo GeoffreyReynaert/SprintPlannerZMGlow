@@ -20,7 +20,7 @@ namespace SprintPlannerZM.Services
 
         public async Task<Vak> GetAsync(int id)
         {
-            var vak =await _database.Vak
+            var vak = await _database.Vak
                 .Include(v => v.klas)
                 .Include(v => v.Leerkracht)
                 .Include(v => v.Sprintvakken)
@@ -34,20 +34,17 @@ namespace SprintPlannerZM.Services
         //enkel voor importeren examens gebruikt
         public async Task<Vak> GetBySubString(string vakNaam, int klasID)
         {
-            var klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == klasID);
-            var vakkenPerKlas = await _database.Vak.Where(v => v.klasID == klasID).ToListAsync();
 
-            foreach (var vak in vakkenPerKlas)
-            {
-                if (vak.vaknaam.Substring(0, 3).ToLower().Equals(vakNaam.Substring(0, 3).ToLower()))
-                {
-                    vak.klas = klas;
-                    return vak;
-                }
-            }
+            var vak = await _database.Vak
+                .Where(v => v.vaknaam.Substring(0, 3).ToLower().Equals(vakNaam.Substring(0, 3).ToLower()))
+                .Where(v => v.klasID == klasID)
+                .Include(v => v.klas)
+                .Include(v => v.Leerkracht)
+                .FirstOrDefaultAsync();
 
-            return null;
+            return vak;
         }
+
 
         public async Task<IList<Vak>> Find()
         {
@@ -64,7 +61,7 @@ namespace SprintPlannerZM.Services
 
         public async Task<IQueryable<Vak>> FindAsyncPagingQueryable()
         {
-            var vakken =  _database.Vak
+            var vakken = _database.Vak
                 .Include(v => v.klas)
                 .Include(v => v.Leerkracht)
                 .Include(v => v.Sprintvakken)
@@ -76,8 +73,8 @@ namespace SprintPlannerZM.Services
 
         public async Task<Vak> Create(Vak vak)
         {
-           await _database.Vak.AddAsync(vak);
-          await  _database.SaveChangesAsync();
+            await _database.Vak.AddAsync(vak);
+            await _database.SaveChangesAsync();
             return vak;
         }
 
@@ -88,7 +85,7 @@ namespace SprintPlannerZM.Services
                 vakToUpd.vaknaam = vak.vaknaam;
                 vakToUpd.vakID = vak.vakID;
                 vakToUpd.leerkrachtID = vak.leerkrachtID;
-                  _database.Vak.Update(vakToUpd);
+                _database.Vak.Update(vakToUpd);
                 await _database.SaveChangesAsync();
                 return vak;
             }
@@ -110,13 +107,3 @@ namespace SprintPlannerZM.Services
     }
 }
 
-
-//public Vak OldGet(int id)
-//{
-//var vak = _database.Vak.SingleOrDefault();
-//    vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
-//    vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
-//    vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
-//    vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
-//    return vak;
-//}

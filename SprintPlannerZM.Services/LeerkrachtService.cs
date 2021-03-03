@@ -19,7 +19,9 @@ namespace SprintPlannerZM.Services
 
         public async Task<Leerkracht> Get(long id)
         {
-            var leerkracht = await _database.Leerkracht.SingleOrDefaultAsync(l => l.leerkrachtID == id);
+            var leerkracht = await _database.Leerkracht
+                .Where(l => l.leerkrachtID == id)
+                .SingleOrDefaultAsync();
             leerkracht.Klassen = await _database.Klas.Where(k => k.titularisID == leerkracht.leerkrachtID).ToListAsync();
             leerkracht.Vakken = await _database.Vak.Where(v => v.leerkrachtID == leerkracht.leerkrachtID).ToListAsync();
             leerkracht.Sprintlokalen = await _database.Sprintlokaal.Where(s => s.leerkrachtID == leerkracht.leerkrachtID).ToListAsync();

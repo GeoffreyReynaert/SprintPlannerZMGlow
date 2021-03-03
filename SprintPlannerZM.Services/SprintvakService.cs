@@ -18,26 +18,28 @@ namespace SprintPlannerZM.Services
         }
         public async Task<Sprintvak> GetAsync(int id)
         {
-            var sprintvak = await _database.Sprintvak.SingleOrDefaultAsync(s => s.sprintvakID == id);
-            sprintvak.Vak = await _database.Vak.SingleOrDefaultAsync(v => v.vakID == sprintvak.vakID);
-            sprintvak.Hulpleerling = await _database.Hulpleerling.SingleOrDefaultAsync(h => h.leerlingID == sprintvak.hulpleerlingID);
+            var sprintvak = await _database.Sprintvak
+                .Where(s => s.sprintvakID == id)
+                .Include(s=>s.Vak)
+                .Include(s=>s.Hulpleerling)
+                .SingleOrDefaultAsync(); 
+
             return sprintvak;
         }
 
         public async Task<IList<Sprintvak>> FindAsync()
         {
-           var sprintvakken =await _database.Sprintvak.ToListAsync();
-           foreach (var sprintvak in sprintvakken)
-           {
-               sprintvak.Vak = _database.Vak.SingleOrDefault(v => v.vakID == sprintvak.vakID);
-               sprintvak.Hulpleerling = _database.Hulpleerling.SingleOrDefault(h => h.leerlingID == sprintvak.hulpleerlingID);
-           }
+           var sprintvakken =await _database.Sprintvak
+               .Include(s=>s.Vak)
+               .Include(s=>s.Hulpleerling)
+               .ToListAsync();
+
            return sprintvakken;
         }
 
         public async Task<Sprintvak> CreateAsync(Sprintvak sprintvak)
         {
-            _database.Sprintvak.Add(sprintvak);
+            await _database.Sprintvak.AddAsync(sprintvak);
            await _database.SaveChangesAsync();
             return sprintvak;
         }

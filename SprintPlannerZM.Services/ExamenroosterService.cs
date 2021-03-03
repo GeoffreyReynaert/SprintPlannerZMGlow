@@ -22,9 +22,11 @@ namespace SprintPlannerZM.Services
 
         public async Task<Examenrooster> Get(int id)
         {
-            var examenrooster =await _database.Examenrooster.SingleOrDefaultAsync(e => e.examenID == id);
-            var vak =await _database.Vak.SingleOrDefaultAsync(v => v.vakID == examenrooster.vakID);
-            examenrooster.Vak = vak;
+            var examenrooster =await _database.Examenrooster
+                .Where(e => e.examenID == id)
+                .Include(e=>e.Vak)
+                .SingleOrDefaultAsync();
+            
             return examenrooster;
         }
 
@@ -33,30 +35,24 @@ namespace SprintPlannerZM.Services
         //Enkel voor de leerlingenverdeling
         public async Task<IList<Examenrooster>> FindByDatum(DateTime date)
         {
-            var examenroosters =await _database.Examenrooster.Where(e => e.datum == date).ToListAsync();
+            var examenroosters =await _database.Examenrooster
+                .Where(e => e.datum.Equals(date))
+                .Include(e=>e.Vak)
+                .ToListAsync();
 
-            foreach (var rooster in examenroosters)
-            {
-                rooster.Vak = await _database.Vak.SingleOrDefaultAsync(v => v.vakID == rooster.vakID); ;
-            }
             return examenroosters;
         }
 
         //ADMIN leerlingverdeling
-        public async Task<IList<Examenrooster>> FindDistinct()
+        public async Task<List<DateTime>> FindDistinct()
         {
             IList<Examenrooster> examens = new List<Examenrooster>();
-            var examenRoosters = await _database.Examenrooster.Select(e => e.datum).Distinct().OrderBy(e => e.Date).ToListAsync();
-            
-            foreach (var String in examenRoosters)
-            {
-                var rooster = new Examenrooster()
-                {
-                    datum = String
-                };
-                examens.Add(rooster);
-            }
-            return examens;
+            var examenRoosters = await _database.Examenrooster
+                .OrderBy(e => e.datum)
+                .Distinct().ToListAsync();
+
+
+            return examenRoosters;
         }
 
         public async Task<IList<Examenrooster>> Find()
