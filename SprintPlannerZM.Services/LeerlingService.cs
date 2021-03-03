@@ -71,14 +71,13 @@ namespace SprintPlannerZM.Services
 
 
         //Voor Paging Queryable Leerling beheer
-        public async Task<IQueryable<Leerling>> FindAsyncPagingQueryable()
+        public  IQueryable<Leerling> FindAsyncPagingQueryable()
         {
-
-            var leerlings = _database.Leerling
+            var LeerlingenQuery = _database.Leerling
                 .Include(l => l.Klas)
                 .AsQueryable();
 
-            return leerlings;
+            return LeerlingenQuery;
         }
 
 

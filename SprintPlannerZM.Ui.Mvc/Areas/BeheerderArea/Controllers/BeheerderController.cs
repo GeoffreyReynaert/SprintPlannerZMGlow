@@ -865,7 +865,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             }
             ViewData["nameFilter"] = searchString;
 
-            var lokalen = await _lokaalService.FindAsyncPagingQueryable();
+            var lokalen =  _lokaalService.FindAsyncPagingQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
             {

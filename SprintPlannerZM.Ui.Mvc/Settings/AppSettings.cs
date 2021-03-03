@@ -5,5 +5,7 @@
         public string SsApiBaseUrl { get; set; }
 
         public string SsApiPassword { get; set; }
+
+        public string TIHFDbContext { get; set; }
     }
 }

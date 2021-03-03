@@ -69,22 +69,8 @@ namespace SprintPlannerZM.Services
             return examenRoosters;
         }
 
-        public IList<Examenrooster> findDistinct()
-        {
-            var examenRoosters = _database.Examenrooster.Select(e => e.datum).Distinct().OrderBy(e=>e.Date).ToList();
-            IList<Examenrooster> examens = new List<Examenrooster>();
-            foreach (var String in examenRoosters)
-            {
-                var rooster = new Examenrooster()
-                {
-                    datum = String
-                };
-                examens.Add(rooster);
-            }
-            return examens;
-        }
 
-        public Examenrooster Create(Examenrooster examenrooster)
+        public async Task<Examenrooster> Create(Examenrooster examenrooster)
         {
            await _database.Examenrooster.AddAsync(examenrooster);
            await _database.SaveChangesAsync();
@@ -116,7 +102,7 @@ namespace SprintPlannerZM.Services
                 }
 
                 _database.Examenrooster.Remove(dbExamenrooster);
-                _database.SaveChangesAsync();
+               await _database.SaveChangesAsync();
                 return true;
             }
         }
