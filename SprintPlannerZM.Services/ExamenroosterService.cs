@@ -44,15 +44,23 @@ namespace SprintPlannerZM.Services
         }
 
         //ADMIN leerlingverdeling
-        public async Task<List<DateTime>> FindDistinct()
+        public async Task<IList<Examenrooster>> FindDistinct()
         {
             IList<Examenrooster> examens = new List<Examenrooster>();
             var examenRoosters = await _database.Examenrooster
-                .OrderBy(e => e.datum)
-                .Distinct().ToListAsync();
+                .Select(e => e.datum).Distinct()
+                .OrderBy(e => e.Date)
+                .ToListAsync();
 
-
-            return examenRoosters;
+            foreach (var String in examenRoosters)
+            {
+                var rooster = new Examenrooster()
+                {
+                    datum = String
+                };
+                examens.Add(rooster);
+            }
+            return examens;
         }
 
         public async Task<IList<Examenrooster>> Find()
