@@ -10,8 +10,8 @@ function () {
 function setStyle(pagina) {
     switch (pagina) {
     case "AdminArea":
-        var Index = document.getElementById("Index");
-        Index.className += " sidebar-nav";
+        var AdminIndex = document.getElementById("AdminIndex");
+        AdminIndex.className += " sidebar-nav";
         break;
     case "LeerlingenOverzicht":
         var LeerlingenOverzicht = document.getElementById("LeerlingenOverzicht");

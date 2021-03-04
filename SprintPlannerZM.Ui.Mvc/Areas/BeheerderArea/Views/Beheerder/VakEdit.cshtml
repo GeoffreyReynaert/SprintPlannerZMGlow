@@ -25,6 +25,11 @@
             <input asp-for="@Model.leerkrachtID" class="form-control" />
             <span asp-validation-for="@Model.leerkrachtID"></span>
         </div>
+        <div class="form-group">
+            <label asp-for="@Model.sprint">Sprintlokaal</label>
+            <input type="checkbox" asp-for="@Model.sprint" class="form-control" />
+            <span asp-validation-for="@Model.sprint"></span>
+        </div>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>

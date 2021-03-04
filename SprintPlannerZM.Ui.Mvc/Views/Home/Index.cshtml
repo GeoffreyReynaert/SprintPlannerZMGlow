@@ -24,7 +24,7 @@
 
 <body>
 
-    <div class="container">
+    <div id="change" class="container">
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
@@ -40,20 +40,20 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="E-mail">
+                            <input id="email" type="text" class="form-control" placeholder="E-mail">
 
                         </div>
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-key"></i></span>
                             </div>
-                            <input type="password" class="form-control" placeholder="password">
+                            <input id="password" type="password" class="form-control" placeholder="password">
                         </div>
                     </form>
                 </div>
                 <div class="card-footer">
                     <div class="form-group position-relative">
-                        <a type="submit" name="" value="Login" asp-action="AdminIndex" class="btn btn-center login_btn"> Login </a>
+                        <a id="login" type="submit" name="" value="Login" class="btn btn-center login_btn"> Login </a>
                     </div>
                 </div>
             </div>
@@ -61,3 +61,14 @@
     </div>
 </body>
 </html>
+
+<script>
+    $("#login").click(function () {
+        //if ($("#password").val() !== 'dora123') {
+        //    $("#change").replaceWith(`<iframe width="1920" height="1000" src="https://www.youtube.com/embed/z0O32YA4Ibs?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
+        //} else {
+            var wrkURL = '@Url.Action("AdminIndex")';
+            location.replace(wrkURL, "_blank");
+        //}
+    });
+</script>

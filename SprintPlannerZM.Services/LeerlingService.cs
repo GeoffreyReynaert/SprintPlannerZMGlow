@@ -55,10 +55,8 @@ namespace SprintPlannerZM.Services
             return leerlingen;
         }
 
-
-
         //Voor Paging Queryable Leerling beheer
-        public  IQueryable<Leerling> FindAsyncPagingQueryable()
+        public IQueryable<Leerling> FindAsyncPagingQueryable()
         {
             var leerlingenQuery = _database.Leerling
                 .Include(l => l.Klas)
@@ -103,6 +101,7 @@ namespace SprintPlannerZM.Services
                 leerlingToUpd.sprinter = leerling.sprinter;
                 leerlingToUpd.mklas = leerling.mklas;
                 leerlingToUpd.typer = leerling.typer;
+                leerlingToUpd.hulpleerlingID = leerling.hulpleerlingID;
                 _database.Leerling.Update(leerlingToUpd);
                 await _database.SaveChangesAsync();
                 return leerling;

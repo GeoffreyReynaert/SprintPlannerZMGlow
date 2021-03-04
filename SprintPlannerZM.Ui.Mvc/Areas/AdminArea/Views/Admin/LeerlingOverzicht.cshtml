@@ -1,33 +1,42 @@
-﻿@model SprintPlannerZM.Model.Leerling
+﻿@model SprintPlannerZM.Model.Klas
 
 <section class="left-allignToNav pt-3">
     <div class="tbl-header">
         <table>
             <thead>
             <tr>
-                <th class="h6">@Model.familieNaam @Model.voorNaam sprint examens</th>
+                <th class="h6">Keuze sprint/typer/m-klas</th>
             </tr>
             </thead>
         </table>
     </div>
     <div class="tbl-content">
-        <div class="">
-            <input type="hidden" id="leerlingID" name="leerlingID" asp-for="@Model.leerlingID" value="@Model.leerlingID" />
-            <input type="hidden" asp-for="@Model.familieNaam" />
-            <input type="hidden" asp-for="@Model.voorNaam" />
-            <input type="hidden" asp-for="@Model.email" />
-            <input type="hidden" asp-for="@Model.KlasID" />
-
-            <div class="pt-2 containerllnoverzicht">
-                <h6 class="w-20" id="leerlingInfo" value="@Model.leerlingID"> @Model.familieNaam @Model.voorNaam</h6>
-                <span> Sprint </span>
-                <input asp-for="@Model.sprinter" type="checkbox" id="sprint" class="ml-lg-n5 mt-1">
-                <span> Typer </span>
-                <input asp-for="@Model.typer" type="checkbox" id="typer" class="ml-lg-n5 mt-1">
-                <span> M-Klas </span>
-                <input asp-for="@Model.mklas" type="checkbox" id="mklas" class="ml-lg-n5 mt-1">
-                <button type="submit" class="btn btn-primary mt-md-n2 "> Bevestig </button>
-            </div>
-        </div>
+        @{
+            var count = 0;
+        }
+        @foreach (var vak in Model.Vakken)
+        {
+            if (vak.sprint)
+            {
+                @foreach (var sprintvak in vak.Sprintvakken)
+                {
+                    count++;
+                    <div class="trBordercolor container">
+                        <div class="">
+                            <div class="pt-2 containerllnoverzicht">
+                                <h6 class="w-20" id="vaknaam{@count}"> @vak.vaknaam</h6>
+                                <span> Sprint </span>
+                                <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.sprint) ? "checked='checked'" : string.Empty)>
+                                <span> Typer </span>
+                                <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.typer) ? "checked='checked'" : string.Empty)>
+                                <span> M-Klas </span>
+                                <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.mklas) ? "checked='checked'" : string.Empty)>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
     </div>
 </section>
+<button id="btnUpdate" class="btn btn-primary mt-md-n2 margin"> Bevestig </button>

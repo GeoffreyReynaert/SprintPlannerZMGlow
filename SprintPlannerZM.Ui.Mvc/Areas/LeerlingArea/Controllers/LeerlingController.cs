@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
@@ -52,9 +56,53 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
         {
             return View();
         }
-        public IActionResult Keuzevak()
+
+        public async Task<IActionResult> Keuzevak()
         {
-            return View();
+            var leerlingen = await _leerlingService.Find();
+            return View(leerlingen);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PartialComboLeerlingen(int leerlingID)
+        {
+            var leerling = await _leerlingService.Get(leerlingID);
+            leerling.Klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
+            return PartialView("PartialLeerling", leerling);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateLeerlingen(string vakKeuzeLijst, bool anySprint)
+        {
+            var jvakKeuzeLijst = JArray.Parse(vakKeuzeLijst);
+            var count = 0;
+            if (anySprint)
+            {
+                //update
+                foreach (var sprintvakKeuze in jvakKeuzeLijst)
+                {
+                    count++;
+                    var keuze = sprintvakKeuze.ToObject<Sprintvak>();
+                    if (keuze.sprint || keuze.typer || keuze.mklas)
+                    {
+                        await _sprintvakService.UpdateAsync(keuze.sprintvakID, keuze);
+                    }
+                    Console.WriteLine(count);
+                }
+            }
+            else
+            {
+                //create
+                foreach (var sprintvakKeuze in jvakKeuzeLijst)
+                {
+                    count++;
+                    var keuze = sprintvakKeuze.ToObject<Sprintvak>();
+                    var sprintVak = new Sprintvak()
+                        {vakID = keuze.vakID, sprint = keuze.sprint, typer = keuze.typer, mklas = keuze.mklas};
+                    await _sprintvakService.CreateAsync(sprintVak);
+                }
+            }
+            return RedirectToAction();
         }
     }
 }

@@ -30,6 +30,19 @@ namespace SprintPlannerZM.Services
             return klas;
         }
 
+        public Klas GetSprintvakWithKlas(int id)
+        {
+            var klas = _database.Klas.SingleOrDefault(k => k.klasID == id);
+            klas.Leerlingen = _database.Leerling.Where(l => klas != null && l.KlasID == klas.klasID).ToList();
+            klas.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == klas.titularisID);
+            klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
+            foreach (var vak in klas.Vakken)
+            {
+                vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
+            }
+
+            return klas;
+        }
 
         public async Task<Klas> GetByKlasName(string name)
         {
