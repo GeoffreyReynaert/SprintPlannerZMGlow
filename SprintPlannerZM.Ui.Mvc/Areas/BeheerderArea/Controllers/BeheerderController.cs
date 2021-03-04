@@ -388,6 +388,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                         rooster.Vak = await _vakService.GetBySubString("Maatschapp", klas.klasID);
                                         Console.WriteLine(reader.GetValue(column) + " is gevonden");
                                     }
+                                    else if (reader.GetValue(column).ToString().Contains("PSYCHOLOGIE"))
+                                    {
+                                        rooster.Vak = await _vakService.GetBySubString("Beroeps", klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) +
+                                                          "Beroepsgerichte psychologie is gelukt ");
+                                    }
                                     else if (reader.GetValue(column).ToString().Contains("IO3") ||
                                              reader.GetValue(column).ToString().Contains("IO4") ||
                                              reader.GetValue(column).ToString().Contains("IO5") ||
