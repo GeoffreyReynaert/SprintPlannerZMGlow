@@ -16,7 +16,7 @@ namespace SprintPlannerZM.Model
         public bool typer { get; set; }
         public bool mklas { get; set; }
         public Klas Klas { get; set; }
-        public long? hulpleerlingID { get; set; }
+        public int? hulpleerlingID { get; set; }
         public Hulpleerling hulpleerling { get; set; }
         
 
