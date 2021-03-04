@@ -394,6 +394,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                         Console.WriteLine(reader.GetValue(column) +
                                                           "Beroepsgerichte psychologie is gelukt ");
                                     }
+                                    else if (reader.GetValue(column).ToString().Contains("R EN E"))
+                                    {
+                                        rooster.Vak = await _vakService.GetBySubString("Religie", klas.klasID);
+                                        Console.WriteLine(reader.GetValue(column) + "Religie en ethiek is gelukt ");
+                                    }
                                     else if (reader.GetValue(column).ToString().Contains("IO3") ||
                                              reader.GetValue(column).ToString().Contains("IO4") ||
                                              reader.GetValue(column).ToString().Contains("IO5") ||
@@ -571,10 +576,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public IActionResult LeerlingEdit(Leerling leerling)
         {
             _leerlingService.Update(leerling.leerlingID, leerling);
-            //var berichten = new List<string> { "leerling " + leerling.familieNaam + " is gewijzigd" };
 
             return RedirectToAction("LeerlingBeheer");
-
         }
 
 
@@ -872,8 +875,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             await _lokaalService.UpdateAsync(lokaal.lokaalID, lokaal);
             return RedirectToAction("lokaalBeheer");
         }
-
-
 
 
 
