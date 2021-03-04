@@ -11,6 +11,7 @@ namespace SprintPlannerZM.Model
         public string familieNaam { get; set; }
         public string email { get; set; }
         public int KlasID { get; set; }
+        public string? groep { get; set; }
         public bool sprinter { get; set; }
         public bool typer { get; set; }
         public bool mklas { get; set; }

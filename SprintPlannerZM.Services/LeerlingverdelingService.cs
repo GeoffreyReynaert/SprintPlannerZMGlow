@@ -29,6 +29,13 @@ namespace SprintPlannerZM.Services
                 .ToListAsync();
         }
 
+        public async Task<IList<Leerlingverdeling>> FindCapWithExamID(int examID)
+        {
+            return await _database.Leerlingverdeling
+                .Where(l=>l.examenID==examID)
+                .ToListAsync();
+        }
+
         public async Task<Leerlingverdeling> Create(Leerlingverdeling leerlingverdeling)
         {
            await _database.Leerlingverdeling.AddAsync(leerlingverdeling);
