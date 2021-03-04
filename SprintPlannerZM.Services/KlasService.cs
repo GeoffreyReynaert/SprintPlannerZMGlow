@@ -40,15 +40,6 @@ namespace SprintPlannerZM.Services
         }
 
 
-        //gebruik voor myro import enkel
-        public Klas GetBySubString(string klasnaam)
-        {
-            var klas = new Klas();
-
-            klas = _database.Klas.SingleOrDefault(l => l.klasnaam.Substring(0, 3).Equals(klasnaam.Substring(0, 3)));
-
-            return klas;
-        }
 
 
         public async Task<IList<Klas>> Find()

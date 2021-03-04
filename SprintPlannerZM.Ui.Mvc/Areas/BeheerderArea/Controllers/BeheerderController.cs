@@ -334,11 +334,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             if (Request.Form.Files.Count != 0)
             {
                 file = Request.Form.Files[0];
-
                 var xlsStream = file.OpenReadStream();
-
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
                 using (var reader = ExcelReaderFactory.CreateReader(xlsStream))
                 {
                     do
@@ -394,11 +391,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     else if (reader.GetValue(column).ToString().Contains("IO3") ||
                                              reader.GetValue(column).ToString().Contains("IO4") ||
                                              reader.GetValue(column).ToString().Contains("IO5") ||
-                                             reader.GetValue(column).ToString().Contains("IO6") ||
-                                             reader.GetValue(column).ToString().Contains("STUDIE") || // GEwoon studie om op school te blijven 
-                                             reader.GetValue(column).ToString().Contains("SPRINT") || // voor sprint 
-                                             reader.GetValue(column).ToString().Contains("RESERVE") || // geen nut 
-                                             reader.GetValue(column).ToString().Contains("FG"))
+                                             reader.GetValue(column).ToString().Contains("IO6")) 
+                                             
                                     {
                                         if (klas.klasID != 1
                                         ) // laatste van de input io opvangen die geen vak heeft nog klas
@@ -418,7 +412,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     else if (reader.GetValue(column).ToString().Contains("INSTROOM") || // OKAN Weten niet wat het juist is  maar normaal taal
                                              reader.GetValue(column).ToString().Contains("FOUTLOOS") || // OKAN TAAL examen
                                              reader.GetValue(column).ToString().Contains("MELKWEG") || //OKAN TAAL MELKWEG (25/02) examen
-                                            reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT")) // OKAN TAAL examen
+                                            reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT")|| 
+                                             reader.GetValue(column).ToString().Contains("STUDIE") || // GEwoon studie om op school te blijven 
+                                             reader.GetValue(column).ToString().Contains("SPRINT") || // voor sprint 
+                                             reader.GetValue(column).ToString().Contains("RESERVE") || // geen nut 
+                                             reader.GetValue(column).ToString().Contains("FG")) // OKAN TAAL examen
                                     {
                                         rooster.examenID = 999;  // Soort fault code om zo deze niet toe te voegen
                                         Console.WriteLine(reader.GetValue(column) + "Skip van de onnodige  op het einde van het document ");
@@ -451,16 +449,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     Console.WriteLine("datum :" + date);
                                 } // datum van examen
 
-                                else if (column == 6
-                                ) // foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
+                                else if (column == 6) // foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
                                 {
                                     var tweeDeligAntw = reader.GetValue(column).ToString().Split(" ");
                                     rooster.tijd = tweeDeligAntw[1];
                                     Console.WriteLine("uur :" + tweeDeligAntw[1]);
                                 } // foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
                             }
-
-                            if (rooster.examenID != 999) // fault code van onnodige gegevens
+                            if (rooster.examenID != 999) // fault code van onnodige gegevens om deze niet te versturen en zo de database te sparen
                             {
                                 rooster.vakID = rooster.Vak.vakID;
                                 Console.WriteLine(rooster.Vak.vaknaam + " " + rooster.Vak.klasID + " " + rooster.datum);
@@ -484,8 +480,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             berichten.Add("Opgelet! U heeft Geen bestand verzonden");
             return View("ImportPagina", berichten);
         }
-
-
 
 
 
