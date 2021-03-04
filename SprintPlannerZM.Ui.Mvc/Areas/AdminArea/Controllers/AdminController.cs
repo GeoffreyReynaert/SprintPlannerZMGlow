@@ -2,7 +2,9 @@
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing.Constraints;
 using Newtonsoft.Json.Linq;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
@@ -58,64 +60,93 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View("Index");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> LeerlingenOverzicht()
-        {
-            //var klassen = _klasService.Find();
-            //foreach (var klas in klassen)
-            //{
-            //    klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
-            //}
-            //return View(klassen);
-            var leerlingen = _leerlingService.FindAsyncPagingQueryable();
-            return View();
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> LeerlingenOverzicht()
+        //{
+        //    var klassen = _klasService.Find();
+        //    foreach (var klas in klassen)
+        //    {
+        //        klas.Leerlingen = _leerlingService.FindByKlasID(klas.klasID);
+        //    }
+        //    return View(klassen);
+        //    var leerlingen = _leerlingService.FindAsyncPagingQueryable();
+        //    return View();
+        //}
 
-        public async Task<IActionResult> LeerlingenOverzicht(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        public async Task<IActionResult> LeerlingenOverzicht(string sortOrder, string currentFilter, string nameString, string klasString, int? pageNumber)
         {
-            ViewData["KlasSortParm"] = string.IsNullOrEmpty(sortOrder) ? "klasnaam_desc" : "";
-            ViewData["VoornaamSortParm"] = sortOrder == "voornaam_desc" ? "voornaam_desc" : "";
-            ViewData["FamilienaamSortParm"] = sortOrder == "familienaam_desc" ? "familienaam_desc" : "";
-            ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentSort"] = sortOrder;
+            ViewData["FamilienaamSortParm"] = string.IsNullOrEmpty(sortOrder) ? "familienaam_asc" : "familienaam_desc";
+            ViewData["VoornaamSortParm"] = sortOrder == "voornaam_desc" ? "voornaam_desc" : "";
 
-            if (searchString != null)
+            if (nameString != null)
             {
                 pageNumber = 1;
             }
             else
             {
-                searchString = currentFilter;
+                nameString = currentFilter;
             }
-            var leerlingen = from l in _leerlingService.Find()
-                select l;
-            if (!string.IsNullOrEmpty(searchString))
+
+            ViewData["NameFilter"] = nameString;
+
+            if (klasString != null)
             {
-                leerlingen = leerlingen.Where(s => s.voorNaam.Contains(searchString)
-                                               || s.familieNaam.Contains(searchString));
+                pageNumber = 1;
             }
-            switch (sortOrder)
+            else
             {
-                case "klasnaam_desc":
-                    leerlingen = leerlingen.OrderByDescending(l => l.Klas.klasnaam);
-                    break;
-                case "voornaam_desc":
-                    leerlingen = leerlingen.OrderBy(l => l.voorNaam);
-                    break;
-                case "familienaam_desc":
-                    leerlingen = leerlingen.OrderByDescending(l => l.familieNaam);
-                    break;
-                default:
-                    leerlingen = leerlingen.OrderBy(l => l.familieNaam);
-                    break;
+                klasString = currentFilter;
             }
-            const int pageSize = 3;
-            return View(await PaginatedList<Leerling>.CreateAsync(leerlingen.AsQueryable(), pageNumber ?? 1, pageSize));
+
+            ViewData["KlasFilter"] = klasString;
+
+            var leerlingen = _leerlingService.FindAsyncPagingQueryable();
+
+            if (!string.IsNullOrEmpty(nameString))
+            {
+                leerlingen = leerlingen.Where(l => l.voorNaam.ToLower().Contains(nameString.ToLower())
+                                               || l.familieNaam.ToLower().Contains(nameString.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(klasString))
+            {
+                leerlingen = leerlingen.Where(k => k.Klas.klasnaam.ToLower().Contains(klasString.ToLower()));
+            }
+
+            leerlingen = sortOrder switch
+            {
+                "klasnaam_desc" => leerlingen.OrderByDescending(l => l.Klas.klasnaam),
+                "voornaam_desc" => leerlingen.OrderBy(l => l.voorNaam),
+                "familienaam_asc" => leerlingen.OrderBy(l => l.familieNaam),
+                "familienaam_desc" => leerlingen.OrderByDescending(l => l.familieNaam),
+                _ => leerlingen.OrderBy(l => l.voorNaam)
+            };
+            return View(await PaginatedList<Leerling>.CreateAsync(leerlingen.AsQueryable(), pageNumber ?? 1, 12));
         }
 
-        public ActionResult LeerlingAsync(Leerling[] model)
+        public async Task<IActionResult> LeerlingUpdate(Leerling[] model)
         {
-            return View("LeerlingOverzicht");
+            foreach (var leerling in model)
+            {
+                if (leerling.sprinter || leerling.typer || leerling.mklas)
+                {
+                    if (leerling.hulpleerlingID == null)
+                    {
+                        var hulpleerling = new Hulpleerling
+                            {leerlingID = leerling.leerlingID, klasID = leerling.KlasID};
+                        var ietske =
+                            await _hulpleerlingService.Create(hulpleerling);
+                        Console.WriteLine(ietske.hulpleerlingID);
+                        leerling.hulpleerlingID = ietske.hulpleerlingID;
+                    }
+                }
+                await _leerlingService.Update(leerling.leerlingID, leerling);
+
+                Console.WriteLine(leerling.voorNaam  + " is toegevoegd.");
+            }
+        
+            return RedirectToAction("LeerlingenOverzicht");
         }
 
         //public IActionResult AlleLeerlingen()
@@ -127,7 +158,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         //    }
         //    return View("LeerlingenOverzicht", klassen);
         //}
-        public IActionResult PartialAlleLeerlingen()
         public async Task<IActionResult> PartialAlleLeerlingen()
         {
             var klassen = await _klasService.Find();
@@ -203,14 +233,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         }
 
         //Detail alle leerlingen naar leerling uit lijst
-        public async Task<IActionResult> LeerlingOverzicht(int leerlingID)
-        {
-            var leerling = _leerlingService.Get(leerlingID);
-            var klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
-            return PartialView("LeerlingOverzicht", klas);
-            var leerling = await _leerlingService.Get(leerlingID);
-            return PartialView("LeerlingOverzicht", leerling);
-        }
+        //public async Task<IActionResult> LeerlingOverzicht(int leerlingID)
+        //{
+        //    var leerling = _leerlingService.Get(leerlingID);
+        //    var klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
+        //    return PartialView("LeerlingOverzicht", klas);
+        //    var leerling = await _leerlingService.Get(leerlingID);
+        //    return PartialView("LeerlingOverzicht", leerling);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> UpdateLeerlingen(string leerlingenLijst)

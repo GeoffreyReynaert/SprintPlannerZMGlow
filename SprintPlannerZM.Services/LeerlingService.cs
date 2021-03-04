@@ -59,19 +59,18 @@ namespace SprintPlannerZM.Services
 
         public async Task<IList<Leerling>> Find()
         {
-            var leerlingen = await _database.Leerling.OrderBy(l => l.familieNaam).ToListAsync();
-            foreach (var leerling in leerlingen)
-            {
-                leerling.hulpleerling = await _database.Hulpleerling.SingleOrDefaultAsync(h => h.leerlingID == leerling.leerlingID);
-                leerling.Klas = await _database.Klas.SingleOrDefaultAsync(k => k.klasID == leerling.KlasID);
-            }
+            var leerlingen = await _database.Leerling
+                .Include(l => l.Klas)
+                .ThenInclude(k => k.Vakken)
+                .Include(k => k.hulpleerling)
+                .OrderBy(l => l.familieNaam)
+                .ToListAsync();
+
             return leerlingen;
         }
 
-
-
         //Voor Paging Queryable Leerling beheer
-        public async Task<IQueryable<Leerling>> FindAsyncPagingQueryable()
+        public IQueryable<Leerling> FindAsyncPagingQueryable()
         {
 
             var leerlings = _database.Leerling
@@ -115,6 +114,7 @@ namespace SprintPlannerZM.Services
                 leerlingToUpd.sprinter = leerling.sprinter;
                 leerlingToUpd.mklas = leerling.mklas;
                 leerlingToUpd.typer = leerling.typer;
+                leerlingToUpd.hulpleerlingID = leerling.hulpleerlingID;
                 _database.Leerling.Update(leerlingToUpd);
                 await _database.SaveChangesAsync();
                 return leerling;

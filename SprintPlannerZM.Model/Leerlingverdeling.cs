@@ -3,7 +3,7 @@
     public class Leerlingverdeling
     {
         public int leerlingverdelingID { get; set; }
-        public int hulpleerlingID { get; set; }
+        public long hulpleerlingID { get; set; }
         public int sprintlokaalID { get; set; }
         public int examenID { get; set; }
         public Hulpleerling Hulpleerling { get; set; }

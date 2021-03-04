@@ -20,7 +20,7 @@ namespace SprintPlannerZM.Services
 
         public async Task<Klas> GetAsync(int id)
         {
-            var klas =await _database.Klas
+            var klas = await _database.Klas
                 .Where(k => k.klasID == id)
                 .Include(k => k.Leerkracht)
                 .Include(k => k.Leerlingen)
@@ -43,8 +43,6 @@ namespace SprintPlannerZM.Services
 
             return klas;
         }
-
-        public Klas GetByKlasName(string name)
 
         public async Task<Klas> GetByKlasName(string name)
         {

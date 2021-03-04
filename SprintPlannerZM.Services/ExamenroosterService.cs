@@ -84,7 +84,7 @@ namespace SprintPlannerZM.Services
             return examens;
         }
 
-        public Examenrooster Create(Examenrooster examenrooster)
+        public async Task<Examenrooster> Create(Examenrooster examenrooster)
         {
            await _database.Examenrooster.AddAsync(examenrooster);
            await _database.SaveChangesAsync();

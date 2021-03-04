@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using SprintPlannerZM.Model;
@@ -56,53 +57,52 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
             return View();
         }
 
-        public IActionResult Keuzevak()
+        public async Task<IActionResult> Keuzevak()
         {
-            var leerlingen = _leerlingService.Find();
+            var leerlingen = await _leerlingService.Find();
             return View(leerlingen);
         }
 
         [HttpPost]
-        public IActionResult PartialComboLeerlingen(int leerlingID)
+        public async Task<IActionResult> PartialComboLeerlingen(int leerlingID)
         {
-            var leerling = _leerlingService.Get(leerlingID);
+            var leerling = await _leerlingService.Get(leerlingID);
             leerling.Klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
             return PartialView("PartialLeerling", leerling);
         }
 
-        //[HttpPost]
-        //public IActionResult UpdateLeerlingen(string vakKeuzeLijst)
-        //{
-        //    var JvakKeuzeLijst = JArray.Parse(vakKeuzeLijst);
-        //    var count = 0;
-        //    foreach (var leerling in JvakKeuzeLijst)
-        //    {
-        //        count++;
-        //        var student = leerling.ToObject<Leerling>();
-        //        if (student.mklas || student.typer || student.sprinter)
-        //        {
-        //            if (ExistAsKeuzeVak(student.leerlingID))
-        //            {
-        //                Console.WriteLine("Bestaat al. niet toegevoegd wel aangepast");
-        //            }
-        //            else
-        //            {
-        //                Hulpleerling hulpleerling = new Hulpleerling { klasID = student.KlasID, leerlingID = student.leerlingID };
-        //                _hulpleerlingService.Create(hulpleerling);
-        //            }
-        //        }
-        //        _leerlingService.Update(student.leerlingID, student);
-        //        Console.WriteLine(count);
-        //    }
-        //    return RedirectToAction();
-        //}
-
-        public bool ExistAsKeuzeVak(int id)
+        [HttpPost]
+        public async Task<IActionResult> UpdateLeerlingen(string vakKeuzeLijst, bool anySprint)
         {
-            var KeuzeVak = new Sprintvak();
-            KeuzeVak = _sprintvakService.Get(id);
-
-            return KeuzeVak != null;
+            var jvakKeuzeLijst = JArray.Parse(vakKeuzeLijst);
+            var count = 0;
+            if (anySprint)
+            {
+                //update
+                foreach (var sprintvakKeuze in jvakKeuzeLijst)
+                {
+                    count++;
+                    var keuze = sprintvakKeuze.ToObject<Sprintvak>();
+                    if (keuze.sprint || keuze.typer || keuze.mklas)
+                    {
+                        await _sprintvakService.UpdateAsync(keuze.sprintvakID, keuze);
+                    }
+                    Console.WriteLine(count);
+                }
+            }
+            else
+            {
+                //create
+                foreach (var sprintvakKeuze in jvakKeuzeLijst)
+                {
+                    count++;
+                    var keuze = sprintvakKeuze.ToObject<Sprintvak>();
+                    var sprintVak = new Sprintvak()
+                        {vakID = keuze.vakID, sprint = keuze.sprint, typer = keuze.typer, mklas = keuze.mklas};
+                    await _sprintvakService.CreateAsync(sprintVak);
+                }
+            }
+            return RedirectToAction();
         }
     }
 }

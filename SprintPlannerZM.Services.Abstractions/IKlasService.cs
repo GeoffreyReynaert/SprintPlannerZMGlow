@@ -9,8 +9,6 @@ namespace SprintPlannerZM.Services.Abstractions
     {
         Task<Klas> GetAsync(int id);
         Task<Klas> GetByKlasName(string id);
-        Klas Get(int id);
-        Klas GetByKlasName(string id);
         Klas GetSprintvakWithKlas(int id);
         Klas GetBySubString(string klasnaam);
         Task<IList<Klas>> Find();

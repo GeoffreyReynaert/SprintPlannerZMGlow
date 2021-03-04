@@ -22,9 +22,7 @@ namespace SprintPlannerZM.Model
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            Leerling objAsPart = obj as Leerling;
-            if (objAsPart == null) return false;
-            else return Equals(objAsPart);
+            return obj is Leerling objAsPart && Equals(objAsPart);
         }
 
         public override int GetHashCode()

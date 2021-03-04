@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SprintPlannerZM.Model;
+using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
@@ -14,7 +16,7 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
-        public async Task<Sprintvak> GetAsync(int id)
+        public async Task<Sprintvak> GetAsync(long id)
         {
             var sprintvak = await _database.Sprintvak.SingleOrDefaultAsync(s => s.sprintvakID == id);
             sprintvak.Vak = await _database.Vak.SingleOrDefaultAsync(v => v.vakID == sprintvak.vakID);
@@ -34,9 +36,9 @@ namespace SprintPlannerZM.Services
         }
 
         public async Task<Sprintvak> CreateAsync(Sprintvak sprintvak)
-        {
-            _database.Sprintvak.Add(sprintvak);
-           await _database.SaveChangesAsync();
+        { 
+            await _database.Sprintvak.AddAsync(sprintvak); 
+            await _database.SaveChangesAsync();
             return sprintvak;
         }
 

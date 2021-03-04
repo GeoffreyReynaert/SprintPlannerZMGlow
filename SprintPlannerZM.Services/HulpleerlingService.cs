@@ -49,9 +49,10 @@ namespace SprintPlannerZM.Services
 
         public async Task<Hulpleerling> Create(Hulpleerling hulpleerling)
         {
-            await _database.Hulpleerling.AddAsync(hulpleerling);
+            await _database.Hulpleerling.AddAsync(hulpleerling); 
             await _database.SaveChangesAsync();
-            return hulpleerling;
+            var dbLeerling = await _database.Hulpleerling.SingleOrDefaultAsync(h=> h.hulpleerlingID == hulpleerling.hulpleerlingID);
+            return dbLeerling;
         }
 
         public async Task<Hulpleerling> Update(int id, Hulpleerling hulpleerling)
