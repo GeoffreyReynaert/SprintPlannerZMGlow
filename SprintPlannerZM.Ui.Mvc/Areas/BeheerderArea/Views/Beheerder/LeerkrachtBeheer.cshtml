@@ -20,23 +20,27 @@
 
 <table class="table">
     <thead>
-    <tr>
-        <th>
-            stamboekNr
-        </th>
-        <th>
-            <a asp-action="LeerkrachtBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Familienaam</a>
-        </th>
-        <th>
-            Voornaam
-        </th>
-        <th>
-            <a asp-action="LeerkrachtBeheer" asp-route-sortOrder="@ViewData["aantal"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">aantal vakken</a>
-        </th>
-        <th>
-            acties
-        </th>
-    </tr>
+        <tr>
+            <th>
+                stamboekNr
+            </th>
+            
+            <th>
+                kluis Nummer
+            </th>
+            <th>
+                <a asp-action="LeerkrachtBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Familienaam</a>
+            </th>
+            <th>
+                Voornaam
+            </th>
+            <th>
+                <a asp-action="LeerkrachtBeheer" asp-route-sortOrder="@ViewData["aantal"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">aantal vakken</a>
+            </th>
+            <th>
+                acties
+            </th>
+        </tr>
     </thead>
     <tbody>
     @foreach (var item in Model)
@@ -44,6 +48,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.leerkrachtID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.kluisNr)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.achternaam)

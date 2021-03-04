@@ -508,7 +508,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public async Task<IActionResult> LeerlingBeheer(string sortOrder, string currentFilter, string searchString, string search2String, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["KlasSortParm"] = sortOrder == "klas" ? "klas_desc" : "klas";
 
             if (searchString != null)
@@ -524,13 +524,13 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
             var students = _leerlingService.FindAsyncPagingQueryable();
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                students = students.Where(s => s.familieNaam.ToLower().Contains(searchString.ToLower())
+                students =  students.Where(s => s.familieNaam.ToLower().Contains(searchString.ToLower())
                                                || s.voorNaam.ToLower().Contains(searchString.ToLower()));
             }
 
-            if (!String.IsNullOrEmpty(search2String))
+            if (!string.IsNullOrEmpty(search2String))
             {
                 students = students.Where(s => s.Klas.klasnaam.ToLower().Contains(search2String.ToLower()));
             }
@@ -568,14 +568,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public async Task<IActionResult> LeerlingEdit(int id)
         {
             var leerling = await _leerlingService.Get(id);
-            return View(leerling);
+            return View( leerling);
         }
 
 
         [HttpPost] // Post van de wijziging
-        public IActionResult LeerlingEdit(Leerling leerling)
+        public async Task<IActionResult> LeerlingEdit(Leerling leerling)
         {
-            _leerlingService.Update(leerling.leerlingID, leerling);
+           await _leerlingService.Update(leerling.leerlingID, leerling);
 
             return RedirectToAction("LeerlingBeheer");
         }
@@ -741,7 +741,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
 
 
-        public async Task<IActionResult> KlasBeheer(string sortOrder, string currentFilter, string searchString, string search2String, int? pageNumber)
+        public async Task<IActionResult> KlasBeheer(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";

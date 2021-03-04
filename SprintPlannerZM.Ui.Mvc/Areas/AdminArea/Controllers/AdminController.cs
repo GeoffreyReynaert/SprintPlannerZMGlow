@@ -56,7 +56,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         public IActionResult Index()
         {
-    
+
             return View("Index");
         }
 
@@ -161,7 +161,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         public async Task<IActionResult> PartialAlleLeerlingen()
         {
             var klassen = await _klasService.Find();
-           
+
             return PartialView("PartialAlleLeerlingen", klassen);
         }
         [HttpPost]
@@ -172,12 +172,30 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         }
 
 
+
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+           !                 Klasverdeling     by Geoff            ! 
+           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+        [HttpGet]
+        public async Task<IActionResult> Klasverdeling()
+        {
+            var examens = await _examenroosterService.FindDistinct();
+            return View(examens);
+        }
+
+
+        //Verdeling generatie
         public async Task<IActionResult> LeerlingVerdeling(string datum)
         {
+            var j = 0;
             var hulpLeerlingen = await _hulpleerlingService.Find();
             var splitPieceDatum = datum.Split(" ")[0];
             var examensPerDatum = await _examenroosterService.FindByDatum(DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null));
             var lokalenVoorSprint = await _lokaalService.FindForSprintAsync();
+            var sprintlokaal = new Sprintlokaal();
+
+            //tester om te zien wie van de hulpleerlingen examens heeft
             foreach (var leerling in hulpLeerlingen)
             {
                 foreach (var vak in leerling.Klas.Vakken)
@@ -191,34 +209,54 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                     }
                 }
             }
+
+            //effectieve methode 
+
             foreach (var leerling in hulpLeerlingen)
             {
-                foreach (var sprintexam in leerling.Sprintvakken)
+                foreach (var sprintKeuzeExam in leerling.Sprintvakken)
                 {
                     foreach (var geplandExamen in examensPerDatum)
                     {
-                        if (geplandExamen.vakID == sprintexam.vakID)
+                        if (geplandExamen.vakID == sprintKeuzeExam.vakID)
                         {
-                            var lokaal = new Lokaal();
-                            Console.WriteLine("Sprintvak keuze ID " + sprintexam.sprintvakID + " voor vak " +
-                                                                     sprintexam.Vak.vaknaam + " voor leerling " + leerling.Leerling.voorNaam +" " +leerling.Klas.klasnaam +
-                                                                     " staat vast op" + geplandExamen.datum );
-                            foreach (var gekozenLokaal in lokalenVoorSprint)
+                            Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakID + " voor vak " +
+                                              sprintKeuzeExam.Vak.vaknaam + " voor leerling " + leerling.Leerling.voorNaam + " " + leerling.Klas.klasnaam +
+                                              " staat vast op" + geplandExamen.datum);
+
+
+
+                            for (int i = 0; i <= leerling.Sprintvakken.Count; i++)
                             {
                                 var aantalReservatiesPerlokaal = _sprintlokaalService.FindByExamID(geplandExamen.examenID).Result.Count;
-                                if (gekozenLokaal.naamafkorting.Equals("225")&& gekozenLokaal.lokaaltype.Equals("sprint")&& aantalReservatiesPerlokaal <= gekozenLokaal.capaciteit)
+
+                                if (aantalReservatiesPerlokaal == 0)
                                 {
-                                    lokaal = gekozenLokaal;
-                                    var sprintlokaal = new Sprintlokaal() { tijd = geplandExamen.tijd, datum = geplandExamen.datum, lokaalID = lokaal.lokaalID };
+                                    sprintlokaal = new Sprintlokaal() { tijd = geplandExamen.tijd, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[j].lokaalID };
+                                    sprintlokaal = await _sprintlokaalService.Create(sprintlokaal);
+                                }
+
+                                var lokaalBeztting = _leerlingverdelingService.FindCapWithExamID(geplandExamen.examenID).Result.Count;
+                                if (lokaalBeztting <= lokalenVoorSprint[j].capaciteit)
+                                {
+                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = leerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalID, examenID = geplandExamen.examenID };
+                                    leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
+                                }
+                                else
+                                {
+                                    j++;
+                                    sprintlokaal = new Sprintlokaal() { tijd = geplandExamen.tijd, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[j].lokaalID };
                                     sprintlokaal = await _sprintlokaalService.Create(sprintlokaal);
                                     var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = leerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalID, examenID = geplandExamen.examenID };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
+
                                 }
                             }
                         }
                     }
                 }
             }
+
             var examenroosters = await _examenroosterService.FindDistinct();
             return View("Klasverdeling", examenroosters);
         }
@@ -249,17 +287,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             {
                 count++;
                 var student = leerling.ToObject<Leerling>();
-                _leerlingService.Update(student.leerlingID, student);
+               await _leerlingService.Update(student.leerlingID, student);
                 Console.WriteLine(count);
             }
             return RedirectToAction();
         }
 
-        public async Task<IActionResult> Klasverdeling()
-        {
-            var examens = await _examenroosterService.FindDistinct();
-            return View(examens);
-        }
 
         public async Task<IActionResult> Toezichters()
         {
@@ -278,7 +311,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         {
             var leerkracht = await _leerkrachtService.Get(leerkrachtID);
             leerkracht.sprintToezichter = leerkracht.sprintToezichter != true;
-            _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
+            await _leerkrachtService.Update(leerkracht.leerkrachtID, leerkracht);
             return RedirectToAction();
         }
 
