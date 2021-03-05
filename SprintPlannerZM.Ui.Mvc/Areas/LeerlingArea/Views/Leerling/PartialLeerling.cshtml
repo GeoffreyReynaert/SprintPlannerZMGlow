@@ -1,5 +1,4 @@
-﻿@using System.Threading
-@model SprintPlannerZM.Model.Leerling
+﻿@model SprintPlannerZM.Model.Leerling
 
 <section class="left-allignToNav pt-3">
     <div class="tbl-header">
@@ -14,7 +13,6 @@
     <div class="tbl-content">
         @{
             var count = 0;
-            var anySprint = false;
         }
         @foreach (var vak in Model.Klas.Vakken)
         {
@@ -22,15 +20,14 @@
             {
                 if (Model.hulpleerling.Sprintvakken.Any())
                 {
-                    anySprint = true;
                     foreach (var sprintvak in vak.Sprintvakken)
                     {
                         count++;
                         <div class="trBordercolor container">
                             <div class="">
                                 <div class="pt-2 containerllnoverzicht">
-                                    <input id="vakId{@count}" value="@sprintvak.sprintvakID" type="hidden" />
-                                    <input id="leerlingId{@count}" value="@sprintvak.hulpleerlingID" type="hidden" />
+                                    <input id="vakId{@count}" value="@sprintvak.sprintvakID" type="hidden"/>
+                                    <input id="leerlingId{@count}" value="@sprintvak.hulpleerlingID" type="hidden"/>
                                     <h6 class="w-20" id="vaknaam{@count}"> @vak.vaknaam</h6>
                                     <span> Sprint </span>
                                     <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.sprint) ? "checked='checked'" : string.Empty)>
@@ -42,16 +39,16 @@
                             </div>
                         </div>
                     }
+                    <input id="anySprint" value="true" type="hidden"/>
                 }
                 else
                 {
-                    anySprint = false;
                     count++;
                     <div class="trBordercolor container">
                         <div class="">
                             <div class="pt-2 containerllnoverzicht">
-                                <input id="vakId{@count}" value="@vak.vakID" type="hidden" />
-                                <input id="leerlingId{@count}" value="@Model.leerlingID" type="hidden" />
+                                <input id="vakId{@count}" value="@vak.vakID" type="hidden"/>
+                                <input id="leerlingId{@count}" value="@Model.leerlingID" type="hidden"/>
                                 <h6 class="w-20" id="vaknaam{@count}"> @vak.vaknaam</h6>
                                 <span> Sprint </span>
                                 <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1">
@@ -62,8 +59,8 @@
                             </div>
                         </div>
                     </div>
+                    <input id="anySprint" value="false" type="hidden"/>
                 }
-                <input id="anySprint" value="@anySprint" type="hidden" />
             }
         }
     </div>
@@ -96,15 +93,15 @@
         $(this).load("UpdateLeerlingen", { leerlingenLijst: JSON.stringify(leerlingLijst) });
     });*@
 
+    var anysprint = $("#anySprint").val();
+
     $("#btnUpdate").click(function() {
-        if ($("#anySprint").val() === "true") {
-            console.log(lijst());
+        if (anysprint === "true") {
             console.log(true);
             $(this).load("UpdateLeerlingen", { vakKeuzeLijst: JSON.stringify(lijst()), anySprint: true });
         } else {
-            console.log(lijst());
             console.log(false);
-            $(this).load("UpdateLeerlingen", { vakKeuzeLijst: JSON.stringify(lijst()), anySprint: false});
+            $(this).load("UpdateLeerlingen", { vakKeuzeLijst: JSON.stringify(lijst()), anySprint: false });
         }
     });
 
@@ -117,11 +114,15 @@
             const vakMklas = $(`input[id="vakMklas{${count}}"]`).is(':checked');
             const leerlingId = $(`input[id="leerlingId{${count}}"]`).val();
             const leerlingInfo = {};
-            leerlingInfo["vakId"] = vakId;
-            leerlingInfo["vakSprint"] = vakSprint;
-            leerlingInfo["vakTyper"] = vakTyper;
-            leerlingInfo["vakMklas"] = vakMklas;
-            leerlingInfo["leerlingId"] = leerlingId;
+            if (anysprint === "false") {
+                leerlingInfo["vakId"] = vakId;
+            } else {
+                leerlingInfo["sprintvakId"] = vakId;
+            }
+            leerlingInfo["sprint"] = vakSprint;
+            leerlingInfo["typer"] = vakTyper;
+            leerlingInfo["mklas"] = vakMklas;
+            leerlingInfo["hulpleerlingId"] = leerlingId;
             leerlingLijst.push(leerlingInfo);
         }
         return leerlingLijst;

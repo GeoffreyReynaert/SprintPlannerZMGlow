@@ -83,11 +83,16 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
                 {
                     count++;
                     var keuze = sprintvakKeuze.ToObject<Sprintvak>();
-                    if (keuze.sprint || keuze.typer || keuze.mklas)
-                    {
-                        await _sprintvakService.UpdateAsync(keuze.sprintvakID, keuze);
-                    }
-                    Console.WriteLine(count);
+                    Console.WriteLine(keuze.sprintvakID);
+                    Console.WriteLine(keuze.sprint);
+                    Console.WriteLine(keuze.typer);
+                    Console.WriteLine(keuze.mklas);
+                    Console.WriteLine(keuze.hulpleerlingID);
+                    Console.WriteLine("--------------------------------------------------------------------------------");
+                    //if (keuze.sprint || keuze.typer || keuze.mklas)
+                    //{
+                    await _sprintvakService.UpdateAsync(keuze.sprintvakID, keuze);
+                    //}
                 }
             }
             else
@@ -97,8 +102,9 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
                 {
                     count++;
                     var keuze = sprintvakKeuze.ToObject<Sprintvak>();
+                    var leerling = await _leerlingService.Get(keuze.hulpleerlingID);
                     var sprintVak = new Sprintvak()
-                        {vakID = keuze.vakID, sprint = keuze.sprint, typer = keuze.typer, mklas = keuze.mklas};
+                        {vakID = keuze.vakID, sprint = keuze.sprint, typer = keuze.typer, mklas = keuze.mklas, hulpleerlingID = (long) leerling.hulpleerlingID};
                     await _sprintvakService.CreateAsync(sprintVak);
                 }
             }

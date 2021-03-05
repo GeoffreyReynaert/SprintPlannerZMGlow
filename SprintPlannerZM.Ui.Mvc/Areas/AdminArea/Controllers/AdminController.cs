@@ -226,13 +226,13 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
 
 
-                            for (int i = 0; i <= leerling.Sprintvakken.Count; i++)
+                            for (var i = 0; i <= leerling.Sprintvakken.Count; i++)
                             {
                                 var aantalReservatiesPerlokaal = _sprintlokaalService.FindByExamID(geplandExamen.examenID).Result.Count;
 
                                 if (aantalReservatiesPerlokaal == 0)
                                 {
-                                    sprintlokaal = new Sprintlokaal() { tijd = geplandExamen.tijd, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[j].lokaalID };
+                                    sprintlokaal = new Sprintlokaal() { tijd = geplandExamen.tijd, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[j].lokaalID, examenID = geplandExamen.examenID};
                                     sprintlokaal = await _sprintlokaalService.Create(sprintlokaal);
                                 }
 
@@ -245,7 +245,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                 else
                                 {
                                     j++;
-                                    sprintlokaal = new Sprintlokaal() { tijd = geplandExamen.tijd, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[j].lokaalID };
+                                    sprintlokaal = new Sprintlokaal() { tijd = geplandExamen.tijd, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[j].lokaalID, examenID = geplandExamen.examenID};
                                     sprintlokaal = await _sprintlokaalService.Create(sprintlokaal);
                                     var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = leerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalID, examenID = geplandExamen.examenID };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);

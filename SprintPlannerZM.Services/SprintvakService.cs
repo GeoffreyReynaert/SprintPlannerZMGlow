@@ -27,6 +27,17 @@ namespace SprintPlannerZM.Services
             return sprintvak;
         }
 
+        public async Task<Sprintvak> GetByVakAndHulpleerlingID(int vakId, long hulpleerlingId)
+        {
+            var sprintvak = await _database.Sprintvak
+                .Where(s => s.hulpleerlingID == hulpleerlingId)
+                .Include(s => s.Vak)
+                .Include(s => s.Hulpleerling)
+                .SingleOrDefaultAsync(s=>s.vakID == vakId);
+
+            return sprintvak;
+        }
+
         public async Task<IList<Sprintvak>> FindAsync()
         {
            var sprintvakken =await _database.Sprintvak
@@ -47,13 +58,12 @@ namespace SprintPlannerZM.Services
         public async Task<Sprintvak> UpdateAsync(int id, Sprintvak sprintvak)
         {
             {
-                var dbSprintvak = await GetAsync(id);
-                if (dbSprintvak == null)
-                {
-                    return sprintvak;
-                }
-                _database.Sprintvak.Update(dbSprintvak);
-               await _database.SaveChangesAsync();
+                var sprintvakToUpd = await _database.Sprintvak.SingleOrDefaultAsync(s => s.sprintvakID == id);
+                sprintvakToUpd.sprint = sprintvak.sprint;
+                sprintvakToUpd.typer = sprintvak.typer;
+                sprintvakToUpd.mklas = sprintvak.mklas;
+                _database.Sprintvak.Update(sprintvakToUpd);
+                await _database.SaveChangesAsync();
                 return sprintvak;
             }
         }
