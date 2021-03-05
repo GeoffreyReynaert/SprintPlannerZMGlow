@@ -877,6 +877,29 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> LokaalDelete(int id)
+        {
+            var lokaal = await _lokaalService.GetAsync(id);
+
+            if (lokaal == null)
+            {
+                return RedirectToAction("LokaalBeheer");
+            }
+
+            return View(lokaal);
+        }
+
+        [HttpPost]
+        [Route("/BeheerderArea/Beheerder/LokaalDelete/{id?}")]
+        public async Task<IActionResult> LokaalDeleteConf(int id)
+        {
+            await _lokaalService.Delete(id);
+
+            return RedirectToAction("LokaalBeheer");
+        }
+
+
 
         /*!!!!!!!!!!!!         Extra functies           !!!!!!!!!!!
           !                                                       ! 
