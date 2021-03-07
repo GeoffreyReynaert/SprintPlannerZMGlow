@@ -43,12 +43,26 @@ namespace SprintPlannerZM.Services
         }
 
 
+        public async Task<IList<Leerling>> FindOnlyWithHulpLln()
+        {
+            var leerlingen = await _database.Leerling
+                .Include(l => l.Klas)
+                .ThenInclude(k => k.Vakken)
+                .Include(k => k.hulpleerling)
+                .OrderBy(l => l.familieNaam)
+                .ToListAsync();
+
+            return leerlingen;
+        }
+
+
         public async Task<IList<Leerling>> Find()
         {
             var leerlingen = await _database.Leerling
                 .Include(l => l.Klas)
                 .ThenInclude(k => k.Vakken)
                 .Include(k => k.hulpleerling)
+                .DefaultIfEmpty()
                 .OrderBy(l => l.familieNaam)
                 .ToListAsync();
 

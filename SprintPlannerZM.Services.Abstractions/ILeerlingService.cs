@@ -10,6 +10,7 @@ namespace SprintPlannerZM.Services.Abstractions
         Task<Leerling> Get(long id);
         Task<Leerling> GetToImport(long id);
         Task<IList<Leerling>> Find();
+        Task<IList<Leerling>> FindOnlyWithHulpLln();
         IQueryable<Leerling> FindAsyncPagingQueryable();
         Task<IList<Leerling>> FindByKlasID(int klasid);
         Task<Leerling> Create(Leerling leerling);
