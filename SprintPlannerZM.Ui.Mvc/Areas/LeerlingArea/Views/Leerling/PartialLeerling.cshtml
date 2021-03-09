@@ -14,13 +14,12 @@
         @{
             var count = 0;
         }
-        @foreach (var vak in Model.Klas.Vakken)
-        {
-            if (vak.sprint && Model.Sprintvakken != null)
+
+            @if (Model.Sprintvakken != null)
             {
                 if (Model.Sprintvakken.Any())
                 {
-                    foreach (var sprintvak in vak.Sprintvakken)
+                    foreach (var sprintvak in Model.Sprintvakken)
                     {
                         count++;
                         <div class="trBordercolor container">
@@ -28,7 +27,7 @@
                                 <div class="pt-2 containerllnoverzicht">
                                     <input id="vakId{@count}" value="@sprintvak.sprintvakID" type="hidden"/>
                                     <input id="leerlingId{@count}" value="@sprintvak.hulpleerlingID" type="hidden"/>
-                                    <h6 class="w-20" id="vaknaam{@count}"> @vak.vaknaam</h6>
+                                    <h6 class="w-20" id="vaknaam{@count}"> @sprintvak.Vak.vaknaam</h6>
                                     <span> Sprint </span>
                                     <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.sprint) ? "checked='checked'" : string.Empty)>
                                     <span> Typer </span>
@@ -43,11 +42,14 @@
                 }
                 else
                 {
+                    foreach (var vak in Model.Klas.Vakken)
+                    {
+
                     count++;
                     <div class="trBordercolor container">
                         <div class="">
                             <div class="pt-2 containerllnoverzicht">
-                                <input id="vakId{@count}" value="@vak.vakID" type="hidden"/>
+                                <input id="vakId{@count}" value="@Model." type="hidden"/>
                                 <input id="leerlingId{@count}" value="@Model.leerlingID" type="hidden"/>
                                 <h6 class="w-20" id="vaknaam{@count}"> @vak.vaknaam</h6>
                                 <span> Sprint </span>
@@ -59,7 +61,8 @@
                             </div>
                         </div>
                     </div>
-                    <input id="anySprint" value="false" type="hidden"/>
+                        <input id="anySprint" value="false" type="hidden"/>
+                    }
                 }
             }
         }

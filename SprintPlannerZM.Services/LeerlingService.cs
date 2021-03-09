@@ -62,7 +62,7 @@ namespace SprintPlannerZM.Services
                 .Include(l => l.Klas)
                 .ThenInclude(k => k.Vakken)
                 .Include(k => k.hulpleerling)
-                .DefaultIfEmpty()
+                //.DefaultIfEmpty()
                 .OrderBy(l => l.familieNaam)
                 .ToListAsync();
 

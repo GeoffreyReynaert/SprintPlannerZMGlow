@@ -67,7 +67,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
         public async Task<IActionResult> PartialComboLeerlingen(int hulpleerlingID)
         {
             var hulpleerling = await _hulpleerlingService.Get(hulpleerlingID);
-            hulpleerling.Klas = _klasService.GetSprintvakWithKlas(hulpleerling.klasID);
             return PartialView("PartialLeerling", hulpleerling);
         }
 
