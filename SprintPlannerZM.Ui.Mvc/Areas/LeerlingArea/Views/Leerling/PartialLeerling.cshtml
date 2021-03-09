@@ -1,4 +1,4 @@
-﻿@model SprintPlannerZM.Model.Leerling
+﻿@model SprintPlannerZM.Model.Hulpleerling
 
 <section class="left-allignToNav pt-3">
     <div class="tbl-header">
@@ -16,9 +16,9 @@
         }
         @foreach (var vak in Model.Klas.Vakken)
         {
-            if (vak.sprint)
+            if (vak.sprint && Model.Sprintvakken != null)
             {
-                if (Model.hulpleerling.Sprintvakken.Any())
+                if (Model.Sprintvakken.Any())
                 {
                     foreach (var sprintvak in vak.Sprintvakken)
                     {

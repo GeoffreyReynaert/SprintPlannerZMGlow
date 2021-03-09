@@ -21,7 +21,7 @@
                                 <option id="index">---Kies veranderende leerling---</option>
                                 @foreach (var leerling in Model)
                                 {
-                                    <option value="@leerling.leerlingID">@leerling.familieNaam @leerling.voorNaam</option>
+                                    <option value="@leerling.hulpleerlingID">@leerling.familieNaam @leerling.voorNaam</option>
                                 }
                             </select>
                         </form>
@@ -38,7 +38,7 @@
     $(".select2").select2();
     $("#cmbLeerlingen").change(function() {
         if ($(this).children(":selected").attr("id") !== "index") {
-            $("#partialView").load("PartialComboLeerlingen", { leerlingID: $(this).find('option:selected').val() });
+            $("#partialView").load("PartialComboLeerlingen", { hulpleerlingID: $(this).find('option:selected').val() });
         }
     });
 </script>

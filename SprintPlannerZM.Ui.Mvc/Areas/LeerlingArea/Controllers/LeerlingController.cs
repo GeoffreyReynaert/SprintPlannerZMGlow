@@ -64,11 +64,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PartialComboLeerlingen(int leerlingID)
+        public async Task<IActionResult> PartialComboLeerlingen(int hulpleerlingID)
         {
-            var leerling = await _leerlingService.Get(leerlingID);
-            leerling.Klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
-            return PartialView("PartialLeerling", leerling);
+            var hulpleerling = await _hulpleerlingService.Get(hulpleerlingID);
+            hulpleerling.Klas = _klasService.GetSprintvakWithKlas(hulpleerling.klasID);
+            return PartialView("PartialLeerling", hulpleerling);
         }
 
         [HttpPost]
