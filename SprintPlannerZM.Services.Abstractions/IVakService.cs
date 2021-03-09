@@ -9,6 +9,7 @@ namespace SprintPlannerZM.Services.Abstractions
     {
         Task<Vak> GetAsync(int id);
         Task<Vak> GetBySubString(string vakNaam, int klasID);
+        Task<IList<Vak>> GetByKlasId(int id);
         Task<IList<Vak>> Find();
         Task<IQueryable<Vak>> FindAsyncPagingQueryable();
         Task<Vak> Create(Vak vak);

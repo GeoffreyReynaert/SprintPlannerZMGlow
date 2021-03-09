@@ -30,16 +30,10 @@ namespace SprintPlannerZM.Services
             return vak;
         }
 
-        public IList<Vak> GetByKlasId(int id)
+        public async Task<IList<Vak>> GetByKlasId(int id)
         {
-            var vakken = _database.Vak.Where(v => v.klasID == id).ToList();
-            foreach (var vak in vakken)
-            {
-                vak.klas = _database.Klas.SingleOrDefault(k => k.klasID == vak.klasID);
-                vak.Examenroosters = _database.Examenrooster.Where(e => e.vakID == vak.vakID).ToList();
-                vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
-                vak.Leerkracht = _database.Leerkracht.SingleOrDefault(l => l.leerkrachtID == vak.leerkrachtID);
-            }
+            var vakken = await _database.Vak
+                .Where(v => v.klasID == id).ToListAsync();
             return vakken;
         }
 

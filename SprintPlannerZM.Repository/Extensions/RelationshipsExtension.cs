@@ -51,6 +51,10 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.klas)
                 .WithMany(u => u.Vakken)
                 .HasForeignKey(a => a.klasID);
+            builder.Entity<Vak>()
+                .HasMany(a => a.Sprintvakken)
+                .WithOne(u => u.Vak)
+                .HasForeignKey(a => a.vakID);
         }
 
         private static void ConfigureExamenrooster(this ModelBuilder builder)
@@ -72,6 +76,10 @@ namespace SprintPlannerZM.Repository.Extensions
                 .WithOne(u => u.hulpleerling)
                 .HasPrincipalKey<Hulpleerling>(a=>a.leerlingID)
                 .HasForeignKey<Leerling>(u => u.leerlingID);
+            builder.Entity<Hulpleerling>()
+                .HasMany(a => a.Sprintvakken)
+                .WithOne(u => u.Hulpleerling)
+                .HasForeignKey(a => a.sprintvakID);
 
         }
 

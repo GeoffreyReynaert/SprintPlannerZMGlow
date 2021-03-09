@@ -13,7 +13,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
     public class AdminController : Controller
     {
         public readonly IBeheerderService _beheerderService;
-        public readonly IDeadlineService _deadlineService;
         private readonly IExamenroosterService _examenroosterService;
         private readonly IHulpleerlingService _hulpleerlingService;
         private readonly IKlasService _klasService;
@@ -26,7 +25,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         private readonly IVakService _vakService;
 
         public AdminController(
-            IDeadlineService deadlineService,
             IBeheerderService beheerderService,
             ILeerlingService leerlingService,
             ILokaalService lokaalService,
@@ -40,7 +38,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             ILeerlingverdelingService leerlingverdelingService
         )
         {
-            _deadlineService = deadlineService;
             _beheerderService = beheerderService;
             _leerlingService = leerlingService;
             _lokaalService = lokaalService;
@@ -137,13 +134,28 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                             {leerlingID = leerling.leerlingID, klasID = leerling.KlasID};
                         var ietske =
                             await _hulpleerlingService.Create(hulpleerling);
-                        Console.WriteLine(ietske.hulpleerlingID);
                         leerling.hulpleerlingID = ietske.hulpleerlingID;
+                        var leerlingVakken = await _vakService.GetByKlasId(leerling.KlasID);
+                        foreach (var vak in leerlingVakken)
+                        {
+                            var sprintvak = new Sprintvak
+                                {vakID = vak.vakID, sprint = false, typer = false, mklas = false, hulpleerlingID = ietske.hulpleerlingID};
+                            await _sprintvakService.CreateAsync(sprintvak);
+                        }
+                    }
+                }
+                else
+                {
+                    var dbleerling = await _leerlingService.Get(leerling.leerlingID);
+                    if (dbleerling.sprinter || dbleerling.typer || dbleerling.mklas)
+                    {
+                        Console.WriteLine(dbleerling.voorNaam + "is geen hulpleerling meer.");
+                        //deleten van vakken waar dbhulpleerlingid == sprintvakleerlingid
+                        //deleten van hulpleerling
+                        //overal updaten.
                     }
                 }
                 await _leerlingService.Update(leerling.leerlingID, leerling);
-
-                Console.WriteLine(leerling.voorNaam  + " is toegevoegd.");
             }
         
             return RedirectToAction("LeerlingenOverzicht");
