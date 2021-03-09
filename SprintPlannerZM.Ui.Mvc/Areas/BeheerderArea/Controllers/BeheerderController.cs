@@ -711,8 +711,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
         public async Task<IActionResult> VakDetails(int id)
         {
-            var leerkracht = await _vakService.GetAsync(id);
-            return View("VakDetails", leerkracht);
+            var vak = await _vakService.GetAsync(id);
+            return View("VakDetails", vak);
         }
 
         [HttpGet]
