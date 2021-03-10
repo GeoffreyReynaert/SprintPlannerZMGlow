@@ -19,8 +19,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
         private readonly ILeerlingService _leerlingService;
         private readonly ILeerlingverdelingService _leerlingverdelingService;
         private readonly ILokaalService _lokaalService;
-        private readonly ISprintlokaalService _sprintlokaalService;
-        private readonly ISprintvakService _sprintvakService;
+        private readonly ISprintlokaalreservatieService _sprintlokaalreservatieService;
+        private readonly ISprintvakkeuzeService _sprintvakkeuzeService;
         private readonly IVakService _vakService;
 
         public LeerlingController(
@@ -33,8 +33,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
             IVakService vakService,
             IExamenroosterService examenroosterService,
             IHulpleerlingService hulpleerlingService,
-            ISprintvakService sprintvakService,
-            ISprintlokaalService sprintlokaalService,
+            ISprintvakkeuzeService sprintvakkeuzeService,
+            ISprintlokaalreservatieService sprintlokaalreservatieService,
             ILeerlingverdelingService leerlingverdelingService
         )
         {
@@ -47,8 +47,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
             _vakService = vakService;
             _examenroosterService = examenroosterService;
             _hulpleerlingService = hulpleerlingService;
-            _sprintvakService = sprintvakService;
-            _sprintlokaalService = sprintlokaalService;
+            _sprintvakkeuzeService = sprintvakkeuzeService;
+            _sprintlokaalreservatieService = sprintlokaalreservatieService;
             _leerlingverdelingService = leerlingverdelingService;
         }
 
@@ -59,8 +59,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
 
         public async Task<IActionResult> Keuzevak()
         {
-            var leerlingen = await _leerlingService.Find();
-            return View(leerlingen);
+            var hulpleerlingen = await _hulpleerlingService.Find();
+            return View(hulpleerlingen);
         }
 
         [HttpPost]
@@ -81,8 +81,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
                 foreach (var sprintvakKeuze in jvakKeuzeLijst)
                 {
                     count++;
-                    var keuze = sprintvakKeuze.ToObject<Sprintvak>();
-                    Console.WriteLine(keuze.sprintvakID);
+                    var keuze = sprintvakKeuze.ToObject<Sprintvakkeuze>();
+                    Console.WriteLine(keuze.sprintvakkeuzeID);
                     Console.WriteLine(keuze.sprint);
                     Console.WriteLine(keuze.typer);
                     Console.WriteLine(keuze.mklas);
@@ -90,7 +90,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
                     Console.WriteLine("--------------------------------------------------------------------------------");
                     //if (keuze.sprint || keuze.typer || keuze.mklas)
                     //{
-                    await _sprintvakService.UpdateAsync(keuze.sprintvakID, keuze);
+                    await _sprintvakkeuzeService.UpdateAsync(keuze.sprintvakkeuzeID, keuze);
                     //}
                 }
             }
@@ -100,11 +100,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
                 foreach (var sprintvakKeuze in jvakKeuzeLijst)
                 {
                     count++;
-                    var keuze = sprintvakKeuze.ToObject<Sprintvak>();
+                    var keuze = sprintvakKeuze.ToObject<Sprintvakkeuze>();
                     var leerling = await _leerlingService.Get(keuze.hulpleerlingID);
-                    var sprintVak = new Sprintvak()
+                    var sprintVak = new Sprintvakkeuze()
                         {vakID = keuze.vakID, sprint = keuze.sprint, typer = keuze.typer, mklas = keuze.mklas, hulpleerlingID = (long) leerling.hulpleerlingID};
-                    await _sprintvakService.CreateAsync(sprintVak);
+                    await _sprintvakkeuzeService.CreateAsync(sprintVak);
                 }
             }
             return RedirectToAction();

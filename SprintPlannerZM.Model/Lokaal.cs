@@ -6,7 +6,7 @@ namespace SprintPlannerZM.Model
     {
         public  Lokaal()
         {
-            Sprintlokalen =new List<Sprintlokaal>();
+            Sprintlokaalreservaties = new List<Sprintlokaalreservatie>();
         }
 
         public int lokaalID { get; set; }
@@ -15,6 +15,6 @@ namespace SprintPlannerZM.Model
         public byte capaciteit { get; set; }
         public string lokaaltype { get; set; }
         public bool sprintlokaal { get; set; }
-        public IList<Sprintlokaal> Sprintlokalen { get; set; }
+        public IList<Sprintlokaalreservatie> Sprintlokaalreservaties { get; set; }
     }
 }

@@ -6,10 +6,10 @@
     @Model.sprinter @Model.typer @Model.mklas
     <span>
         sprintvakken
-        @foreach (var sprintvak in @Model.hulpleerling.Sprintvakken)
+        @foreach (var sprintvakkeuze in @Model.hulpleerling.Sprintvakkeuzes)
         {
 
-            @sprintvak.sprintvakID @sprintvak.Vak.vaknaam
+            @sprintvakkeuze.sprintvakkeuzeID @sprintvakkeuze.Vak.vaknaam
 
         }
     </span>

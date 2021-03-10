@@ -12,6 +12,6 @@ namespace SprintPlannerZM.Model
         public Klas klas { get; set; }
         public Leerkracht Leerkracht { get; set; }
         public IList<Examenrooster> Examenroosters { get; set; }
-        public IList<Sprintvak> Sprintvakken { get; set; }
+        public IList<Sprintvakkeuze> Sprintvakkeuzes { get; set; }
     }
 }

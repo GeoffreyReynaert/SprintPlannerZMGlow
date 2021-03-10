@@ -15,25 +15,25 @@
             var count = 0;
         }
 
-            @if (Model.Sprintvakken != null)
+            @if (Model.Sprintvakkeuzes != null)
             {
-                if (Model.Sprintvakken.Any())
+                if (Model.Sprintvakkeuzes.Any())
                 {
-                    foreach (var sprintvak in Model.Sprintvakken)
+                    foreach (var sprintvakkeuze in Model.Sprintvakkeuzes)
                     {
                         count++;
                         <div class="trBordercolor container">
                             <div class="">
                                 <div class="pt-2 containerllnoverzicht">
-                                    <input id="vakId{@count}" value="@sprintvak.sprintvakID" type="hidden"/>
-                                    <input id="leerlingId{@count}" value="@sprintvak.hulpleerlingID" type="hidden"/>
-                                    <h6 class="w-20" id="vaknaam{@count}"> @sprintvak.Vak.vaknaam</h6>
+                                    <input id="vakId{@count}" value="@sprintvakkeuze.sprintvakkeuzeID" type="hidden"/>
+                                    <input id="leerlingId{@count}" value="@sprintvakkeuze.hulpleerlingID" type="hidden"/>
+                                    <h6 class="w-20" id="vaknaam{@count}"> @sprintvakkeuze.Vak.vaknaam</h6>
                                     <span> Sprint </span>
-                                    <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.sprint) ? "checked='checked'" : string.Empty)>
+                                    <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.sprint) ? "checked='checked'" : string.Empty)>
                                     <span> Typer </span>
-                                    <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.typer) ? "checked='checked'" : string.Empty)>
+                                    <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.typer) ? "checked='checked'" : string.Empty)>
                                     <span> M-Klas </span>
-                                    <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.mklas) ? "checked='checked'" : string.Empty)>
+                                    <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.mklas) ? "checked='checked'" : string.Empty)>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                     <div class="trBordercolor container">
                         <div class="">
                             <div class="pt-2 containerllnoverzicht">
-                                <input id="vakId{@count}" value="@Model." type="hidden"/>
+                                <input id="vakId{@count}" value="@vak.vakID" type="hidden"/>
                                 <input id="leerlingId{@count}" value="@Model.leerlingID" type="hidden"/>
                                 <h6 class="w-20" id="vaknaam{@count}"> @vak.vaknaam</h6>
                                 <span> Sprint </span>
@@ -120,7 +120,7 @@
             if (anysprint === "false") {
                 leerlingInfo["vakId"] = vakId;
             } else {
-                leerlingInfo["sprintvakId"] = vakId;
+                leerlingInfo["sprintvakkeuzeId"] = vakId;
             }
             leerlingInfo["sprint"] = vakSprint;
             leerlingInfo["typer"] = vakTyper;

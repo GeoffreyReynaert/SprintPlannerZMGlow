@@ -23,7 +23,7 @@ namespace SprintPlannerZM.Services
             var vak = await _database.Vak
                 .Include(v => v.klas)
                 .Include(v => v.Leerkracht)
-                .Include(v => v.Sprintvakken)
+                .Include(v => v.Sprintvakkeuzes)
                 .Include(v => v.Examenroosters)
                 .SingleOrDefaultAsync(v => v.vakID == id);
 
@@ -58,7 +58,7 @@ namespace SprintPlannerZM.Services
             var vakken = await _database.Vak
                 .Include(v => v.klas)
                 .Include(v => v.Leerkracht)
-                .Include(v => v.Sprintvakken)
+                .Include(v => v.Sprintvakkeuzes)
                 .Include(v => v.Examenroosters)
                 .ToListAsync();
 
@@ -71,7 +71,7 @@ namespace SprintPlannerZM.Services
             var vakken = _database.Vak
                 .Include(v => v.klas)
                 .Include(v => v.Leerkracht)
-                .Include(v => v.Sprintvakken)
+                .Include(v => v.Sprintvakkeuzes)
                 .AsQueryable();
 
             return vakken;

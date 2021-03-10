@@ -38,7 +38,7 @@ namespace SprintPlannerZM.Services
             klas.Vakken = _database.Vak.Where(v => v.klasID == klas.klasID).ToList();
             foreach (var vak in klas.Vakken)
             {
-                vak.Sprintvakken = _database.Sprintvak.Where(s => s.vakID == vak.vakID).ToList();
+                vak.Sprintvakkeuzes = _database.Sprintvakkeuze.Where(s => s.vakID == vak.vakID).ToList();
             }
 
             return klas;

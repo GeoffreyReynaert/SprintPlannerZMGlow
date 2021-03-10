@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SprintPlannerZM.Model
 {
@@ -9,7 +8,7 @@ namespace SprintPlannerZM.Model
 
         public Hulpleerling()
         {
-            Sprintvakken = new List<Sprintvak>();
+            Sprintvakkeuzes = new List<Sprintvakkeuze>();
             Leerlingverdelingen = new List<Leerlingverdeling>();
         }
         [Key]
@@ -18,7 +17,7 @@ namespace SprintPlannerZM.Model
         public long leerlingID { get; set; }
         public Klas Klas { get; set; }
         public Leerling Leerling { get; set; }
-        public IList<Sprintvak> Sprintvakken { get; set; }
+        public IList<Sprintvakkeuze> Sprintvakkeuzes { get; set; }
         public IList<Leerlingverdeling> Leerlingverdelingen { get; set; }
     }
 }

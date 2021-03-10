@@ -52,7 +52,7 @@ namespace SprintPlannerZM.Repository.Extensions
                 .WithMany(u => u.Vakken)
                 .HasForeignKey(a => a.klasID);
             builder.Entity<Vak>()
-                .HasMany(a => a.Sprintvakken)
+                .HasMany(a => a.Sprintvakkeuzes)
                 .WithOne(a=>a.Vak)
                 .HasForeignKey(a => a.vakID);
         }
@@ -74,40 +74,40 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Hulpleerling>()
                 .HasOne(a => a.Leerling)
                 .WithOne(u => u.hulpleerling)
-                .HasPrincipalKey<Hulpleerling>(a=>a.leerlingID)
+                .HasPrincipalKey<Hulpleerling>(a=>a.hulpleerlingID)
                 .HasForeignKey<Leerling>(u => u.leerlingID);
             builder.Entity<Hulpleerling>()
-                .HasMany(a => a.Sprintvakken)
+                .HasMany(a => a.Sprintvakkeuzes)
                 .WithOne(u => u.Hulpleerling)
-                .HasForeignKey(a => a.sprintvakID);
+                .HasForeignKey(a => a.sprintvakkeuzeID);
 
         }
 
         private static void ConfigureSprintvak(this ModelBuilder builder)
         {
-            builder.Entity<Sprintvak>()
+            builder.Entity<Sprintvakkeuze>()
                 .HasOne(a => a.Vak)
-                .WithMany(u => u.Sprintvakken)
+                .WithMany(u => u.Sprintvakkeuzes)
                 .HasForeignKey(a => a.vakID);
-            builder.Entity<Sprintvak>()
+            builder.Entity<Sprintvakkeuze>()
                 .HasOne(a => a.Hulpleerling)
-                .WithMany(u => u.Sprintvakken)
+                .WithMany(u => u.Sprintvakkeuzes)
                 .HasForeignKey(a => a.hulpleerlingID);
         }
 
         private static void ConfigureSprintlokaal(this ModelBuilder builder)
         {
-            builder.Entity<Sprintlokaal>()
+            builder.Entity<Sprintlokaalreservatie>()
                 .HasOne(a => a.Leerkracht)
-                .WithMany(u => u.Sprintlokalen)
+                .WithMany(u => u.Sprintlokaalreservaties)
                 .HasForeignKey(a => a.leerkrachtID);
-            builder.Entity<Sprintlokaal>()
+            builder.Entity<Sprintlokaalreservatie>()
                 .HasOne(a => a.Lokaal)
-                .WithMany(u => u.Sprintlokalen)
+                .WithMany(u => u.Sprintlokaalreservaties)
                 .HasForeignKey(a => a.lokaalID);
-            builder.Entity<Sprintlokaal>()
+            builder.Entity<Sprintlokaalreservatie>()
                 .HasOne(a => a.Examen)
-                .WithMany(u => u.Sprintlokalen)
+                .WithMany(u => u.Sprintlokaalreservaties)
                 .HasForeignKey(a => a.examenID);
         }
 
@@ -118,9 +118,9 @@ namespace SprintPlannerZM.Repository.Extensions
                 .WithMany(u => u.Leerlingverdelingen)
                 .HasForeignKey(a => a.hulpleerlingID);
             builder.Entity<Leerlingverdeling>()
-                .HasOne(a => a.Sprintlokaal)
+                .HasOne(a => a.Sprintlokaalreservatie)
                 .WithMany(u => u.Leerlingverdelingen)
-                .HasForeignKey(a => a.sprintlokaalID);
+                .HasForeignKey(a => a.sprintlokaalreservatieID);
             builder.Entity<Leerlingverdeling>()
                 .HasOne(a => a.Examenrooster)
                 .WithMany(u => u.Leerlingverdelingen)

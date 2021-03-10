@@ -13,7 +13,7 @@ sprint lokaal: @Model.sprintlokaal
 
 @Model.capaciteit
 <br />
-@foreach (var reservaties in Model.Sprintlokalen)
+@foreach (var reservaties in Model.Sprintlokaalreservaties)
 {
 <span>
     lokaal met id @reservaties.lokaalID    gereserveerd op @reservaties.datum @reservaties.tijd voor examen met id @reservaties.examenID  <br />

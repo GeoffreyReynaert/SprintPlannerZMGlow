@@ -381,7 +381,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     if (reader.GetValue(column).ToString().Contains("SCHOONMAAK")
                                     ) // opvangen van poets tijd
                                     {
-                                        rooster.Vak = await _vakService.GetBySubString(reader.GetValue(column).ToString(), 1);
+                                        rooster.Vak =
+                                            await _vakService.GetBySubString(reader.GetValue(column).ToString(), 1);
                                     }
                                     else if (reader.GetValue(column).ToString().Contains("MAVO"))
                                     {
@@ -402,55 +403,64 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     else if (reader.GetValue(column).ToString().Contains("IO3") ||
                                              reader.GetValue(column).ToString().Contains("IO4") ||
                                              reader.GetValue(column).ToString().Contains("IO5") ||
-                                             reader.GetValue(column).ToString().Contains("IO6")) 
-                                             
+                                             reader.GetValue(column).ToString().Contains("IO6"))
+
                                     {
                                         if (klas.klasID != 1
                                         ) // laatste van de input io opvangen die geen vak heeft nog klas
                                         {
-                                            rooster.Vak = await _vakService.GetBySubString("integrale opdr", klas.klasID);
+                                            rooster.Vak =
+                                                await _vakService.GetBySubString("integrale opdr", klas.klasID);
                                             Console.WriteLine(reader.GetValue(column) +
                                                               "Integrale opdrachten tis gelukt ");
                                         }
                                         else
                                         {
-                                            rooster.examenID = 999;  // Soort fault code om zo deze niet toe te voegen
-                                            Console.WriteLine(reader.GetValue(column) + "Skip van de onnodige informatie op het einde van het document ");
+                                            rooster.examenID = 999; // Soort fault code om zo deze niet toe te voegen
+                                            Console.WriteLine(reader.GetValue(column) +
+                                                              "Skip van de onnodige informatie op het einde van het document ");
                                         }
                                     }
                                     //TODO Nog nakijken wat deze juist zijn 
 
-                                    else if (reader.GetValue(column).ToString().Contains("INSTROOM") || // OKAN Weten niet wat het juist is  maar normaal taal
-                                             reader.GetValue(column).ToString().Contains("FOUTLOOS") || // OKAN TAAL examen
-                                             reader.GetValue(column).ToString().Contains("MELKWEG") || //OKAN TAAL MELKWEG (25/02) examen
-                                            reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT")|| 
-                                             reader.GetValue(column).ToString().Contains("STUDIE") || // GEwoon studie om op school te blijven 
+                                    else if (reader.GetValue(column).ToString()
+                                                 .Contains(
+                                                     "INSTROOM") || // OKAN Weten niet wat het juist is  maar normaal taal
+                                             reader.GetValue(column).ToString()
+                                                 .Contains("FOUTLOOS") || // OKAN TAAL examen
+                                             reader.GetValue(column).ToString()
+                                                 .Contains("MELKWEG") || //OKAN TAAL MELKWEG (25/02) examen
+                                             reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT") ||
+                                             reader.GetValue(column).ToString()
+                                                 .Contains("STUDIE") || // GEwoon studie om op school te blijven 
                                              reader.GetValue(column).ToString().Contains("SPRINT") || // voor sprint 
                                              reader.GetValue(column).ToString().Contains("RESERVE") || // geen nut 
                                              reader.GetValue(column).ToString().Contains("FG")) // OKAN TAAL examen
                                     {
-                                        rooster.examenID = 999;  // Soort fault code om zo deze niet toe te voegen
-                                        Console.WriteLine(reader.GetValue(column) + "Skip van de onnodige  op het einde van het document ");
+                                        rooster.examenID = 999; // Soort fault code om zo deze niet toe te voegen
+                                        Console.WriteLine(reader.GetValue(column) +
+                                                          "Skip van de onnodige  op het einde van het document ");
                                     }
                                     else
                                     {
-                                        rooster.Vak = await _vakService.GetBySubString(reader.GetValue(column).ToString(),
+                                        rooster.Vak = await _vakService.GetBySubString(
+                                            reader.GetValue(column).ToString(),
                                             klas.klasID);
                                         Console.WriteLine(reader.GetValue(column).ToString());
                                     }
+                                }
 
+                                //} // vak naam met klas.id dat vakID geeft
 
-                                } // vak naam met klas.id dat vakID geeft
+                                //else if (column == 4) // lokaal ID nog verwerken in examenrooster
+                                //{
+                                //    if (reader.GetValue(column) != null)
+                                //    {
+                                //        lokaal = await _lokaalService.GetByNameAsync(reader.GetValue(column).ToString());
+                                //        Console.WriteLine(reader.GetValue(column).ToString());
+                                //    }
 
-                                else if (column == 4) // lokaal ID nog verwerken in examenrooster
-                                {
-                                    if (reader.GetValue(column) != null)
-                                    {
-                                        lokaal = await _lokaalService.GetByNameAsync(reader.GetValue(column).ToString());
-                                        Console.WriteLine(reader.GetValue(column).ToString());
-                                    }
-
-                                } // lokaal ID nog verwerken in examenrooster
+                                //} // lokaal ID nog verwerken in examenrooster
 
                                 else if (column == 5) // datum van examen
                                 {

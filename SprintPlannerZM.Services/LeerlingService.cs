@@ -24,13 +24,21 @@ namespace SprintPlannerZM.Services
                 .Include(l => l.Klas)
                 .ThenInclude(k => k.Vakken)
                 .Include(k => k.hulpleerling)
-              //  .ThenInclude(h=>h.Sprintvakken)
+                //.ThenInclude(h=>h.Sprintvakken)
                 .DefaultIfEmpty()
                 .SingleOrDefaultAsync();
 
             return leerling;
         }
 
+        public async Task<Leerling> GetHulpAanpassing(long id)
+        {
+            var leerling = await _database.Leerling
+                .Where(l => l.leerlingID == id)
+                .SingleOrDefaultAsync();
+
+            return leerling;
+        }
 
 
         public async Task<Leerling> GetToImport(long id)
@@ -84,8 +92,8 @@ namespace SprintPlannerZM.Services
         {
             var leerlingenPerKlas = await _database.Leerling
                 .Where(l => l.KlasID == klasid)
-                .Include(l=>l.hulpleerling)
-                .Include(l=>l.Klas)
+                .Include(l => l.hulpleerling)
+                .Include(l => l.Klas)
                 .OrderBy(l => l.familieNaam)
                 .ToListAsync();
 
@@ -95,7 +103,7 @@ namespace SprintPlannerZM.Services
 
         public async Task<Leerling> Create(Leerling leerling)
         {
-            var dbLeerling = 
+            var dbLeerling =
                 await _database.Leerling
                     .Where(l => l.leerlingID == leerling.leerlingID)
                     .SingleOrDefaultAsync();
@@ -105,6 +113,7 @@ namespace SprintPlannerZM.Services
                 await _database.Leerling.AddAsync(leerling);
                 await _database.SaveChangesAsync();
             }
+
             return leerling;
         }
 
@@ -122,14 +131,25 @@ namespace SprintPlannerZM.Services
             }
         }
 
+        public async Task<Leerling> UpdateIdAndType(long id, Leerling leerling)
+        {
+            {
+                var leerlingToUpd = await _database.Leerling.SingleOrDefaultAsync(l => l.leerlingID == id);
+                leerlingToUpd.sprinter = leerling.sprinter;
+                leerlingToUpd.mklas = leerling.mklas;
+                leerlingToUpd.typer = leerling.typer;
+                leerlingToUpd.hulpleerlingID = leerling.hulpleerlingID;
+                _database.Leerling.Update(leerlingToUpd);
+                await _database.SaveChangesAsync();
+                return leerling;
+            }
+        }
+
         public async Task<bool> Delete(int id)
         {
             {
                 var dbLeerling = await Get(id);
-                if (dbLeerling == null)
-                {
-                    return false;
-                }
+                if (dbLeerling == null) return false;
                 _database.Leerling.Remove(dbLeerling);
                 await _database.SaveChangesAsync();
                 return true;
@@ -147,4 +167,3 @@ namespace SprintPlannerZM.Services
 //    .ThenInclude(s => s.Vak)
 //    .SingleOrDefault();
 //}
-

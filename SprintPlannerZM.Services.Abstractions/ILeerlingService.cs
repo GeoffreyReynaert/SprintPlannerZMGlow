@@ -8,6 +8,7 @@ namespace SprintPlannerZM.Services.Abstractions
     public interface ILeerlingService
     {
         Task<Leerling> Get(long id);
+        Task<Leerling> GetHulpAanpassing(long id);
         Task<Leerling> GetToImport(long id);
         Task<IList<Leerling>> Find();
         Task<IList<Leerling>> FindOnlyWithHulpLln();
@@ -15,6 +16,7 @@ namespace SprintPlannerZM.Services.Abstractions
         Task<IList<Leerling>> FindByKlasID(int klasid);
         Task<Leerling> Create(Leerling leerling);
         Task<Leerling> Update(long id, Leerling leerling);
+        Task<Leerling> UpdateIdAndType(long id, Leerling leerling);
         Task<bool> Delete(int id);
     }
 }

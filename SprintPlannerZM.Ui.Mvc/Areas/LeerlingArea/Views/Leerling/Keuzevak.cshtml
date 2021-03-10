@@ -1,4 +1,4 @@
-﻿@model IList<SprintPlannerZM.Model.Leerling>
+﻿@model IList<SprintPlannerZM.Model.Hulpleerling>
 
 <head>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -19,9 +19,9 @@
                         <form class="col-4">
                             <select class="form-control select2" id="cmbLeerlingen">
                                 <option id="index">---Kies veranderende leerling---</option>
-                                @foreach (var leerling in Model)
+                                @foreach (var hulpleerling in Model)
                                 {
-                                    <option value="@leerling.hulpleerlingID">@leerling.familieNaam @leerling.voorNaam</option>
+                                    <option value="@hulpleerling.hulpleerlingID">@hulpleerling.Leerling.familieNaam @hulpleerling.Leerling.voorNaam</option>
                                 }
                             </select>
                         </form>

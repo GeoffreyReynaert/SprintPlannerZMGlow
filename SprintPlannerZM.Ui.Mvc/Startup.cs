@@ -48,8 +48,8 @@ namespace SprintPlannerZM.Ui.Mvc
             services.AddScoped<IExamenroosterService, ExamenroosterService>();
             services.AddScoped<ILokaalService, LokaalService>();
             services.AddScoped<IHulpleerlingService, HulpleerlingService>();
-            services.AddScoped<ISprintvakService, SprintvakService>();
-            services.AddScoped<ISprintlokaalService, SprintlokaalService>();
+            services.AddScoped<ISprintvakkeuzeService, SprintvakkeuzeService>();
+            services.AddScoped<ISprintlokaalreservatieService, SprintlokaalreservatieService>();
             services.AddScoped<ILeerlingverdelingService, LeerlingverdelingService>();
         }
 

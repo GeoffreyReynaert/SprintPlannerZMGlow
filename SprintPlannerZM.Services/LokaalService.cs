@@ -47,7 +47,7 @@ namespace SprintPlannerZM.Services
         public  IQueryable<Lokaal> FindAsyncPagingQueryable()
         {
             var lokalen =  _database.Lokaal
-                .Include(l => l.Sprintlokalen)
+                .Include(l => l.Sprintlokaalreservaties)
                 .AsQueryable();
 
             return lokalen;

@@ -18,8 +18,8 @@ namespace SprintPlannerZM.Repository
         public DbSet<Examenrooster> Examenrooster { get; set; }
         public DbSet<Lokaal> Lokaal { get; set; }
         public DbSet<Hulpleerling> Hulpleerling { get; set; }
-        public DbSet<Sprintvak> Sprintvak { get; set; }
-        public DbSet<Sprintlokaal> Sprintlokaal { get; set; }
+        public DbSet<Sprintvakkeuze> Sprintvakkeuze { get; set; }
+        public DbSet<Sprintlokaalreservatie> Sprintlokaalreservatie { get; set; }
         public DbSet<Leerlingverdeling> Leerlingverdeling { get; set; }
         public DbSet<Deadline> Deadline { get; set; }
         public DbSet<Beheerder> Beheerder { get; set; }

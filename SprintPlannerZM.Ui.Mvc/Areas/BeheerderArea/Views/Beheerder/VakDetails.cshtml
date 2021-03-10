@@ -11,10 +11,10 @@
 <br />
 sprint mogelijkheid @Model.sprint
 <br />
-Aantal leerlingen die dit vak als hulp leerling volgen: @Model.Sprintvakken.Count
+Aantal leerlingen die dit vak als hulp leerling volgen: @Model.Sprintvakkeuzes.Count
 <br />
 
-@foreach (var sprintkeuze in @Model.Sprintvakken)
+@foreach (var sprintkeuze in @Model.Sprintvakkeuzes)
 {
 <span>  @sprintkeuze.hulpleerlingID   als sprint :@sprintkeuze.sprint     als typer :@sprintkeuze.typer    als mklas :@sprintkeuze.mklas</span>
 }

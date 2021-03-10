@@ -17,18 +17,27 @@ namespace SprintPlannerZM.Services
         {
             _database = database;
         }
-        public async Task<Hulpleerling> Get(int id)
+        public async Task<Hulpleerling> Get(long? id)
         {
             var hulpLln= await _database.Hulpleerling
                 .Where(v => v.hulpleerlingID == id)
                 .Include(v=>v.Klas)
-                .Include(v=>v.Sprintvakken)
+                .Include(v=>v.Sprintvakkeuzes)
                 .Include(h=>h.Leerling)
                 .SingleOrDefaultAsync();
         
             return hulpLln;
         }
-        
+
+        public async Task<Hulpleerling> GetHulpAsync(long? id)
+        {
+            var hulpLln = await _database.Hulpleerling
+                .Where(v => v.hulpleerlingID == id)
+                .SingleOrDefaultAsync();
+
+            return hulpLln;
+        }
+
         public async Task<Hulpleerling> GetbyLeerlingId(long leerlingID)
         {
             var hulpLln =await _database.Hulpleerling.FirstOrDefaultAsync(l => l.leerlingID == leerlingID);
@@ -42,7 +51,7 @@ namespace SprintPlannerZM.Services
                .Include(h=>h.Leerling)
                .Include(h => h.Klas)
                .ThenInclude(k=>k.Vakken)
-               .Include(h => h.Sprintvakken)
+               .Include(h => h.Sprintvakkeuzes)
                .ThenInclude(s=>s.Vak)
                .ToListAsync();
 
@@ -57,7 +66,7 @@ namespace SprintPlannerZM.Services
             return dbLeerling;
         }
 
-        public async Task<Hulpleerling> Update(int id, Hulpleerling hulpleerling)
+        public async Task<Hulpleerling> Update(long? id, Hulpleerling hulpleerling)
         {
             {
                 var dbHulpleerling = await Get(id);
@@ -71,14 +80,16 @@ namespace SprintPlannerZM.Services
             }
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> DeleteByAsync(long? id)
         {
             {
-                var dbHulpleerling = await Get(id);
+                //var dbHulpleerling = await GetHulpAsync(id);
+                var dbHulpleerling = await _database.Hulpleerling.Where(h => h.hulpleerlingID == id).SingleOrDefaultAsync();
                 if (dbHulpleerling == null)
                 {
                     return false;
                 }
+
                 _database.Hulpleerling.Remove(dbHulpleerling);
                 await _database.SaveChangesAsync();
                 return true;

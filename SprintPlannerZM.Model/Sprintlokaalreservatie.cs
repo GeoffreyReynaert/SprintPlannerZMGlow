@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SprintPlannerZM.Model
 {
-    public class Sprintlokaal
+    public class Sprintlokaalreservatie
     {
-        public Sprintlokaal()
+        public Sprintlokaalreservatie()
         {
             Leerlingverdelingen = new List<Leerlingverdeling>();
         }
-
-        public int sprintlokaalID { get; set; }
+        [Key]
+        public int sprintlokaalreservatieID { get; set; }
         public string tijd { get; set; }
         public DateTime datum { get; set; }
         public int lokaalID { get; set; }
