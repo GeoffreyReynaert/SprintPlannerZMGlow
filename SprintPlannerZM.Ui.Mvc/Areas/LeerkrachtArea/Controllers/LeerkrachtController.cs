@@ -15,8 +15,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerkrachtArea.Controllers
         private readonly ILeerlingService _leerlingService;
         private readonly ILeerlingverdelingService _leerlingverdelingService;
         private readonly ILokaalService _lokaalService;
-        private readonly ISprintlokaalService _sprintlokaalService;
-        private readonly ISprintvakService _sprintvakService;
+        private readonly ISprintlokaalreservatieService _sprintlokaalreservatieService;
+        private readonly ISprintvakkeuzeService _sprintvakkeuzeService;
         private readonly IVakService _vakService;
 
         public LeerkrachtController(
@@ -29,8 +29,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerkrachtArea.Controllers
             IVakService vakService,
             IExamenroosterService examenroosterService,
             IHulpleerlingService hulpleerlingService,
-            ISprintvakService sprintvakService,
-            ISprintlokaalService sprintlokaalService,
+            ISprintvakkeuzeService sprintvakkeuzeService,
+            ISprintlokaalreservatieService sprintlokaalreservatieService,
             ILeerlingverdelingService leerlingverdelingService
         )
         {
@@ -43,8 +43,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerkrachtArea.Controllers
             _vakService = vakService;
             _examenroosterService = examenroosterService;
             _hulpleerlingService = hulpleerlingService;
-            _sprintvakService = sprintvakService;
-            _sprintlokaalService = sprintlokaalService;
+            _sprintvakkeuzeService = sprintvakkeuzeService;
+            _sprintlokaalreservatieService = sprintlokaalreservatieService;
             _leerlingverdelingService = leerlingverdelingService;
         }
 

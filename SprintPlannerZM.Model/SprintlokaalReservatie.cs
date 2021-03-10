@@ -3,19 +3,20 @@ using System.Collections.Generic;
 
 namespace SprintPlannerZM.Model
 {
-    public class Sprintlokaal
+    public class SprintlokaalReservatie
     {
-        public Sprintlokaal()
+        public SprintlokaalReservatie()
         {
             Leerlingverdelingen = new List<Leerlingverdeling>();
         }
 
-        public int sprintlokaalID { get; set; }
+        public int sprintlokaalreservatieID { get; set; }
         public string tijd { get; set; }
         public DateTime datum { get; set; }
         public int lokaalID { get; set; }
         public long? leerkrachtID { get; set; }
         public int examenID { get; set; }
+        public string reservatietype { get; set; }
         public Lokaal Lokaal { get; set; }
         public Examenrooster Examen { get; set; }
         public Leerkracht Leerkracht { get; set; }

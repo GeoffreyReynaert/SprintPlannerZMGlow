@@ -8,18 +8,18 @@ using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
 {
-    public class SprintvakService : ISprintvakService
+    public class SprintvakkeuzeService : ISprintvakkeuzeService
     {
         private readonly TihfDbContext _database;
 
-        public SprintvakService(TihfDbContext database)
+        public SprintvakkeuzeService(TihfDbContext database)
         {
             _database = database;
         }
-        public async Task<Sprintvak> GetAsync(long id)
+        public async Task<Sprintvakkeuze> GetAsync(long id)
         {
             var sprintvak = await _database.Sprintvak
-                .Where(s => s.sprintvakID == id)
+                .Where(s => s.sprintvakkeuzeID == id)
                 .Include(s=>s.Vak)
                 .Include(s=>s.Hulpleerling)
                 .SingleOrDefaultAsync(); 
@@ -27,7 +27,7 @@ namespace SprintPlannerZM.Services
             return sprintvak;
         }
 
-        public async Task<Sprintvak> GetByVakAndHulpleerlingID(int vakId, long hulpleerlingId)
+        public async Task<Sprintvakkeuze> GetByVakAndHulpleerlingID(int vakId, long hulpleerlingId)
         {
             var sprintvak = await _database.Sprintvak
                 .Where(s => s.hulpleerlingID == hulpleerlingId)
@@ -38,7 +38,7 @@ namespace SprintPlannerZM.Services
             return sprintvak;
         }
 
-        public async Task<IList<Sprintvak>> FindAsync()
+        public async Task<IList<Sprintvakkeuze>> FindAsync()
         {
            var sprintvakken =await _database.Sprintvak
                .Include(s=>s.Vak)
@@ -48,23 +48,23 @@ namespace SprintPlannerZM.Services
            return sprintvakken;
         }
 
-        public async Task<Sprintvak> CreateAsync(Sprintvak sprintvak)
+        public async Task<Sprintvakkeuze> CreateAsync(Sprintvakkeuze sprintvakkeuze)
         { 
-            await _database.Sprintvak.AddAsync(sprintvak); 
+            await _database.Sprintvak.AddAsync(sprintvakkeuze); 
             await _database.SaveChangesAsync();
-            return sprintvak;
+            return sprintvakkeuze;
         }
 
-        public async Task<Sprintvak> UpdateAsync(int id, Sprintvak sprintvak)
+        public async Task<Sprintvakkeuze> UpdateAsync(int id, Sprintvakkeuze sprintvakkeuze)
         {
             {
-                var sprintvakToUpd = await _database.Sprintvak.SingleOrDefaultAsync(s => s.sprintvakID == id);
-                sprintvakToUpd.sprint = sprintvak.sprint;
-                sprintvakToUpd.typer = sprintvak.typer;
-                sprintvakToUpd.mklas = sprintvak.mklas;
+                var sprintvakToUpd = await _database.Sprintvak.SingleOrDefaultAsync(s => s.sprintvakkeuzeID == id);
+                sprintvakToUpd.sprint = sprintvakkeuze.sprint;
+                sprintvakToUpd.typer = sprintvakkeuze.typer;
+                sprintvakToUpd.mklas = sprintvakkeuze.mklas;
                 _database.Sprintvak.Update(sprintvakToUpd);
                 await _database.SaveChangesAsync();
-                return sprintvak;
+                return sprintvakkeuze;
             }
         }
 

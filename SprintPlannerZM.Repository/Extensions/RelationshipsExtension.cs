@@ -79,17 +79,17 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Hulpleerling>()
                 .HasMany(a => a.Sprintvakken)
                 .WithOne(u => u.Hulpleerling)
-                .HasForeignKey(a => a.sprintvakID);
+                .HasForeignKey(a => a.sprintvakkeuzeID);
 
         }
 
         private static void ConfigureSprintvak(this ModelBuilder builder)
         {
-            builder.Entity<Sprintvak>()
+            builder.Entity<Sprintvakkeuze>()
                 .HasOne(a => a.Vak)
                 .WithMany(u => u.Sprintvakken)
                 .HasForeignKey(a => a.vakID);
-            builder.Entity<Sprintvak>()
+            builder.Entity<Sprintvakkeuze>()
                 .HasOne(a => a.Hulpleerling)
                 .WithMany(u => u.Sprintvakken)
                 .HasForeignKey(a => a.hulpleerlingID);
@@ -97,15 +97,15 @@ namespace SprintPlannerZM.Repository.Extensions
 
         private static void ConfigureSprintlokaal(this ModelBuilder builder)
         {
-            builder.Entity<Sprintlokaal>()
+            builder.Entity<SprintlokaalReservatie>()
                 .HasOne(a => a.Leerkracht)
                 .WithMany(u => u.Sprintlokalen)
                 .HasForeignKey(a => a.leerkrachtID);
-            builder.Entity<Sprintlokaal>()
+            builder.Entity<SprintlokaalReservatie>()
                 .HasOne(a => a.Lokaal)
                 .WithMany(u => u.Sprintlokalen)
                 .HasForeignKey(a => a.lokaalID);
-            builder.Entity<Sprintlokaal>()
+            builder.Entity<SprintlokaalReservatie>()
                 .HasOne(a => a.Examen)
                 .WithMany(u => u.Sprintlokalen)
                 .HasForeignKey(a => a.examenID);
@@ -118,7 +118,7 @@ namespace SprintPlannerZM.Repository.Extensions
                 .WithMany(u => u.Leerlingverdelingen)
                 .HasForeignKey(a => a.hulpleerlingID);
             builder.Entity<Leerlingverdeling>()
-                .HasOne(a => a.Sprintlokaal)
+                .HasOne(a => a.SprintlokaalReservatie)
                 .WithMany(u => u.Leerlingverdelingen)
                 .HasForeignKey(a => a.sprintlokaalID);
             builder.Entity<Leerlingverdeling>()

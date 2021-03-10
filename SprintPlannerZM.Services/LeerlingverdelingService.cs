@@ -29,10 +29,10 @@ namespace SprintPlannerZM.Services
                 .ToListAsync();
         }
 
-        public async Task<IList<Leerlingverdeling>> FindCapWithExamID(int examID)
+        public async Task<IList<Leerlingverdeling>> FindCapWithExamIDAndType(int examID, string type)
         {
             return await _database.Leerlingverdeling
-                .Where(l=>l.examenID==examID)
+                .Where(l=>l.examenID==examID).Where(l=>l.reservatietype.Equals(type))
                 .ToListAsync();
         }
 

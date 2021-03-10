@@ -1,0 +1,15 @@
+﻿@model IList<SprintPlannerZM.Model.SprintlokaalReservatie>
+
+@{
+
+    var arraydistincted = Model.Distinct().ToArray();
+}
+@foreach (var distinctlist in arraydistincted)
+{
+    <div>@distinctlist.reservatietype  <br />
+        @distinctlist.Lokaal.lokaalnaam <br /> 
+        @distinctlist.datum <br /> 
+        @distinctlist.tijd  <br />
+        @distinctlist.Examen.Vak.vaknaam <br /> <br />
+        </div>
+}

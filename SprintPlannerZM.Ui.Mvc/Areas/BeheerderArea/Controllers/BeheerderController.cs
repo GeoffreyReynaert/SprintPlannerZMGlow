@@ -402,8 +402,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     else if (reader.GetValue(column).ToString().Contains("IO3") ||
                                              reader.GetValue(column).ToString().Contains("IO4") ||
                                              reader.GetValue(column).ToString().Contains("IO5") ||
-                                             reader.GetValue(column).ToString().Contains("IO6")) 
-                                             
+                                             reader.GetValue(column).ToString().Contains("IO6"))
+
                                     {
                                         if (klas.klasID != 1
                                         ) // laatste van de input io opvangen die geen vak heeft nog klas
@@ -423,7 +423,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                     else if (reader.GetValue(column).ToString().Contains("INSTROOM") || // OKAN Weten niet wat het juist is  maar normaal taal
                                              reader.GetValue(column).ToString().Contains("FOUTLOOS") || // OKAN TAAL examen
                                              reader.GetValue(column).ToString().Contains("MELKWEG") || //OKAN TAAL MELKWEG (25/02) examen
-                                            reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT")|| 
+                                            reader.GetValue(column).ToString().Contains("NIEUW SPREEKRECHT") ||
                                              reader.GetValue(column).ToString().Contains("STUDIE") || // GEwoon studie om op school te blijven 
                                              reader.GetValue(column).ToString().Contains("SPRINT") || // voor sprint 
                                              reader.GetValue(column).ToString().Contains("RESERVE") || // geen nut 
@@ -438,19 +438,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                             klas.klasID);
                                         Console.WriteLine(reader.GetValue(column).ToString());
                                     }
+                                }
 
-
-                                } // vak naam met klas.id dat vakID geeft
-
-                                else if (column == 4) // lokaal ID nog verwerken in examenrooster
-                                {
-                                    if (reader.GetValue(column) != null)
-                                    {
-                                        lokaal = await _lokaalService.GetByNameAsync(reader.GetValue(column).ToString());
-                                        Console.WriteLine(reader.GetValue(column).ToString());
-                                    }
-
-                                } // lokaal ID nog verwerken in examenrooster
+                                //else if (column == 4) // lokaal ID nog verwerken in examenrooster
+                                //{
+                                //}
 
                                 else if (column == 5) // datum van examen
                                 {
@@ -526,8 +518,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                students =  students.Where(s => s.familieNaam.ToLower().Contains(searchString.ToLower())
-                                               || s.voorNaam.ToLower().Contains(searchString.ToLower()));
+                students = students.Where(s => s.familieNaam.ToLower().Contains(searchString.ToLower())
+                                              || s.voorNaam.ToLower().Contains(searchString.ToLower()));
             }
 
             if (!string.IsNullOrEmpty(search2String))
@@ -568,14 +560,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         public async Task<IActionResult> LeerlingEdit(int id)
         {
             var leerling = await _leerlingService.Get(id);
-            return View( leerling);
+            return View(leerling);
         }
 
 
         [HttpPost] // Post van de wijziging
         public async Task<IActionResult> LeerlingEdit(Leerling leerling)
         {
-           await _leerlingService.Update(leerling.leerlingID, leerling);
+            await _leerlingService.Update(leerling.leerlingID, leerling);
 
             return RedirectToAction("LeerlingBeheer");
         }

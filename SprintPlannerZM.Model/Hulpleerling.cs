@@ -9,7 +9,7 @@ namespace SprintPlannerZM.Model
 
         public Hulpleerling()
         {
-            Sprintvakken = new List<Sprintvak>();
+            Sprintvakken = new List<Sprintvakkeuze>();
             Leerlingverdelingen = new List<Leerlingverdeling>();
         }
         [Key]
@@ -18,7 +18,7 @@ namespace SprintPlannerZM.Model
         public long leerlingID { get; set; }
         public Klas Klas { get; set; }
         public Leerling Leerling { get; set; }
-        public IList<Sprintvak> Sprintvakken { get; set; }
+        public IList<Sprintvakkeuze> Sprintvakken { get; set; }
         public IList<Leerlingverdeling> Leerlingverdelingen { get; set; }
     }
 }

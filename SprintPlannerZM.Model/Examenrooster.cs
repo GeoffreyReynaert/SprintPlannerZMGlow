@@ -10,7 +10,7 @@ namespace SprintPlannerZM.Model
         public Examenrooster()
         {
             Leerlingverdelingen = new List<Leerlingverdeling>();
-            Sprintlokalen = new List<Sprintlokaal>();
+            Sprintlokalen = new List<SprintlokaalReservatie>();
         }
         [Key]
         public int examenID { get; set; }
@@ -22,6 +22,6 @@ namespace SprintPlannerZM.Model
         public DateTime datum { get; set; }
         public Vak Vak { get; set; }
         public IList<Leerlingverdeling> Leerlingverdelingen { get; set; }
-        public IList<Sprintlokaal> Sprintlokalen { get; set; }
+        public IList<SprintlokaalReservatie> Sprintlokalen { get; set; }
     }
 }

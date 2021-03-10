@@ -1,8 +1,8 @@
 ﻿namespace SprintPlannerZM.Model
 {
-    public class Sprintvak
+    public class Sprintvakkeuze
     {
-        public int sprintvakID { get; set; }
+        public int sprintvakkeuzeID { get; set; }
         public int vakID { get; set; }
         public bool sprint { get; set; }
         public bool typer { get; set; }
