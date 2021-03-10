@@ -189,7 +189,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             var examensPerDatum = await _examenroosterService.FindByDatum(DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null));
             var lokalenVoorSprint = await _lokaalService.FindForSprintAsync();
             var lokalenVoorTyper = await _lokaalService.FindForTyperAsync();
-            var sprintlokaal = new SprintlokaalReservatie();
+            var sprintlokaal = new Sprintlokaalreservatie();
 
             //tester om te zien wie van de hulpleerlingen examens heeft op de welbepaalde datum
 
@@ -241,7 +241,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
                                 if (lokaalBeztting <= lokalenVoorSprint[i].capaciteit && sType.Equals("sprint"))
                                 {
-                                    sprintlokaal = new SprintlokaalReservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[i].lokaalID, examenID = geplandExamen.examenID };
+                                    sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[i].lokaalID, examenID = geplandExamen.examenID };
                                     sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
                                     Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
                                     var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
@@ -253,7 +253,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                 }
                                 else if (lokaalBeztting <= lokalenVoorTyper[j].capaciteit && sType.Equals("typer"))
                                 {
-                                    sprintlokaal = new SprintlokaalReservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID };
+                                    sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID };
                                     sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
                                     Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
                                     var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
@@ -264,7 +264,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                 }
                                 else if (lokaalBeztting <= lokalenVoorSprint[i].capaciteit && sType.Equals("mklas"))
                                 {
-                                    sprintlokaal = new SprintlokaalReservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID };
+                                    sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID };
                                     sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
                                     Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
                                     var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };

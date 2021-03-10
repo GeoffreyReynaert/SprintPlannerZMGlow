@@ -8,7 +8,7 @@
         public int examenID { get; set; }
         public string reservatietype { get; set; }
         public Hulpleerling Hulpleerling { get; set; }
-        public SprintlokaalReservatie SprintlokaalReservatie { get; set; }
+        public Sprintlokaalreservatie Sprintlokaalreservatie { get; set; }
         public Examenrooster Examenrooster { get; set; }
     }
 }

@@ -6,11 +6,11 @@ namespace SprintPlannerZM.Services.Abstractions
 {
     public interface ISprintlokaalreservatieService
     {
-        Task<SprintlokaalReservatie> Get(int id);
-        Task<IList<SprintlokaalReservatie>> Find();
-        Task<IList<SprintlokaalReservatie>> FindByExamIDAndType(int examID, string type);
-        Task<SprintlokaalReservatie> Create(SprintlokaalReservatie sprintlokaalReservatie);
-        Task<SprintlokaalReservatie> Update(int id, SprintlokaalReservatie sprintlokaalReservatie);
+        Task<Sprintlokaalreservatie> Get(int id);
+        Task<IList<Sprintlokaalreservatie>> Find();
+        Task<IList<Sprintlokaalreservatie>> FindByExamIDAndType(int examID, string type);
+        Task<Sprintlokaalreservatie> Create(Sprintlokaalreservatie sprintlokaalreservatie);
+        Task<Sprintlokaalreservatie> Update(int id, Sprintlokaalreservatie sprintlokaalreservatie);
         Task<bool> Delete(int id);
     }
 }

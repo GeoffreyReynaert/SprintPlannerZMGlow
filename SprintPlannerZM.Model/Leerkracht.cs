@@ -8,7 +8,7 @@ namespace SprintPlannerZM.Model
         {
             Klassen = new List<Klas>();
             Vakken = new List<Vak>();
-            Sprintlokalen = new List<SprintlokaalReservatie>();
+            Sprintlokalen = new List<Sprintlokaalreservatie>();
         }
         public long leerkrachtID { get; set; }
         public string voornaam { get; set; }
@@ -21,7 +21,7 @@ namespace SprintPlannerZM.Model
         public byte rol { get; set; }
         public IList<Klas> Klassen { get; set; }
         public IList<Vak> Vakken { get; set; }
-        public IList<SprintlokaalReservatie> Sprintlokalen { get; set; }
+        public IList<Sprintlokaalreservatie> Sprintlokalen { get; set; }
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
