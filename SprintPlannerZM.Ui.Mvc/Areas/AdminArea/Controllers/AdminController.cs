@@ -195,19 +195,19 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             //tester om te zien wie van de hulpleerlingen examens heeft op de welbepaalde datum
 
-            //foreach (var leerling in hulpLeerlingen)
-            //{
-            //    foreach (var vak in leerling.Klas.Vakken)
-            //    {
-            //        foreach (var rooster in examensPerDatum)
-            //        {
-            //            if (rooster.vakID == vak.vakID)
-            //            {
-            //                Console.WriteLine("Deze leerling :" + leerling.Leerling.voorNaam + " heeft het vak " + vak.vaknaam + "als examen op" + rooster.datum);
-            //            }
-            //        }
-            //    }
-            //}
+            foreach (var leerling in hulpLeerlingen)
+            {
+                foreach (var vak in leerling.Klas.Vakken)
+                {
+                    foreach (var rooster in examensPerDatum)
+                    {
+                        if (rooster.vakID == vak.vakID)
+                        {
+                            Console.WriteLine("Deze leerling :" + leerling.Leerling.voorNaam + " heeft het vak " + vak.vaknaam + "als examen op" + rooster.datum);
+                        }
+                    }
+                }
+            }
 
             //effectieve methode 
 

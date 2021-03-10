@@ -2,9 +2,9 @@
 
 @{
 
-    var arraydistincted = Model.Distinct().ToArray();
+   
 }
-@foreach (var distinctlist in arraydistincted)
+@foreach (var distinctlist in Model)
 {
     <div>@distinctlist.reservatietype  <br />
         @distinctlist.Lokaal.lokaalnaam <br /> 

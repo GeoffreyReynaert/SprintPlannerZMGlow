@@ -21,7 +21,7 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.ConfigureExamenrooster();
             builder.ConfigureHulpleerling();
             builder.ConfigureSprintvak();
-            builder.ConfigureSprintlokaal();
+            builder.ConfigureSprintlokaalReservatie();
             builder.ConfigureLeerlingverdeling();
         }
 
@@ -99,20 +99,20 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasForeignKey(a => a.hulpleerlingID);
         }
 
-        private static void ConfigureSprintlokaal(this ModelBuilder builder)
+        private static void ConfigureSprintlokaalReservatie(this ModelBuilder builder)
         {
             builder.Entity<Sprintlokaalreservatie>()
                 .HasOne(a => a.Leerkracht)
                 .WithMany(u => u.Sprintlokaalreservaties)
                 .HasForeignKey(a => a.leerkrachtID);
             builder.Entity<Sprintlokaalreservatie>()
-                .HasOne(a => a.Lokaal)
-                .WithMany(u => u.Sprintlokaalreservaties)
-                .HasForeignKey(a => a.lokaalID);
-            builder.Entity<Sprintlokaalreservatie>()
                 .HasOne(a => a.Examen)
                 .WithMany(u => u.Sprintlokaalreservaties)
                 .HasForeignKey(a => a.examenID);
+            builder.Entity<Sprintlokaalreservatie>()
+                .HasOne(a => a.Lokaal)
+               .WithMany(a=>a.Sprintlokaalreservaties)
+                .HasForeignKey(a => a.lokaalID);
         }
 
         private static void ConfigureLeerlingverdeling(this ModelBuilder builder)
