@@ -195,25 +195,25 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             //tester om te zien wie van de hulpleerlingen examens heeft op de welbepaalde datum
 
-            foreach (var leerling in hulpLeerlingen)
-            {
-                foreach (var vak in leerling.Klas.Vakken)
-                {
-                    foreach (var rooster in examensPerDatum)
-                    {
-                        if (rooster.vakID == vak.vakID)
-                        {
-                            Console.WriteLine("Deze leerling :" + leerling.Leerling.voorNaam + " heeft het vak " + vak.vaknaam + "als examen op" + rooster.datum);
-                        }
-                    }
-                }
-            }
+            //foreach (var leerling in hulpLeerlingen)
+            //{
+            //    foreach (var vak in leerling.Klas.Vakken)
+            //    {
+            //        foreach (var rooster in examensPerDatum)
+            //        {
+            //            if (rooster.vakID == vak.vakID)
+            //            {
+            //                Console.WriteLine("Deze leerling :" + leerling.Leerling.voorNaam + " heeft het vak " + vak.vaknaam + "als examen op" + rooster.datum);
+            //            }
+            //        }
+            //    }
+            //}
 
             //effectieve methode 
 
             foreach (var hulpleerling in hulpLeerlingen)
             {
-                foreach (var sprintKeuzeExam in hulpleerling.Sprintvakken)
+                foreach (var sprintKeuzeExam in hulpleerling.Sprintvakkeuzes)
                 {
                     foreach (var geplandExamen in examensPerDatum)
                     {
@@ -246,7 +246,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                     sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[i].lokaalID, examenID = geplandExamen.examenID };
                                     sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
                                     Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
+                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
                                     Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
                                                       sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
@@ -258,7 +258,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                     sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID };
                                     sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
                                     Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
+                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
                                     Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
                                                       sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
@@ -269,7 +269,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                     sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID };
                                     sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
                                     Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
+                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
                                     Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
                                                       sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
@@ -281,7 +281,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
                                 if (lokaalBeztting <= lokalenVoorSprint[i].capaciteit && sType.Equals("sprint"))
                                 {
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
+                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
                                     Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
                                                       sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
@@ -289,7 +289,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                 }
                                 else if (lokaalBeztting <= lokalenVoorTyper[j].capaciteit && sType.Equals("typer"))
                                 {
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
+                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
                                     Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
                                                       sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
@@ -297,7 +297,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                 }
                                 else if (lokaalBeztting <= lokalenVoorSprint[i].capaciteit && sType.Equals("mklas"))
                                 {
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
+                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
                                     Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
                                                       sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +

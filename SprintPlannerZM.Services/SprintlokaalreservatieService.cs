@@ -30,12 +30,14 @@ namespace SprintPlannerZM.Services
         }
 
 
-        public async Task<IList<Sprintlokaalreservatie>> FindByExamID(int examid)
+        public async Task<IList<Sprintlokaalreservatie>> FindByExamIDAndType(int examid, string type)
         {
             return await _database.Sprintlokaalreservatie
                 .Where(s => s.examenID == examid)
+                .Where(s => s.reservatietype.Equals(type))
                 .ToListAsync();
         }
+
 
 
         public async Task<Sprintlokaalreservatie> Create(Sprintlokaalreservatie sprintlokaalreservatie)

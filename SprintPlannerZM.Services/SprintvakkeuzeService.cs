@@ -18,13 +18,22 @@ namespace SprintPlannerZM.Services
         }
         public async Task<Sprintvakkeuze> GetAsync(long id)
         {
-            var sprintvak = await _database.Sprintvakkeuze
+            var sprintvakkeuze = await _database.Sprintvakkeuze
                 .Where(s => s.sprintvakkeuzeID == id)
-                .Include(s=>s.Vak)
-                .Include(s=>s.Hulpleerling)
-                .SingleOrDefaultAsync(); 
+                .Include(s => s.Vak)
+                .Include(s => s.Hulpleerling)
+                .SingleOrDefaultAsync();
+            return sprintvakkeuze;
+        }
 
-            return sprintvak;
+        public async Task<IList<Sprintvakkeuze>> GetHulpVakAsync(long? hulpleerlingID)
+        {
+            var sprintvakkeuzes = await _database.Sprintvakkeuze
+                .Where(h => h.hulpleerlingID == hulpleerlingID)
+                .Include(s => s.Vak)
+                .Include(s => s.Hulpleerling)
+                .ToListAsync();
+            return sprintvakkeuzes;
         }
 
         public async Task<Sprintvakkeuze> GetByVakAndHulpleerlingID(int vakId, long hulpleerlingId)
@@ -33,24 +42,22 @@ namespace SprintPlannerZM.Services
                 .Where(s => s.hulpleerlingID == hulpleerlingId)
                 .Include(s => s.Vak)
                 .Include(s => s.Hulpleerling)
-                .SingleOrDefaultAsync(s=>s.vakID == vakId);
-
+                .SingleOrDefaultAsync(s => s.vakID == vakId);
             return sprintvak;
         }
 
         public async Task<IList<Sprintvakkeuze>> FindAsync()
         {
-           var sprintvakken =await _database.Sprintvakkeuze
-               .Include(s=>s.Vak)
-               .Include(s=>s.Hulpleerling)
-               .ToListAsync();
-
-           return sprintvakken;
+            var sprintvakkeuzes = await _database.Sprintvakkeuze
+                .Include(s => s.Vak)
+                .Include(s => s.Hulpleerling)
+                .ToListAsync();
+            return sprintvakkeuzes;
         }
 
         public async Task<Sprintvakkeuze> CreateAsync(Sprintvakkeuze sprintvakkeuze)
-        { 
-            await _database.Sprintvakkeuze.AddAsync(sprintvakkeuze); 
+        {
+            await _database.Sprintvakkeuze.AddAsync(sprintvakkeuze);
             await _database.SaveChangesAsync();
             return sprintvakkeuze;
         }
@@ -70,16 +77,29 @@ namespace SprintPlannerZM.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
+            var dbSprintvak = await GetAsync(id);
+            if (dbSprintvak == null)
             {
-                var dbSprintvak =await GetAsync(id);
-                if (dbSprintvak == null)
+                return false;
+            }
+            _database.Sprintvakkeuze.Remove(dbSprintvak);
+            await _database.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteByHulpAsync(long? hulpleerlingID)
+        {
+            var dbSprintvakken = await GetHulpVakAsync(hulpleerlingID);
+            foreach (var dbvakkeuze in dbSprintvakken)
+            {
+                if (dbvakkeuze == null)
                 {
                     return false;
                 }
-                _database.Sprintvakkeuze.Remove(dbSprintvak);
-               await _database.SaveChangesAsync();
-                return true;
+                _database.Sprintvakkeuze.Remove(dbvakkeuze);
+                await _database.SaveChangesAsync();
             }
+            return true;
         }
     }
 }
