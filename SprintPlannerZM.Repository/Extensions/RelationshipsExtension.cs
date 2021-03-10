@@ -74,7 +74,7 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Hulpleerling>()
                 .HasOne(a => a.Leerling)
                 .WithOne(u => u.hulpleerling)
-                .HasPrincipalKey<Hulpleerling>(a=>a.leerlingID)
+                .HasPrincipalKey<Hulpleerling>(a=>a.hulpleerlingID)
                 .HasForeignKey<Leerling>(u => u.leerlingID);
             builder.Entity<Hulpleerling>()
                 .HasMany(a => a.Sprintvakken)
