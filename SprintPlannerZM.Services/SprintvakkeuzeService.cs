@@ -18,22 +18,13 @@ namespace SprintPlannerZM.Services
         }
         public async Task<Sprintvakkeuze> GetAsync(long id)
         {
-            var sprintvakkeuze = await _database.Sprintvakkeuze
+            var sprintvak = await _database.Sprintvakkeuze
                 .Where(s => s.sprintvakkeuzeID == id)
                 .Include(s=>s.Vak)
                 .Include(s=>s.Hulpleerling)
-                .SingleOrDefaultAsync();
-            return sprintvakkeuze;
-        }
+                .SingleOrDefaultAsync(); 
 
-        public async Task<IList<Sprintvakkeuze>> GetHulpVakAsync(long? hulpleerlingID)
-        {
-            var sprintvakkeuzes = await _database.Sprintvakkeuze
-                .Where(h=> h.hulpleerlingID == hulpleerlingID)
-                .Include(s => s.Vak)
-                .Include(s => s.Hulpleerling)
-                .ToListAsync();
-            return sprintvakkeuzes;
+            return sprintvak;
         }
 
         public async Task<Sprintvakkeuze> GetByVakAndHulpleerlingID(int vakId, long hulpleerlingId)
@@ -43,16 +34,18 @@ namespace SprintPlannerZM.Services
                 .Include(s => s.Vak)
                 .Include(s => s.Hulpleerling)
                 .SingleOrDefaultAsync(s=>s.vakID == vakId);
+
             return sprintvak;
         }
 
         public async Task<IList<Sprintvakkeuze>> FindAsync()
         {
-           var sprintvakkeuzes = await _database.Sprintvakkeuze
+           var sprintvakken =await _database.Sprintvakkeuze
                .Include(s=>s.Vak)
                .Include(s=>s.Hulpleerling)
                .ToListAsync();
-           return sprintvakkeuzes;
+
+           return sprintvakken;
         }
 
         public async Task<Sprintvakkeuze> CreateAsync(Sprintvakkeuze sprintvakkeuze)
@@ -77,7 +70,8 @@ namespace SprintPlannerZM.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var dbSprintvak = await GetAsync(id);
+            {
+                var dbSprintvak =await GetAsync(id);
                 if (dbSprintvak == null)
                 {
                     return false;
@@ -85,21 +79,7 @@ namespace SprintPlannerZM.Services
                 _database.Sprintvakkeuze.Remove(dbSprintvak);
                await _database.SaveChangesAsync();
                 return true;
-        }
-
-        public async Task<bool> DeleteByHulpAsync(long? hulpleerlingID)
-        {
-            var dbSprintvakken = await GetHulpVakAsync(hulpleerlingID);
-            foreach (var dbvakkeuze in dbSprintvakken)
-            {
-                if (dbvakkeuze == null)
-                {
-                    return false;
-                }
-                _database.Sprintvakkeuze.Remove(dbvakkeuze);
-                await _database.SaveChangesAsync();
             }
-            return true;
         }
     }
 }
