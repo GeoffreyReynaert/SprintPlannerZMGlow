@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SprintPlannerZM.Model
 {
     public class Leerling : IEquatable<Leerling>
     {
+       
         public long leerlingID { get; set; }
         public string voorNaam { get; set; }
         public string familieNaam { get; set; }

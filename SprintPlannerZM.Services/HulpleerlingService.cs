@@ -48,7 +48,7 @@ namespace SprintPlannerZM.Services
         public async Task<IList<Hulpleerling>> Find()
         {
            var  hulpleerlingen = await _database.Hulpleerling
-               .Include(h=>h.Leerling)
+               .Include(l=>l.Leerling)
                .Include(h => h.Klas)
                .ThenInclude(k=>k.Vakken)
                .Include(h => h.Sprintvakkeuzes)

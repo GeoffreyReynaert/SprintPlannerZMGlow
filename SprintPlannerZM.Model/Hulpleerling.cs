@@ -11,7 +11,7 @@ namespace SprintPlannerZM.Model
             Sprintvakkeuzes = new List<Sprintvakkeuze>();
             Leerlingverdelingen = new List<Leerlingverdeling>();
         }
-        [Key]
+      
         public long hulpleerlingID { get; set; }
         public int klasID { get; set; }
         public long leerlingID { get; set; }

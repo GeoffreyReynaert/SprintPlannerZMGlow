@@ -2,6 +2,7 @@
 {
     public class Leerlingverdeling
     {
+
         public int leerlingverdelingID { get; set; }
         public long hulpleerlingID { get; set; }
         public int sprintlokaalreservatieID { get; set; }

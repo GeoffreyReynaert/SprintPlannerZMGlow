@@ -31,6 +31,11 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.Klas)
                 .WithMany(u => u.Leerlingen)
                 .HasForeignKey(a => a.KlasID);
+            builder.Entity<Leerling>()
+                .HasOne(a => a.hulpleerling)
+                .WithOne(u => u.Leerling)
+                .HasPrincipalKey<Leerling>(a => a.leerlingID)
+                .HasForeignKey<Hulpleerling>(u => u.hulpleerlingID);
         }
 
         private static void ConfigureKlas(this ModelBuilder builder)
@@ -74,8 +79,7 @@ namespace SprintPlannerZM.Repository.Extensions
             builder.Entity<Hulpleerling>()
                 .HasOne(a => a.Leerling)
                 .WithOne(u => u.hulpleerling)
-                .HasPrincipalKey<Hulpleerling>(a=>a.hulpleerlingID)
-                .HasForeignKey<Leerling>(u => u.leerlingID);
+                .HasForeignKey<Leerling>(u => u.hulpleerlingID);
             builder.Entity<Hulpleerling>()
                 .HasMany(a => a.Sprintvakkeuzes)
                 .WithOne(u => u.Hulpleerling)

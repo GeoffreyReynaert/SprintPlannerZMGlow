@@ -217,7 +217,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                 {
                     foreach (var geplandExamen in examensPerDatum)
                     {
-                        if (geplandExamen.vakID == sprintKeuzeExam.vakID && geplandExamen.groep.Equals("gr1") && (sprintKeuzeExam.sprint || sprintKeuzeExam.typer || sprintKeuzeExam.mklas))
+                        if (geplandExamen.vakID == sprintKeuzeExam.vakID /*&& geplandExamen.groep.Equals("gr1") */ && (sprintKeuzeExam.sprint || sprintKeuzeExam.typer || sprintKeuzeExam.mklas))
                         {
 
                             //opmaken van de lokaal reservatie type
