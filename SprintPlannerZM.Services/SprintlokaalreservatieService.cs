@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
-    public class SprintlokaalreservatieService: ISprintlokaalreservatieService
+    public class SprintlokaalreservatieService : ISprintlokaalreservatieService
     {
         private readonly TihfDbContext _database;
 
@@ -33,15 +33,15 @@ namespace SprintPlannerZM.Services
         public async Task<IList<Sprintlokaalreservatie>> FindByExamID(int examid)
         {
             return await _database.Sprintlokaalreservatie
-                .Where(s=>s.examenID == examid)
+                .Where(s => s.examenID == examid)
                 .ToListAsync();
         }
 
 
         public async Task<Sprintlokaalreservatie> Create(Sprintlokaalreservatie sprintlokaalreservatie)
         {
-           await _database.Sprintlokaalreservatie.AddAsync(sprintlokaalreservatie);
-           await _database.SaveChangesAsync();
+            await _database.Sprintlokaalreservatie.AddAsync(sprintlokaalreservatie);
+            await _database.SaveChangesAsync();
             return sprintlokaalreservatie;
         }
 
@@ -62,13 +62,13 @@ namespace SprintPlannerZM.Services
         public async Task<bool> Delete(int id)
         {
             {
-                var dbSprintlokaalreservatie =await Get(id);
+                var dbSprintlokaalreservatie = await Get(id);
                 if (dbSprintlokaalreservatie == null)
                 {
                     return false;
                 }
                 _database.Sprintlokaalreservatie.Remove(dbSprintlokaalreservatie);
-               await _database.SaveChangesAsync();
+                await _database.SaveChangesAsync();
                 return true;
             }
         }
