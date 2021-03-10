@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace SprintPlannerZM.Model
 {
-    public class SprintlokaalReservatie
+    public class Sprintlokaalreservatie
     {
-        public SprintlokaalReservatie()
+        public Sprintlokaalreservatie()
         {
             Leerlingverdelingen = new List<Leerlingverdeling>();
         }
@@ -23,3 +23,5 @@ namespace SprintPlannerZM.Model
         public IList<Leerlingverdeling> Leerlingverdelingen { get; set; }
     }
 }
+
+
