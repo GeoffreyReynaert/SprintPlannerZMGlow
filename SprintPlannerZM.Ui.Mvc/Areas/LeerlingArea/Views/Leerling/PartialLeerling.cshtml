@@ -1,52 +1,66 @@
 ﻿@model SprintPlannerZM.Model.Hulpleerling
-
-<section class="left-allignToNav pt-3">
-    <div class="tbl-header">
-        <table>
-            <thead>
-            <tr>
-                <th class="h6">Keuze sprint/typer/m-klas</th>
-            </tr>
-            </thead>
-        </table>
-    </div>
-    <div class="tbl-content">
-        @{
-            var count = 0;
-        }
-
-            @if (Model.Sprintvakkeuzes != null)
+@{
+    var count = 0;
+}
+<div class="cards">
+    @if (Model.Sprintvakkeuzes != null)
+    {
+        if (Model.Sprintvakkeuzes.Any())
+        {
+            foreach (var sprintvakkeuze in Model.Sprintvakkeuzes)
             {
-                if (Model.Sprintvakkeuzes.Any())
-                {
-                    foreach (var sprintvakkeuze in Model.Sprintvakkeuzes)
-                    {
-                        count++;
-                        <div class="trBordercolor container">
-                            <div class="">
-                                <div class="pt-2 containerllnoverzicht">
-                                    <input id="vakId{@count}" value="@sprintvakkeuze.sprintvakkeuzeID" type="hidden"/>
-                                    <input id="leerlingId{@count}" value="@sprintvakkeuze.hulpleerlingID" type="hidden"/>
-                                    <h6 class="w-20" id="vaknaam{@count}"> @sprintvakkeuze.Vak.vaknaam</h6>
-                                    <span> Sprint </span>
-                                    <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.sprint) ? "checked='checked'" : string.Empty)>
-                                    <span> Typer </span>
-                                    <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.typer) ? "checked='checked'" : string.Empty)>
-                                    <span> M-Klas </span>
-                                    <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.mklas) ? "checked='checked'" : string.Empty)>
-                                </div>
+                count++;
+                <div class="card">
+                    <div class="card-header bg-header">
+                        <input id="vakId{@count}" value="@sprintvakkeuze.sprintvakkeuzeID" type="hidden" />
+                        <input id="leerlingId{@count}" value="@sprintvakkeuze.hulpleerlingID" type="hidden" />
+                        <h6 id="vaknaam{@count}"> @sprintvakkeuze.Vak.vaknaam</h6>
+                    </div>
+                    <div class="card-body bg-body-text">@sprintvakkeuze.Vak.Leerkracht.voornaam @sprintvakkeuze.Vak.Leerkracht.achternaam </div>
+                    <div class="card-footer bg-footer-text">
+                        <span> Sprint </span>
+                        <input id="vakSprint{@count}" type="checkbox" class="mt-1 display-line" @(Convert.ToBoolean(sprintvakkeuze.sprint) ? "checked='checked'" : string.Empty)>
+                        <input id="vakTyper{@count}" type="hidden" @(Convert.ToBoolean(sprintvakkeuze.typer) ? "checked='checked'" : string.Empty)>
+                        <input id="vakMklas{@count}" type="hidden" @(Convert.ToBoolean(sprintvakkeuze.mklas) ? "checked='checked'" : string.Empty)>
+                    </div>
+                </div>
+                @*<div class="trBordercolor container">
+                        <div class="">
+                            <div class="pt-2 containerllnoverzicht">
+                                <input id="vakId{@count}" value="@sprintvakkeuze.sprintvakkeuzeID" type="hidden"/>
+                                <input id="leerlingId{@count}" value="@sprintvakkeuze.hulpleerlingID" type="hidden"/>
+                                <h6 class="w-20" id="vaknaam{@count}"> @sprintvakkeuze.Vak.vaknaam</h6>
+                                <span> Sprint </span>
+                                <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.sprint) ? "checked='checked'" : string.Empty)>
+                                <input id="vakTyper{@count}" type="hidden" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.typer) ? "checked='checked'" : string.Empty)>
+                                <input id="vakMklas{@count}" type="hidden" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.mklas) ? "checked='checked'" : string.Empty)>
                             </div>
                         </div>
-                    }
-                    <input id="anySprint" value="true" type="hidden"/>
-                }
-                else
-                {
-                    foreach (var vak in Model.Klas.Vakken)
-                    {
+                    </div>*@
+            }
+            <input id="anySprint" value="true" type="hidden" />
+        }
+        else
+        {
+            foreach (var vak in Model.Klas.Vakken)
+            {
+                count++;
+                <div class="card">
+                    <div class="card-header bg-header">
+                        <input id="vakId{@count}" value="@vak.vakID" type="hidden" />
+                        <input id="leerlingId{@count}" value="@Model.leerlingID" type="hidden" />
+                        <h6 id="vaknaam{@count}"> @vak.vaknaam</h6>
+                    </div>
+                    <div class="card-body bg-body-text">@vak.Leerkracht.voornaam @vak.Leerkracht.achternaam </div>
+                    <div class="card-footer bg-footer-text">
+                        <span> Sprint </span>
+                        <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1 display-line">
+                        <input id="vakTyper{@count}" type="hidden" class="ml-lg-n5 mt-1">
+                        <input id="vakMklas{@count}" type="hidden" class="ml-lg-n5 mt-1">
+                    </div>
+                </div>
 
-                    count++;
-                    <div class="trBordercolor container">
+                @*<div class="trBordercolor container">
                         <div class="">
                             <div class="pt-2 containerllnoverzicht">
                                 <input id="vakId{@count}" value="@vak.vakID" type="hidden"/>
@@ -54,20 +68,16 @@
                                 <h6 class="w-20" id="vaknaam{@count}"> @vak.vaknaam</h6>
                                 <span> Sprint </span>
                                 <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1">
-                                <span> Typer </span>
-                                <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1">
-                                <span> M-Klas </span>
-                                <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1">
+                                <input id="vakTyper{@count}" type="hidden" class="ml-lg-n5 mt-1">
+                                <input id="vakMklas{@count}" type="hidden" class="ml-lg-n5 mt-1">
                             </div>
                         </div>
                     </div>
-                        <input id="anySprint" value="false" type="hidden"/>
-                    }
-                }
+                    <input id="anySprint" value="false" type="hidden"/>*@
             }
         }
-    </div>
-</section>
+    }
+</div>
 <button id="btnUpdate" class="btn btn-primary mt-md-n2 margin"> Bevestig </button>
 
 <script>
@@ -131,3 +141,38 @@
         return leerlingLijst;
     }
 </script>
+
+<style>
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: auto;
+        grid-gap: 1rem;
+    }
+
+    .card {
+        border: 2px solid grey;
+        border-radius: 4px;
+        margin: 4px;
+    }
+
+    .bg-header{
+        background-color: #fa975f
+    }
+
+    .bg-body{
+
+    }
+
+    .bg-body-text{
+        color: grey
+    }
+
+    .bg-footer-text {
+        color: #009ba8;
+    }
+
+    .display-line{
+        margin-left: 10px;
+    }
+</style>

@@ -1,4 +1,4 @@
-﻿@model SprintPlannerZM.Model.Klas
+﻿@model SprintPlannerZM.Model.Hulpleerling
 
 <section class="left-allignToNav pt-3">
     <div class="tbl-header">
@@ -14,29 +14,60 @@
         @{
             var count = 0;
         }
-        @foreach (var vak in Model.Vakken)
+        @foreach (var vak in Model.Klas.Vakken)
         {
             if (vak.sprint)
             {
-                @foreach (var sprintvak in vak.Sprintvakkeuzes)
+                @foreach (var sprintvakkeuze in vak.Sprintvakkeuzes)
                 {
-                    count++;
-                    <div class="trBordercolor container">
-                        <div class="">
-                            <div class="pt-2 containerllnoverzicht">
-                                <h6 class="w-20" id="vaknaam{@count}"> @vak.vaknaam</h6>
-                                <span> Sprint </span>
-                                <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.sprint) ? "checked='checked'" : string.Empty)>
-                                <span> Typer </span>
-                                <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.typer) ? "checked='checked'" : string.Empty)>
-                                <span> M-Klas </span>
-                                <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvak.mklas) ? "checked='checked'" : string.Empty)>
+                    {
+                        count++;
+                        <div class="trBordercolor container">
+                            <div class="">
+                                <div class="pt-2 containerllnoverzicht">
+                                    <input id="vakId{@count}" value="@sprintvakkeuze.sprintvakkeuzeID" type="hidden" />
+                                    <input id="leerlingId{@count}" value="@sprintvakkeuze.hulpleerlingID" type="hidden" />
+                                    <h6 class="w-20" id="vaknaam{@count}"> @sprintvakkeuze.Vak.vaknaam</h6>
+                                    <span> Sprint </span>
+                                    <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.sprint) ? "checked='checked'" : string.Empty)>
+                                    <span> Typer </span>
+                                    <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.typer) ? "checked='checked'" : string.Empty)>
+                                    <span> M-Klas </span>
+                                    <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.mklas) ? "checked='checked'" : string.Empty)>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
             }
         }
     </div>
 </section>
 <button id="btnUpdate" class="btn btn-primary mt-md-n2 margin"> Bevestig </button>
+
+<script>
+
+    $("#btnUpdate").click(function() {
+        $(this).load("UpdateVakken", { vakKeuzeLijst: JSON.stringify(lijst())});
+    });
+
+    function lijst() {
+        const leerlingLijst = [];
+        for (let count = 1; count <= @count; count++) {
+            const vakId = $(`input[id="vakId{${count}}"]`).val();
+            const vakSprint = $(`input[id="vakSprint{${count}}"]`).is(':checked');
+            const vakTyper = $(`input[id="vakTyper{${count}}"]`).is(':checked');
+            const vakMklas = $(`input[id="vakMklas{${count}}"]`).is(':checked');
+            const leerlingId = $(`input[id="leerlingId{${count}}"]`).val();
+            const leerlingInfo = {};
+            leerlingInfo["sprintvakkeuzeId"] = vakId;
+            leerlingInfo["sprint"] = vakSprint;
+            leerlingInfo["typer"] = vakTyper;
+            leerlingInfo["mklas"] = vakMklas;
+            leerlingInfo["hulpleerlingId"] = leerlingId;
+            leerlingLijst.push(leerlingInfo);
+        }
+        return leerlingLijst;
+    }
+
+</script>

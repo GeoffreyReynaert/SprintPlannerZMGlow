@@ -1,11 +1,10 @@
-﻿using SprintPlannerZM.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
+using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Services
 {
@@ -22,6 +21,8 @@ namespace SprintPlannerZM.Services
             var hulpLln= await _database.Hulpleerling
                 .Where(v => v.hulpleerlingID == id)
                 .Include(v=>v.Klas)
+                .ThenInclude(v=>v.Vakken)
+                .ThenInclude(l=>l.Leerkracht)
                 .Include(v=>v.Sprintvakkeuzes)
                 .Include(h=>h.Leerling)
                 .SingleOrDefaultAsync();

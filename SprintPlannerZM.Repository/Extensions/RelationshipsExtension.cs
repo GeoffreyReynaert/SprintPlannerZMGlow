@@ -35,7 +35,7 @@ namespace SprintPlannerZM.Repository.Extensions
                 .HasOne(a => a.hulpleerling)
                 .WithOne(u => u.Leerling)
                 .HasPrincipalKey<Leerling>(a => a.leerlingID)
-                .HasForeignKey<Hulpleerling>(u => u.hulpleerlingID);
+                .HasForeignKey<Hulpleerling>(u => u.leerlingID);
         }
 
         private static void ConfigureKlas(this ModelBuilder builder)

@@ -327,14 +327,25 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         }
 
         //Detail alle leerlingen naar leerling uit lijst
-        //public async Task<IActionResult> LeerlingOverzicht(int leerlingID)
-        //{
-        //    var leerling = _leerlingService.Get(leerlingID);
-        //    var klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
-        //    return PartialView("LeerlingOverzicht", klas);
-        //    var leerling = await _leerlingService.Get(leerlingID);
-        //    return PartialView("LeerlingOverzicht", leerling);
-        //}
+        public async Task<IActionResult> LeerlingOverzicht(long hulpleerlingId)
+        {
+            var hulpleerling = await _hulpleerlingService.Get(hulpleerlingId);
+            return View("LeerlingOverzicht", hulpleerling);
+        }
+
+        public async Task<IActionResult> UpdateVakken(string vakKeuzeLijst)
+        {
+            var keuzeLijst = JArray.Parse(vakKeuzeLijst);
+            var count = 0;
+            foreach (var vakKeuze in keuzeLijst)
+            {
+                count++;
+                var sprintvak = vakKeuze.ToObject<Sprintvakkeuze>();
+                await _sprintvakkeuzeService.UpdateAsync(sprintvak.sprintvakkeuzeID, sprintvak);
+                Console.WriteLine(count);
+            }
+            return RedirectToAction();
+        }
 
         [HttpPost]
         public async Task<IActionResult> UpdateLeerlingen(string leerlingenLijst)
@@ -396,6 +407,17 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         {
             return View();
         }
+
+        public IActionResult AantalPerDul()
+        {
+            return View();
+        }
+
+        public IActionResult ToezichtPerLeerkracht()
+        {
+            return View();
+        }
+
 
         public bool ExistsAsHulpLeerling(long id)
         {

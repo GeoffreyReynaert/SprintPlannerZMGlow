@@ -1,4 +1,5 @@
-﻿@model SprintPlannerZM.Model.PaginatedList<SprintPlannerZM.Model.Leerling>
+﻿@using SprintPlannerZM.Model
+@model SprintPlannerZM.Model.PaginatedList<SprintPlannerZM.Model.Leerling>
 
 @{
     ViewData["Title"] = "LeerlingenOverzicht";
@@ -105,9 +106,18 @@
                                 <td>
                                     <input asp-for="@Model[i].mklas" type="checkbox" class="form-control" />
                                 </td>
-                                <td>
-                                    <a asp-action="" asp-route-id="@Model[i].leerlingID">Wijzig</a>
-                                </td>
+                                @if (Model[i].hulpleerlingID != null)
+                                {
+                                    <td>
+                                        <a asp-action="LeerlingOverzicht" asp-route-hulpleerlingId="@Model[i].hulpleerlingID">Wijzig</a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <a>Geen hulpleerling</a>
+                                    </td>
+                                }
                             </tr>
                             }
                         </table>
