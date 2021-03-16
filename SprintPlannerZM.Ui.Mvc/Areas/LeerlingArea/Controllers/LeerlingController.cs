@@ -88,10 +88,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerlingArea.Controllers
                     Console.WriteLine(keuze.mklas);
                     Console.WriteLine(keuze.hulpleerlingID);
                     Console.WriteLine("--------------------------------------------------------------------------------");
-                    //if (keuze.sprint || keuze.typer || keuze.mklas)
-                    //{
                     await _sprintvakkeuzeService.UpdateAsync(keuze.sprintvakkeuzeID, keuze);
-                    //}
                 }
             }
             else

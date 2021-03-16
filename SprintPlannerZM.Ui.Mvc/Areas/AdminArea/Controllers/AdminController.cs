@@ -431,6 +431,26 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View(gereserveerdeExamens);
         }
 
+        //Detail alle leerlingen naar leerling uit lijst
+        public async Task<IActionResult> LeerlingOverzicht(long hulpleerlingId)
+        {
+            var hulpleerling = await _hulpleerlingService.Get(hulpleerlingId);
+            return View("LeerlingOverzicht", hulpleerling);
+        }
+
+        public async Task<IActionResult> UpdateVakken(string vakKeuzeLijst)
+        {
+            var keuzeLijst = JArray.Parse(vakKeuzeLijst);
+            var count = 0;
+            foreach (var vakKeuze in keuzeLijst)
+            {
+                count++;
+                var sprintvak = vakKeuze.ToObject<Sprintvakkeuze>();
+                await _sprintvakkeuzeService.UpdateAsync(sprintvak.sprintvakkeuzeID, sprintvak);
+                Console.WriteLine(count);
+            }
+            return RedirectToAction();
+        }
 
 
         /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -499,6 +519,17 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         {
             return View();
         }
+
+        public IActionResult AantalPerDul()
+        {
+            return View();
+        }
+
+        public IActionResult ToezichtPerLeerkracht()
+        {
+            return View();
+        }
+
 
         public bool ExistsAsHulpLeerling(long id)
         {
