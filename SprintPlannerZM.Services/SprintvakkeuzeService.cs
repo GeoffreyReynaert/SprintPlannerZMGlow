@@ -55,6 +55,16 @@ namespace SprintPlannerZM.Services
             return sprintvakkeuzes;
         }
 
+        public async Task<IList<Sprintvakkeuze>> FindWithHll(long hulpleerlingId)
+        {
+            var sprintvakkeuzes = await _database.Sprintvakkeuze
+                .Where(h=> h.hulpleerlingID == hulpleerlingId)
+                .Include(s => s.Vak)
+                .Include(s => s.Hulpleerling)
+                .ToListAsync();
+            return sprintvakkeuzes;
+        }
+
         public async Task<Sprintvakkeuze> CreateAsync(Sprintvakkeuze sprintvakkeuze)
         {
             await _database.Sprintvakkeuze.AddAsync(sprintvakkeuze);

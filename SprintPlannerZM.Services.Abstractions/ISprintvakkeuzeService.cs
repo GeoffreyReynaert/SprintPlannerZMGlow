@@ -10,6 +10,7 @@ namespace SprintPlannerZM.Services.Abstractions
         Task<IList<Sprintvakkeuze>> GetHulpVakAsync(long? hulpleerlingID);
         Task<Sprintvakkeuze> GetByVakAndHulpleerlingID(int vakId, long hulpleerlingId);
         Task<IList<Sprintvakkeuze>> FindAsync();
+        Task<IList<Sprintvakkeuze>> FindWithHll(long hulpleerlingId);
         Task<Sprintvakkeuze> CreateAsync(Sprintvakkeuze sprintvakkeuze);
         Task<Sprintvakkeuze> UpdateAsync(int id, Sprintvakkeuze sprintvakkeuze);
         Task<bool> DeleteAsync(int id);

@@ -434,8 +434,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         //Detail alle leerlingen naar leerling uit lijst
         public async Task<IActionResult> LeerlingOverzicht(long hulpleerlingId)
         {
-            var hulpleerling = await _hulpleerlingService.Get(hulpleerlingId);
-            return View("LeerlingOverzicht", hulpleerling);
+            var sprintvakken = await _sprintvakkeuzeService.FindWithHll(hulpleerlingId);
+            return View("LeerlingOverzicht", sprintvakken);
         }
 
         public async Task<IActionResult> UpdateVakken(string vakKeuzeLijst)
