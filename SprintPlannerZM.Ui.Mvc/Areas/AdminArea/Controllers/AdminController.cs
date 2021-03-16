@@ -56,7 +56,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View("Index");
         }
 
-
+        /* PAGING*/
         public async Task<IActionResult> LeerlingenOverzicht(string sortOrder, string currentFilter, string nameString, string klasString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
@@ -126,7 +126,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                         foreach (var vak in leerlingVakken)
                         {
                             var sprintvakkeuze = new Sprintvakkeuze()
-                                {vakID = vak.vakID, sprint = false, typer = false, mklas = false, hulpleerlingID = ietske.hulpleerlingID};
+                            { vakID = vak.vakID, sprint = false, typer = false, mklas = false, hulpleerlingID = ietske.hulpleerlingID };
                             await _sprintvakkeuzeService.CreateAsync(sprintvakkeuze);
                         }
                     }
@@ -169,8 +169,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
 
 
-        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
-           !                 Klasverdeling     by Geoff            ! 
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+           !                                                       !
+           !                 Klasverdeling     by Geoff            !
+           ! 
            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         [HttpGet]
@@ -186,6 +188,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         {
             var i = 0;
             var j = 0;
+            var k = 0;  /* lokaal reservaties per type teller */
+            var lokaalIndexI = 0;
             var hulpLeerlingen = await _hulpleerlingService.Find();
             var splitPieceDatum = datum.Split(" ")[0];
             var examensPerDatum = await _examenroosterService.FindByDatum(DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null));
@@ -203,7 +207,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                     {
                         if (rooster.vakID == vak.vakID)
                         {
-                            Console.WriteLine("Deze leerling :" + leerling.Leerling.voorNaam + " heeft het vak " + vak.vaknaam + "als examen op" + rooster.datum);
+                            Console.WriteLine("Deze leerling :" + leerling.Leerling.voorNaam + " heeft het vak " + vak.vaknaam + "als examen op" + rooster.datum + "om " + rooster.tijd + " Uur");
                         }
                     }
                 }
@@ -217,7 +221,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                 {
                     foreach (var geplandExamen in examensPerDatum)
                     {
-                        if (geplandExamen.vakID == sprintKeuzeExam.vakID /*&& geplandExamen.groep.Equals("gr1") */ && (sprintKeuzeExam.sprint || sprintKeuzeExam.typer || sprintKeuzeExam.mklas))
+                        if (geplandExamen.vakID == sprintKeuzeExam.vakID && geplandExamen.groep.Equals("gr1") && (sprintKeuzeExam.sprint || sprintKeuzeExam.typer || sprintKeuzeExam.mklas))
                         {
 
                             //opmaken van de lokaal reservatie type
@@ -235,72 +239,173 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                 sType = "sprint";
                             }
 
-                            var lokaalReservaties = _sprintlokaalreservatieService.FindByExamIDAndType(geplandExamen.examenID, sType).Result.Count;
-                            var lokaalBeztting = _leerlingverdelingService.FindCapWithExamIDAndType(geplandExamen.examenID, sType).Result.Count;
+                            //var lokaalReservaties = _sprintlokaalreservatieService.FindByExamIDAndType(geplandExamen.examenID, sType).Result.Count;
+                            //var lokaalReservaties = _sprintlokaalreservatieService.FindAantalBySprintreservatieIdAndType(sprintlokaal.sprintlokaalreservatieID,sType).Result.Count;
+                            var lokaalBeztting = _leerlingverdelingService.FindAantalBySprintLokaalId(sprintlokaal.sprintlokaalreservatieID, sType).Result.Count;
 
-                            if (lokaalReservaties == 0)
+
+                            if (lokaalBeztting <= lokalenVoorSprint[lokaalIndexI].capaciteit && sType.Equals("sprint") && i == 0)
                             {
+                                i = 0;
+                                sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[i].lokaalID, examenID = geplandExamen.examenID };
+                                sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
+                                i++;
+                                Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
+                                var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID, reservatietype = sType };
+                                leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
+                                Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
+                                                  sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
+                                                  " staat vast op" + geplandExamen.datum + " als sprinter");
 
-                                if (lokaalBeztting <= lokalenVoorSprint[i].capaciteit && sType.Equals("sprint"))
-                                {
-                                    sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorSprint[i].lokaalID, examenID = geplandExamen.examenID };
-                                    sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
-                                    Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
-                                    leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
-                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
-                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
-                                                      " staat vast op" + geplandExamen.datum + " als sprinter");
-
-                                }
-                                else if (lokaalBeztting <= lokalenVoorTyper[j].capaciteit && sType.Equals("typer"))
-                                {
-                                    sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID };
-                                    sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
-                                    Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
-                                    leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
-                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
-                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
-                                                      " staat vast op" + geplandExamen.datum + " als typer");
-                                }
-                                else if (lokaalBeztting <= lokalenVoorSprint[i].capaciteit && sType.Equals("mklas"))
-                                {
-                                    sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID };
-                                    sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
-                                    Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
-                                    leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
-                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
-                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
-                                                      " staat vast op" + geplandExamen.datum + " als mklas");
-                                }
+                            }
+                            else if (lokaalBeztting <= lokalenVoorTyper[j].capaciteit && sType.Equals("typer") && j == 0)
+                            {
+                                j = 0;
+                                sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID };
+                                sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
+                                j++;
+                                Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
+                                var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID, reservatietype = sType };
+                                leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
+                                Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
+                                                  sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
+                                                  " staat vast op" + geplandExamen.datum + " als typer");
+                            }
+                            else if (lokaalBeztting <= lokalenVoorSprint[i].capaciteit && sType.Equals("mklas") && k == 0)
+                            {
+                                k = 0;
+                                sprintlokaal = new Sprintlokaalreservatie() { tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum, lokaalID = lokalenVoorTyper[i].lokaalID, examenID = geplandExamen.examenID, };
+                                sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
+                                Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
+                                k++;
+                                var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID, reservatietype = sType };
+                                leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
+                                Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
+                                                  sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
+                                                  " staat vast op" + geplandExamen.datum + " als mklas");
                             }
                             else
                             {
 
-                                if (lokaalBeztting <= lokalenVoorSprint[i].capaciteit && sType.Equals("sprint"))
+                                //sprintlokaal = _sprintlokaalreservatieService.Get();
+                                if (lokaalBeztting < lokalenVoorSprint[lokaalIndexI].capaciteit &&
+                                    sType.Equals("sprint") && i > 0)
                                 {
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
+                                    var leerlingverdeling = new Leerlingverdeling()
+                                    {
+                                        hulpleerlingID = hulpleerling.hulpleerlingID,
+                                        sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID,
+                                        examenID = geplandExamen.examenID, reservatietype = sType
+                                    };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
-                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
-                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
+                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID +
+                                                      " voor vak " +
+                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " +
+                                                      hulpleerling.Leerling.voorNaam + " " +
+                                                      hulpleerling.Klas.klasnaam +
                                                       " staat vast op" + geplandExamen.datum + " als sprinter");
                                 }
-                                else if (lokaalBeztting <= lokalenVoorTyper[j].capaciteit && sType.Equals("typer"))
+                                else if (lokaalBeztting < lokalenVoorTyper[j].capaciteit && sType.Equals("typer") &&
+                                         j > 0)
                                 {
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
+                                    var leerlingverdeling = new Leerlingverdeling()
+                                    {
+                                        hulpleerlingID = hulpleerling.hulpleerlingID,
+                                        sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID,
+                                        examenID = geplandExamen.examenID, reservatietype = sType
+                                    };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
-                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
-                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
+                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID +
+                                                      " voor vak " +
+                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " +
+                                                      hulpleerling.Leerling.voorNaam + " " +
+                                                      hulpleerling.Klas.klasnaam +
                                                       " staat vast op" + geplandExamen.datum + " als typer");
                                 }
-                                else if (lokaalBeztting <= lokalenVoorSprint[i].capaciteit && sType.Equals("mklas"))
+                                else if (lokaalBeztting < lokalenVoorSprint[i].capaciteit && sType.Equals("mklas") &&
+                                         k > 0)
                                 {
-                                    var leerlingverdeling = new Leerlingverdeling() { hulpleerlingID = hulpleerling.hulpleerlingID, sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID, examenID = geplandExamen.examenID };
+                                    var leerlingverdeling = new Leerlingverdeling()
+                                    {
+                                        hulpleerlingID = hulpleerling.hulpleerlingID,
+                                        sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID,
+                                        examenID = geplandExamen.examenID, reservatietype = sType
+                                    };
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
-                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID + " voor vak " +
-                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " + hulpleerling.Leerling.voorNaam + " " + hulpleerling.Klas.klasnaam +
+                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID +
+                                                      " voor vak " +
+                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " +
+                                                      hulpleerling.Leerling.voorNaam + " " +
+                                                      hulpleerling.Klas.klasnaam +
+                                                      " staat vast op" + geplandExamen.datum + " als mklas");
+                                }
+                                else if (lokaalBeztting >= lokalenVoorSprint[lokaalIndexI].capaciteit &&
+                                         sType.Equals("sprint"))
+                                {
+
+                                    lokaalIndexI++;
+                                    sprintlokaal = new Sprintlokaalreservatie()
+                                    {
+                                        tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum,
+                                        lokaalID = lokalenVoorSprint[i].lokaalID, examenID = geplandExamen.examenID
+                                    };
+                                    sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
+                                    var leerlingverdeling = new Leerlingverdeling()
+                                    {
+                                        hulpleerlingID = hulpleerling.hulpleerlingID,
+                                        sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID,
+                                        examenID = geplandExamen.examenID, reservatietype = sType
+                                    };
+                                    leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
+                                    i++;
+                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID +
+                                                      " voor vak " +
+                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " +
+                                                      hulpleerling.Leerling.voorNaam + " " +
+                                                      hulpleerling.Klas.klasnaam +
+                                                      " staat vast op" + geplandExamen.datum + " als sprinter");
+                                }
+                                else if (lokaalBeztting >= lokalenVoorTyper[j].capaciteit && sType.Equals("typer"))
+                                {
+
+                                    sprintlokaal = new Sprintlokaalreservatie()
+                                    {
+                                        tijd = geplandExamen.tijd, reservatietype = sType, datum = geplandExamen.datum,
+                                        lokaalID = lokalenVoorTyper[j].lokaalID, examenID = geplandExamen.examenID
+                                    };
+                                    sprintlokaal = await _sprintlokaalreservatieService.Create(sprintlokaal);
+                                    Console.WriteLine("Sprintlokaal reservatie aangemaakt voor type " + sType);
+
+                                    var leerlingverdeling = new Leerlingverdeling()
+                                    {
+                                        hulpleerlingID = hulpleerling.hulpleerlingID,
+                                        sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID,
+                                        examenID = geplandExamen.examenID, reservatietype = sType
+                                    };
+                                    leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
+                                    j++;
+                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID +
+                                                      " voor vak " +
+                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " +
+                                                      hulpleerling.Leerling.voorNaam + " " +
+                                                      hulpleerling.Klas.klasnaam +
+                                                      " staat vast op" + geplandExamen.datum + " als typer");
+                                }
+                                else if (lokaalBeztting >= lokalenVoorSprint[i].capaciteit && sType.Equals("mklas"))
+                                {
+                                    k++;
+                                    var leerlingverdeling = new Leerlingverdeling()
+                                    {
+                                        hulpleerlingID = hulpleerling.hulpleerlingID,
+                                        sprintlokaalreservatieID = sprintlokaal.sprintlokaalreservatieID,
+                                        examenID = geplandExamen.examenID, reservatietype = sType
+                                    };
+                                    leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
+                                    Console.WriteLine("Sprintvak keuze ID " + sprintKeuzeExam.sprintvakkeuzeID +
+                                                      " voor vak " +
+                                                      sprintKeuzeExam.Vak.vaknaam + " voor leerling " +
+                                                      hulpleerling.Leerling.voorNaam + " " +
+                                                      hulpleerling.Klas.klasnaam +
                                                       " staat vast op" + geplandExamen.datum + " als mklas");
                                 }
                             }
@@ -326,15 +431,13 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View(gereserveerdeExamens);
         }
 
-        //Detail alle leerlingen naar leerling uit lijst
-        //public async Task<IActionResult> LeerlingOverzicht(int leerlingID)
-        //{
-        //    var leerling = _leerlingService.Get(leerlingID);
-        //    var klas = _klasService.GetSprintvakWithKlas(leerling.KlasID);
-        //    return PartialView("LeerlingOverzicht", klas);
-        //    var leerling = await _leerlingService.Get(leerlingID);
-        //    return PartialView("LeerlingOverzicht", leerling);
-        //}
+
+
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+           !                                                       !
+           !          Updaten van hulp statuus  by niels           !
+           ! 
+           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         [HttpPost]
         public async Task<IActionResult> UpdateLeerlingen(string leerlingenLijst)

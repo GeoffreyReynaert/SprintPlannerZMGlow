@@ -1,15 +1,60 @@
 ﻿@model IList<SprintPlannerZM.Model.Sprintlokaalreservatie>
 
-@{
 
-   
-}
-@foreach (var distinctlist in Model)
-{
-    <div>@distinctlist.reservatietype  <br />
-        @distinctlist.Lokaal.lokaalnaam <br /> 
-        @distinctlist.datum <br /> 
-        @distinctlist.tijd  <br />
-        @distinctlist.Examen.Vak.vaknaam <br /> <br />
-        </div>
-}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Datum
+            </th>
+            <th>
+                Uur
+            </th>
+            <th>
+                Vak
+            </th>
+            <th>
+                aantal hulpleerlingen
+            </th>
+            <th>
+                lokaal
+            </th>
+            <th>
+                
+            </th>
+            <th>
+                acties
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var distinctlist in Model)
+        {
+
+            <tr>
+                <td>
+                    @distinctlist.datum
+                </td>
+                <td>
+                    @distinctlist.tijd
+                </td>
+                <td>
+                    @distinctlist.Examen.Vak.vaknaam
+                </td>
+                <td>
+                    @distinctlist.Leerlingverdelingen.Count
+                </td>
+                <td>
+                    @distinctlist.Lokaal.lokaalnaam
+                </td>
+                <td>
+                </td>
+                <td>
+                    <a asp-action="" asp-route-id="">Edit</a> |
+                    <a asp-action="" asp-route-id="">Details</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -31,9 +31,18 @@ namespace SprintPlannerZM.Services
                 .Include(l=>l.Leerlingverdelingen)
                 .Include(l=>l.Examen)
                 .ThenInclude(e=>e.Vak)
+                .ThenInclude(k=>k.klas)
                 .ToListAsync();
         }
 
+
+        public async Task<IList<Sprintlokaalreservatie>> FindAantalBySprintreservatieIdAndType(int reservatieID, string type)
+        {
+            return await _database.Sprintlokaalreservatie
+                .Where(s => s.sprintlokaalreservatieID == reservatieID)
+                .Where(s => s.reservatietype.Equals(type))
+                .ToListAsync();
+        }
 
         public async Task<IList<Sprintlokaalreservatie>> FindByExamIDAndType(int examid, string type)
         {
@@ -42,8 +51,6 @@ namespace SprintPlannerZM.Services
                 .Where(s => s.reservatietype.Equals(type))
                 .ToListAsync();
         }
-
-
 
         public async Task<Sprintlokaalreservatie> Create(Sprintlokaalreservatie sprintlokaalreservatie)
         {

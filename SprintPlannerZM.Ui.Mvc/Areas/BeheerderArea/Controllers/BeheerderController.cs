@@ -348,23 +348,23 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                             var vak = new Vak();
                             //IList<Vak> vakken;
 
-                            for (int column = 0; column < reader.FieldCount; column++)
+                            for (int column = 0; column < reader.FieldCount; column++)  /* column 4 = lokalen*/
                             {
                                 if (column == 1) //Klas uit id
                                 {
                                     var klasnaamUitXls = reader.GetValue(column).ToString();
 
                                     if (klasnaamUitXls.Substring(klasnaamUitXls.Length - 3, 3) == "gr1" ||
-                                        (klasnaamUitXls.Substring(klasnaamUitXls.Length - 3, 3) == "gr2"))
+                                        klasnaamUitXls.Substring(klasnaamUitXls.Length - 3, 3) == "gr2")
                                     {
                                         Console.WriteLine(klasnaamUitXls.Substring(klasnaamUitXls.Length - 3, 3));
                                         var splitNaam = klasnaamUitXls.Split("g");
                                         klas = await _klasService.GetByKlasName(splitNaam[0]);
                                         rooster.groep = klasnaamUitXls.Substring(klasnaamUitXls.Length - 3, 3);
-
                                     }
                                     else
                                     {
+                                        rooster.groep = "gr1";
                                         klas = await _klasService.GetByKlasName(reader.GetValue(column).ToString());
                                     }
 
@@ -444,10 +444,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                         Console.WriteLine(reader.GetValue(column).ToString());
                                     }
                                 }
-
-                                //else if (column == 4) // lokaal ID nog verwerken in examenrooster
-                                //{
-                                //}
 
                                 else if (column == 5) // datum van examen
                                 {

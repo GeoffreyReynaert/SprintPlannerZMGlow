@@ -52,7 +52,7 @@ namespace SprintPlannerZM.Services
                .Include(h => h.Klas)
                .ThenInclude(k=>k.Vakken)
                .Include(h => h.Sprintvakkeuzes)
-               .ThenInclude(s=>s.Vak)
+               .ThenInclude(s=>s.Vak)/*.OrderBy(h=>h.Klas)*/
                .ToListAsync();
 
            return hulpleerlingen;
