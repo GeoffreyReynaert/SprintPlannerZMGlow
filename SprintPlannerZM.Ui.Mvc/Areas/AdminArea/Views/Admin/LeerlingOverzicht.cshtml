@@ -1,12 +1,12 @@
 ﻿@model IList<SprintPlannerZM.Model.Sprintvakkeuze>
-
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <section class="left-allignToNav pt-3">
     <div class="tbl-header">
         <table>
             <thead>
-                <tr>
-                    <th class="h6">Keuze sprint/typer/m-klas</th>
-                </tr>
+            <tr>
+                <th class="h6">Keuze sprint/typer/m-klas</th>
+            </tr>
             </thead>
         </table>
     </div>
@@ -38,31 +38,31 @@
         }
     </div>
 </section>
-<button id="btnUpdate" class="btn btn-primary mt-md-n2 margin"> Bevestig </button>
+<button id="btnKeuzeUpdate" class="btn btn-primary mt-md-n2 margin"> Bevestig </button>
 
 <script>
+    $("#btnKeuzeUpdate").click(function () {
+        console.log(lijst());
+        $(this).load("UpdateVakken", { vakKeuzeLijst: JSON.stringify(lijst()) });
 
-    $("#btnUpdate").click(function() {
-        $(this).load("UpdateVakken", { vakKeuzeLijst: JSON.stringify(lijst())});
-    });
-
-    function lijst() {
-        const leerlingLijst = [];
-        for (let count = 1; count <= @count; count++) {
-            const vakId = $(`input[id="vakId{${count}}"]`).val();
-            const vakSprint = $(`input[id="vakSprint{${count}}"]`).is(':checked');
-            const vakTyper = $(`input[id="vakTyper{${count}}"]`).is(':checked');
-            const vakMklas = $(`input[id="vakMklas{${count}}"]`).is(':checked');
-            const leerlingId = $(`input[id="leerlingId{${count}}"]`).val();
-            const leerlingInfo = {};
-            leerlingInfo["sprintvakkeuzeId"] = vakId;
-            leerlingInfo["sprint"] = vakSprint;
-            leerlingInfo["typer"] = vakTyper;
-            leerlingInfo["mklas"] = vakMklas;
-            leerlingInfo["hulpleerlingId"] = leerlingId;
-            leerlingLijst.push(leerlingInfo);
+        function lijst() {
+            const leerlingLijst = [];
+            for (let count = 1; count <= @count; count++) {
+                const vakId = $(`input[id="vakId{${count}}"]`).val();
+                const vakSprint = $(`input[id="vakSprint{${count}}"]`).is(':checked');
+                const vakTyper = $(`input[id="vakTyper{${count}}"]`).is(':checked');
+                const vakMklas = $(`input[id="vakMklas{${count}}"]`).is(':checked');
+                const leerlingId = $(`input[id="leerlingId{${count}}"]`).val();
+                const leerlingInfo = {};
+                leerlingInfo["sprintvakkeuzeId"] = vakId;
+                leerlingInfo["sprint"] = vakSprint;
+                leerlingInfo["typer"] = vakTyper;
+                leerlingInfo["mklas"] = vakMklas;
+                leerlingInfo["hulpleerlingId"] = leerlingId;
+                leerlingLijst.push(leerlingInfo);
+            }
+            return leerlingLijst;
         }
-        return leerlingLijst;
-    }
+    })
 
 </script>
