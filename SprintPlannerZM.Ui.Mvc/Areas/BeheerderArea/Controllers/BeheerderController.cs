@@ -6,6 +6,7 @@ using SprintPlannerZM.Services.Abstractions;
 using SprintPlannerZM.Ui.Mvc.Settings;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -330,7 +331,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         {
             IList<Examenrooster> examenroosters = new List<Examenrooster>();
             List<string> berichten = new List<string>();
-            IFormFile file;
+            var splitPieceDatum = "";
+          IFormFile file;
             if (Request.Form.Files.Count != 0)
             {
                 file = Request.Form.Files[0];
@@ -446,18 +448,20 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                 }
 
                                 else if (column == 5) // datum van examen
-                                {
-                                    var splitPieceDatum = reader.GetValue(column).ToString().Split(" ")[1];
-                                    DateTime date = DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null);
-                                    rooster.datum = date;
-                                    Console.WriteLine("datum :" + date);
+                                { 
+                                    splitPieceDatum = reader.GetValue(column).ToString().Split(" ")[1];
+                                    
                                 } // datum van examen
 
                                 else if (column == 6) // foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
                                 {
                                     var tweeDeligAntw = reader.GetValue(column).ToString().Split(" ");
+                                  
+                                    splitPieceDatum = splitPieceDatum +" "+ tweeDeligAntw[1];
+                                    DateTime date = DateTime.Parse(splitPieceDatum);
+                                    rooster.datum = date ;
                                     rooster.tijd = tweeDeligAntw[1];
-                                    Console.WriteLine("uur :" + tweeDeligAntw[1]);
+                                    Console.WriteLine("datum en uur :"+ date);
                                 } // foutieve datum gevolgd van " " en het juiste uur opgevangen door split en item[1] van de result array
                             }
                             if (rooster.examenID != 999) // fault code van onnodige gegevens om deze niet te versturen en zo de database te sparen
