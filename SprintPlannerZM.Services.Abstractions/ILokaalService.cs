@@ -13,6 +13,7 @@ namespace SprintPlannerZM.Services.Abstractions
         IQueryable<Lokaal> FindAsyncPagingQueryable();
         Task<IList<Lokaal>> FindForSprintAsync();
         Task<IList<Lokaal>> FindForTyperAsync();
+        Task<IList<Lokaal>> FindForMklasAsync();
         Task<Lokaal> CreateAsync(Lokaal lokaal);
         Task<Lokaal> UpdateAsync(int id, Lokaal lokaal);
         Task<bool> Delete(int id);

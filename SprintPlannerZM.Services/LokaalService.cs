@@ -49,6 +49,12 @@ namespace SprintPlannerZM.Services
                 .Where(l => l.lokaaltype.Equals("typer"))
                 .ToListAsync();
         }
+        public async Task<IList<Lokaal>> FindForMklasAsync()
+        {
+            return await _database.Lokaal
+                .Where(l => l.lokaaltype.Equals("m-klas"))
+                .ToListAsync();
+        }
 
 
         public  IQueryable<Lokaal> FindAsyncPagingQueryable()

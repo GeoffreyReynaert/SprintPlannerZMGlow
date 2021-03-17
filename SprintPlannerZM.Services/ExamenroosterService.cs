@@ -37,7 +37,7 @@ namespace SprintPlannerZM.Services
         {
             var examenroosters =await _database.Examenrooster
                 .Where(e => e.datum.Equals(date))
-                .Include(e=>e.Vak)
+                .Include(e=>e.Vak).OrderBy(e=>e.tijd.Substring(0,1))
                 .ToListAsync();
 
             return examenroosters;
