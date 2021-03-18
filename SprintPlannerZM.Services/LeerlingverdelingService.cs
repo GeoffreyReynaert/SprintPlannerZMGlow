@@ -37,6 +37,7 @@ namespace SprintPlannerZM.Services
                 .ThenInclude(l => l.Klas)
                 .Include(l => l.Examenrooster)
                 .ThenInclude(e => e.Vak)
+                .Where(l=>l.sprintlokaalreservatieID== sprintlokaalreservatieId)
                 .ToListAsync();
         }
 
