@@ -10,7 +10,7 @@
             <thead>
                 <span class="text-center text-white">
                     <b>
-                        <h5>Januari @Model[0].datum</h5>
+                        <h5>Januari</h5>
                     </b>
                 </span>
             </thead>
@@ -22,8 +22,9 @@
             {
                 count++;
                 idMaker = "position" + count;
+                var datumWeergave = examen.datum.Date.ToString().Split(" ")[0];
                 <div class="card-body cardBodyCSS align-items-center cardMargin" id="@idMaker">
-                <h6>@examen.datum</h6><a  type="button" asp-controller="Admin" asp-action="LeerlingVerdeling" asp-route-datum="@examen.datum" class="btn btn-center btn-gen">Genereer</a>
+                <h6>@datumWeergave</h6><a  type="button" asp-controller="Admin" asp-action="LeerlingVerdeling" asp-route-datum="@examen.datum" class="btn btn-center btn-gen">Genereer</a>
             </div>
             }
         </div>

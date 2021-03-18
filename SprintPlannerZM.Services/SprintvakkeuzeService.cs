@@ -23,16 +23,28 @@ namespace SprintPlannerZM.Services
                 .Include(s => s.Vak)
                 .Include(s => s.Hulpleerling)
                 .SingleOrDefaultAsync();
+
             return sprintvakkeuze;
         }
 
-        public async Task<IList<Sprintvakkeuze>> GetHulpVakAsync(long? hulpleerlingID)
+        public async Task<IList<Sprintvakkeuze>> GetHulpVakAsync(long? hulpleerlingId)
         {
             var sprintvakkeuzes = await _database.Sprintvakkeuze
-                .Where(h => h.hulpleerlingID == hulpleerlingID)
+                .Where(h => h.hulpleerlingID == hulpleerlingId)
                 .Include(s => s.Vak)
                 .Include(s => s.Hulpleerling)
                 .ToListAsync();
+
+            return sprintvakkeuzes;
+        }
+
+        public async Task<IList<Sprintvakkeuze>> FindByVakId(int vakId)
+        {
+            var sprintvakkeuzes = await _database.Sprintvakkeuze
+                .Where(h => h.vakID == vakId)
+                .Include(s => s.Vak)
+                .ToListAsync();
+
             return sprintvakkeuzes;
         }
 
@@ -43,6 +55,7 @@ namespace SprintPlannerZM.Services
                 .Include(s => s.Vak)
                 .Include(s => s.Hulpleerling)
                 .SingleOrDefaultAsync(s => s.vakID == vakId);
+
             return sprintvak;
         }
 
@@ -52,6 +65,7 @@ namespace SprintPlannerZM.Services
                 .Include(s => s.Vak)
                 .Include(s => s.Hulpleerling)
                 .ToListAsync();
+
             return sprintvakkeuzes;
         }
 
@@ -62,6 +76,7 @@ namespace SprintPlannerZM.Services
                 .Include(s => s.Vak)
                 .Include(s => s.Hulpleerling)
                 .ToListAsync();
+
             return sprintvakkeuzes;
         }
 
@@ -69,6 +84,7 @@ namespace SprintPlannerZM.Services
         {
             await _database.Sprintvakkeuze.AddAsync(sprintvakkeuze);
             await _database.SaveChangesAsync();
+
             return sprintvakkeuze;
         }
 
@@ -81,6 +97,7 @@ namespace SprintPlannerZM.Services
                 sprintvakToUpd.mklas = sprintvakkeuze.mklas;
                 _database.Sprintvakkeuze.Update(sprintvakToUpd);
                 await _database.SaveChangesAsync();
+
                 return sprintvakkeuze;
             }
         }
@@ -94,6 +111,7 @@ namespace SprintPlannerZM.Services
             }
             _database.Sprintvakkeuze.Remove(dbSprintvak);
             await _database.SaveChangesAsync();
+
             return true;
         }
 
