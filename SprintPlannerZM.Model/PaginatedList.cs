@@ -9,12 +9,14 @@ namespace SprintPlannerZM.Model
     public class PaginatedList<T> : List<T>
     {
         public int PageIndex { get; }
-        private int TotalPages { get; }
+        public int TotalPages { get; }
+        public int ListCount { get; }
 
         private PaginatedList(IEnumerable<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            ListCount = count;
             AddRange(items);
         }
 

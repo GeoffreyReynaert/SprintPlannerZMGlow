@@ -1,4 +1,6 @@
-﻿@model IList<SprintPlannerZM.Model.Examenrooster>
+﻿@using System.Globalization
+@using SprintPlannerZM.Model
+@model IList<SprintPlannerZM.Model.Examenrooster>
 @{
     var count = 0;
     var idMaker = "";
@@ -22,8 +24,10 @@
             {
                 count++;
                 idMaker = "position" + count;
+                var datetime = examen.datum;
+                var datum = datetime.ToString(CultureInfo.CurrentCulture).Split("0:00:00")[0];
                 <div class="card-body cardBodyCSS align-items-center cardMargin" id="@idMaker">
-                <h6>@examen.datum</h6><a  type="button" asp-controller="Admin" asp-action="LeerlingVerdeling" asp-route-datum="@examen.datum" class="btn btn-center btn-gen">Genereer</a>
+                <h6>@datum</h6><a  type="button" asp-controller="Admin" asp-action="LeerlingVerdeling" asp-route-datum="@examen.datum" class="btn btn-center btn-gen">Genereer</a>
             </div>
             }
         </div>

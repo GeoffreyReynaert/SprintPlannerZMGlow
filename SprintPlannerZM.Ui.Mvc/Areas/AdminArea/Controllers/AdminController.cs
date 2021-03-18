@@ -57,15 +57,18 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         }
 
         /* PAGING*/
-        public async Task<IActionResult> LeerlingenOverzicht(string sortOrder, string currentFilter, string nameString, string klasString, int? pageNumber)
+        public async Task<IActionResult> LeerlingenOverzicht(string sortOrder, string currentFilter, string nameString, string klasString, int? pageNumber, bool buttonPress)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["FamilienaamSortParm"] = string.IsNullOrEmpty(sortOrder) ? "familienaam_asc" : "familienaam_desc";
-            ViewData["VoornaamSortParm"] = sortOrder == "voornaam_desc" ? "voornaam_desc" : "";
+            ViewData["FamilienaamSortParm"] = sortOrder == "familienaam_asc" ? "familienaam_desc" : "familienaam_asc";
+            ViewData["VoornaamSortParm"] = sortOrder == "voornaam_asc" ? "voornaam_desc" : "voornaam_asc";
 
             if (nameString != null)
             {
-                pageNumber = 1;
+                if (buttonPress == false)
+                {
+                    pageNumber = 1;
+                }
             }
             else
             {
@@ -76,7 +79,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             if (klasString != null)
             {
-                pageNumber = 1;
+                if (buttonPress == false)
+                {
+                    pageNumber = 1;
+                }
             }
             else
             {
@@ -100,11 +106,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             leerlingen = sortOrder switch
             {
-                "klasnaam_desc" => leerlingen.OrderByDescending(l => l.Klas.klasnaam),
-                "voornaam_desc" => leerlingen.OrderBy(l => l.voorNaam),
-                "familienaam_asc" => leerlingen.OrderBy(l => l.familieNaam),
-                "familienaam_desc" => leerlingen.OrderByDescending(l => l.familieNaam),
-                _ => leerlingen.OrderBy(l => l.voorNaam)
+                "voornaam_asc" => leerlingen.OrderBy(v => v.voorNaam).ThenBy(f => f.familieNaam),
+                "voornaam_desc" => leerlingen.OrderByDescending(v => v.voorNaam).ThenByDescending(f => f.familieNaam),
+                "familienaam_asc" => leerlingen.OrderBy(f => f.familieNaam).ThenBy(v => v.voorNaam),
+                "familienaam_desc" => leerlingen.OrderByDescending(f => f.familieNaam).ThenByDescending(v => v.voorNaam),
+                _ => leerlingen.OrderBy(v => v.voorNaam).ThenBy(f => f.familieNaam)
             };
             return View(await PaginatedList<Leerling>.CreateAsync(leerlingen.AsQueryable(), pageNumber ?? 1, 12));
         }

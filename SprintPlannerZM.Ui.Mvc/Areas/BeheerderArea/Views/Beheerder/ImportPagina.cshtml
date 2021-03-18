@@ -51,7 +51,29 @@
                 Opgelet de wachtijd kan oplopen <br />
                 Elke digitale cel is hard aan het werk voor u<br />
                 Dank u voor u geduld <br />
-                <img src="https://media.tenor.com/images/8d483e909ec3618f521e9700d6fbf2e1/tenor.gif" alt="error" width="220" height="165" />
+                @{
+                    var random = new Random().Next(0, 4);
+                }
+                @if (random == 0)
+                {
+                    <img src="https://media.tenor.com/images/8d483e909ec3618f521e9700d6fbf2e1/tenor.gif" alt="error" width="220" height="165" />
+                }
+                else if (random == 1)
+                {
+                    <img src="https://miro.medium.com/max/978/0*mv8MNRLDNNnt5f72.gif" alt="error" width="489" height="289" />
+                }
+                else if (random == 2)
+                {
+                    <img src="https://data.whicdn.com/images/42829097/original.gif" alt="error" width="500" height="270" />
+                }
+                else if (random == 3)
+                {
+                    <img src="http://cdn.lowgif.com/full/6c85d696f5fc43c4-.gif" alt="error" width="500" height="400" />
+                }
+                else if (random == 4)
+                {
+                    <img src="http://cdn.lowgif.com/medium/6a81bccb7dc0a31d-.gif" alt="error" width="560" height="420" />
+                }
             </div>
         </div>
     </div>
