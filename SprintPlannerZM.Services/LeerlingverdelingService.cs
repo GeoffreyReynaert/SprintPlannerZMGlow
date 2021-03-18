@@ -29,6 +29,16 @@ namespace SprintPlannerZM.Services
                 .ToListAsync();
         }
 
+        public async Task<IList<Leerlingverdeling>> FindBySprintLokaalReservatie(int sprintlokaalreservatieId)
+        {
+            return await _database.Leerlingverdeling
+                .Include(l => l.Hulpleerling)
+                .ThenInclude(h => h.Leerling)
+                .ThenInclude(l => l.Klas)
+                .Include(l => l.Examenrooster)
+                .ThenInclude(e => e.Vak)
+                .ToListAsync();
+        }
 
         public async Task<IList<Leerlingverdeling>> FindAantalBySprintLokaalId(int sprintlokaalreservatieId ,string type)
         {

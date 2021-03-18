@@ -284,8 +284,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         public async Task<IActionResult> DetailsExamen(int id)
         {
-            var detailSprintreservatie = await _sprintlokaalreservatieService.Get(id);
-            return View(detailSprintreservatie);
+            var leerlingverdelingen = await _leerlingverdelingService.FindBySprintLokaalReservatie(id);
+            return View(leerlingverdelingen);
         }
 
         //Detail alle leerlingen naar leerling uit lijst

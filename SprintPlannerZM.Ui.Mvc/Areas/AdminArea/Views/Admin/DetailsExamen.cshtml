@@ -1,4 +1,4 @@
-﻿@model SprintPlannerZM.Model.Sprintlokaalreservatie
+﻿@model IList<SprintPlannerZM.Model.Leerlingverdeling>
 
 
 <section class="left-allignToNav pt-3">
@@ -6,7 +6,7 @@
         <table>
             <thead>
                 <tr>
-                    <th class="h6">Lokaal @Model.Lokaal.lokaalnaam verdeling Overzicht @Model.Examen.Vak.vaknaam  </th>
+                    <th class="h6">Lokaal verdeling Overzicht @Model[0].Sprintlokaalreservatie.Lokaal.lokaalnaam </th>
                 </tr>
             </thead>
         </table>
@@ -15,11 +15,12 @@
         <div class="trBordercolor container">
             <div class="">
                 <div class="pt-2">
-                    @foreach (var leerling in @Model.Leerlingverdelingen)
+                    @foreach (var leerling in @Model)
                     {
                     <span>
                         leerling @leerling.Hulpleerling.Leerling.familieNaam @leerling.Hulpleerling.Leerling.voorNaam
                         klas @leerling.Hulpleerling.Leerling.Klas.klasnaam
+                        vak @leerling.Examenrooster.Vak.vaknaam
                     </span>
                         <br />
                     }
