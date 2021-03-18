@@ -12,9 +12,6 @@
                 Uur
             </th>
             <th>
-                Vak
-            </th>
-            <th>
                 aantal hulpleerlingen
             </th>
             <th>
@@ -40,9 +37,6 @@
                     @distinctlist.tijd
                 </td>
                 <td>
-                    @distinctlist.Examen.Vak.vaknaam
-                </td>
-                <td>
                     @distinctlist.Leerlingverdelingen.Count
                 </td>
                 <td>
@@ -53,7 +47,7 @@
                 </td>
                 <td>
                     <a asp-action="" asp-route-id="">Edit</a> |
-                    <a asp-action="" asp-route-id="">Details</a> |
+                    <a asp-action="DetailsExamen" asp-route-id="@distinctlist.sprintlokaalreservatieID">Details</a> |
                 </td>
             </tr>
         }

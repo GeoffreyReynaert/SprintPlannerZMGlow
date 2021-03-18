@@ -281,6 +281,13 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View(gereserveerdeExamens);
         }
 
+
+        public async Task<IActionResult> DetailsExamen(int id)
+        {
+            var detailSprintreservatie = await _sprintlokaalreservatieService.Get(id);
+            return View(detailSprintreservatie);
+        }
+
         //Detail alle leerlingen naar leerling uit lijst
         public async Task<IActionResult> LeerlingOverzicht(long hulpleerlingId)
         {
@@ -730,7 +737,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             var biepDBLokaal = await _lokaalService.GetByNameAsync("biep!");
 
-            if (aantalExams<15 && aantalExams > 0 && lokaalreservaties.Count>0)
+            if (aantalExams< biepDBLokaal.capaciteit && aantalExams > 0 && lokaalreservaties.Count>0)
             {
                 var BiepRes = new Sprintlokaalreservatie()
                 {
