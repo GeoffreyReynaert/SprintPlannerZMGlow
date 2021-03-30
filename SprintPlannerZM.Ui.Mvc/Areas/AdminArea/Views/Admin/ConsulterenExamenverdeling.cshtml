@@ -12,16 +12,13 @@
                 Uur
             </th>
             <th>
-                Vak
-            </th>
-            <th>
                 aantal hulpleerlingen
             </th>
             <th>
                 lokaal
             </th>
             <th>
-                
+                type
             </th>
             <th>
                 acties
@@ -40,19 +37,17 @@
                     @distinctlist.tijd
                 </td>
                 <td>
-                    @distinctlist.Examen.Vak.vaknaam
-                </td>
-                <td>
                     @distinctlist.Leerlingverdelingen.Count
                 </td>
                 <td>
                     @distinctlist.Lokaal.lokaalnaam
                 </td>
                 <td>
+                    @distinctlist.reservatietype
                 </td>
                 <td>
                     <a asp-action="" asp-route-id="">Edit</a> |
-                    <a asp-action="" asp-route-id="">Details</a> |
+                    <a asp-action="DetailsExamen" asp-route-id="@distinctlist.sprintlokaalreservatieID">Details</a> |
                 </td>
             </tr>
         }

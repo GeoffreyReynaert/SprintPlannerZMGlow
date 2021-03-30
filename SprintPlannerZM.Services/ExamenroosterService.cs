@@ -36,8 +36,9 @@ namespace SprintPlannerZM.Services
         public async Task<IList<Examenrooster>> FindByDatum(DateTime date)
         {
             var examenroosters =await _database.Examenrooster
-                .Where(e => e.datum.Equals(date))
+                .Where(e => e.datum.Date.Equals(date.Date))
                 .Include(e=>e.Vak)
+                .OrderBy(e=>e.datum.Hour)
                 .ToListAsync();
 
             return examenroosters;
@@ -47,11 +48,21 @@ namespace SprintPlannerZM.Services
         public async Task<IList<Examenrooster>> FindDistinct()
         {
             var examenRoosters = await _database.Examenrooster
-                .Select(e => e.datum).Distinct()
+                .Select(e => e.datum.Date).Distinct()
                 .OrderBy(e => e.Date)
                 .ToListAsync();
 
-            return examenRoosters.Select(strings => new Examenrooster {datum = strings}).ToList();
+
+            //Objecten aanmaken om lijst van examenroosters weer te geven en geen lijst van datetimes
+            foreach (var String in examenRoosters)
+            {
+                var rooster = new Examenrooster()
+                {
+                    datum = String
+                };
+                examens.Add(rooster);
+            }
+            return examens;
         }
 
         public async Task<IList<Examenrooster>> Find()

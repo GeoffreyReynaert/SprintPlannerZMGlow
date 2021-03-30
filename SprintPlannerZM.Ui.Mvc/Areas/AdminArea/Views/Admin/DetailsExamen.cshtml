@@ -1,0 +1,33 @@
+﻿@model IList<SprintPlannerZM.Model.Leerlingverdeling>
+
+
+<section class="left-allignToNav pt-3">
+    <div class="tbl-header">
+        <table>
+            <thead>
+                <tr>
+                    <th class="h6">Lokaal verdeling Overzicht @Model[0].Sprintlokaalreservatie.Lokaal.lokaalnaam </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tbl-content">
+        <div class="trBordercolor container">
+            <div class="">
+                <div class="pt-2">
+                    @foreach (var leerling in @Model)
+                    {
+                    <span>
+                        leerling @leerling.Hulpleerling.Leerling.familieNaam @leerling.Hulpleerling.Leerling.voorNaam
+                        klas @leerling.Hulpleerling.Leerling.Klas.klasnaam
+                        vak @leerling.Examenrooster.Vak.vaknaam
+                    </span>
+                        <br />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="containerDropdowns left-allignToNav tableFixFooter pb-5 mb-5"></div>
+
