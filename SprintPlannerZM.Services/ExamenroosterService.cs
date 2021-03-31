@@ -52,6 +52,7 @@ namespace SprintPlannerZM.Services
                 .OrderBy(e => e.Date)
                 .ToListAsync();
 
+            IList<Examenrooster> examens = new List<Examenrooster>();
 
             //Objecten aanmaken om lijst van examenroosters weer te geven en geen lijst van datetimes
             foreach (var String in examenRoosters)
