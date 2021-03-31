@@ -579,7 +579,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                                       " staat vast op" + examenPerUur.datum + " " + examenPerUur.tijd +
                                                       " als sprinter");
                                 }
-                                else if (lokaalIndexTyper < lokalenVoorTyper[lokaalIndexTyper].capaciteit &&
+                                else if (lokaalBezttingTyper < lokalenVoorTyper[lokaalIndexTyper].capaciteit &&
                                          sType.Equals("typer") && ReservatieIndexTyper > 0)
                                 {
                                     var leerlingverdeling = new Leerlingverdeling()
@@ -684,7 +684,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                     leerlingverdeling = await _leerlingverdelingService.Create(leerlingverdeling);
                                     leerlingverdelingen.Add(leerlingverdeling);
                                     aantalExams++;
-                                    ReservatieIndexSprint = 1;
+                                    ReservatieIndexTyper = 1;
                                     Console.WriteLine("Sprintvak keuze ID " + sprintVakKeuzeExamen.sprintvakkeuzeID +
                                                       " voor vak " +
                                                       sprintVakKeuzeExamen.Vak.vaknaam + " voor leerling " +
@@ -703,7 +703,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                         tijd = examenPerUur.tijd,
                                         reservatietype = sType,
                                         datum = examenPerUur.datum,
-                                        lokaalID = lokalenVoorTyper[lokaalIndexM].lokaalID,
+                                        lokaalID = lokalenVoorMklas[lokaalIndexM].lokaalID,
                                         examenID = examenPerUur.examenID
                                     };
                                     mklaslokaal = await _sprintlokaalreservatieService.Create(mklaslokaal);
@@ -727,7 +727,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                                       hulpleerling.Leerling.voorNaam + " " +
                                                       hulpleerling.Klas.klasnaam +
                                                       " staat vast op" + examenPerUur.datum + " " + examenPerUur.tijd +
-                                                      " als typer");
+                                                      " als mklas");
                                 }
                             }
                         }
