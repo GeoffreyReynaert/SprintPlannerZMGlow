@@ -46,6 +46,51 @@ namespace SprintPlannerZM.Services
             return hulpLln;
         }
 
+        public async Task<Hulpleerling> GetOverzicht(long id)
+        {
+            var hulpleerling = await _database.Hulpleerling
+                .Where(h=> h.hulpleerlingID == id)
+                .Include(l => l.Leerling)
+                .Include(k => k.Klas)
+                .Include(l => l.Leerlingverdelingen)
+                .ThenInclude(s => s.Sprintlokaalreservatie)
+                .ThenInclude(e => e.Examen)
+                .ThenInclude(v => v.Vak)
+                .Include(l => l.Leerlingverdelingen)
+                .ThenInclude(l => l.Sprintlokaalreservatie)
+                .ThenInclude(l => l.Lokaal)
+                .SingleOrDefaultAsync();
+
+            return hulpleerling;
+        }
+
+        public async Task<IList<Hulpleerling>> FindOverzicht()
+        {
+            var hulpleerlingen = await _database.Hulpleerling
+                .Include(l=>l.Leerling)
+                .Include(k => k.Klas)
+                .Include(l => l.Leerlingverdelingen)
+                .ThenInclude(s => s.Sprintlokaalreservatie)
+                .ThenInclude(e => e.Examen)
+                .ThenInclude(v => v.Vak)
+                .Include(l=>l.Leerlingverdelingen)
+                .ThenInclude(l=>l.Sprintlokaalreservatie)
+                .ThenInclude(l=>l.Lokaal)
+                .ToListAsync();
+
+            return hulpleerlingen;
+        }
+
+        public async Task<IList<Hulpleerling>> simpleFind()
+        {
+            var hulpleerlingen = await _database.Hulpleerling
+                .Include(l=>l.Leerling)
+                .Include(l=>l.Leerlingverdelingen)
+                .ToListAsync();
+
+            return hulpleerlingen;
+        }
+
         public async Task<IList<Hulpleerling>> Find()
         {
            var  hulpleerlingen = await _database.Hulpleerling

@@ -63,7 +63,6 @@ namespace SprintPlannerZM.Services
             return leerlingen;
         }
 
-
         public async Task<IList<Leerling>> Find()
         {
             var leerlingen = await _database.Leerling

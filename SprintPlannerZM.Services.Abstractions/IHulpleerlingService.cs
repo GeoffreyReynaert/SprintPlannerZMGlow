@@ -9,6 +9,9 @@ namespace SprintPlannerZM.Services.Abstractions
         Task<Hulpleerling> Get(long? id);
         Task<Hulpleerling> GetHulpAsync(long? id);
         Task<Hulpleerling> GetbyLeerlingId(long id);
+        Task<Hulpleerling> GetOverzicht(long id);
+        Task<IList<Hulpleerling>> FindOverzicht();
+        Task<IList<Hulpleerling>> simpleFind();
         Task<IList<Hulpleerling>> Find();
         Task<Hulpleerling> Create(Hulpleerling hulpleerling);
         Task<Hulpleerling> Update(long? id, Hulpleerling hulpleerling);

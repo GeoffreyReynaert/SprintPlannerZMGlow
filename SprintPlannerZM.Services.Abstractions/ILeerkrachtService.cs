@@ -12,6 +12,7 @@ namespace SprintPlannerZM.Services.Abstractions
     {
         Task<Leerkracht> Get(long id);
         Task<IList<Leerkracht>> Find();
+        Task<IList<Leerkracht>> FindOverzicht();
         Task<IQueryable<Leerkracht>> FindAsyncPagingQueryable();
         Task<Leerkracht> Create(Leerkracht leerkracht);
         Task<Leerkracht> Update(long id, Leerkracht leerkracht);

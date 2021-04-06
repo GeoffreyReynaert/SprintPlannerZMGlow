@@ -351,9 +351,11 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return PartialView("PartialComboToezichters", leerkracht);
         }
 
-        public IActionResult Overzichten()
+        public async Task<IActionResult> Overzichten()
         {
-            return View();
+            var hulpleerlingen = await _hulpleerlingService.simpleFind();
+
+            return View("Overzichten", hulpleerlingen);
         }
 
         public IActionResult AantalPerDul()
@@ -361,40 +363,215 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View();
         }
 
-        public IActionResult ToezichtPerLeerkracht()
+        [HttpPost]
+        public async Task<IActionResult> ToezichtPerLeerkracht()
         {
+            var listData = await _leerkrachtService.FindOverzicht();
+
+            //Create excel file.
+            var workbook = new XLWorkbook();
+            var workSheet = workbook.Worksheets.Add("Toezich Per Leerkracht");
+            var paginarow = 1;
+
+            //Test.
+            foreach (var leerkracht in listData)
+            {
+                var leerkrachnaam = leerkracht.voornaam + " " + leerkracht.achternaam;
+                var kluisnr = leerkracht.kluisNr;
+                foreach (var sprintlokaalreservaties in leerkracht.Sprintlokaalreservaties)
+                {
+                    var uur = sprintlokaalreservaties.tijd;
+                    var datum = sprintlokaalreservaties.datum;
+                    var lokaal = sprintlokaalreservaties.Lokaal.naamafkorting;
+
+                    //HulpleerlingId van leerlingverdeling waar sprintlokaalreservatie gelijk is aan sprintlokaalreservatieid van die leerkracht
+                    var reservatieData = await _sprintlokaalreservatieService.Get(sprintlokaalreservaties.sprintlokaalreservatieID);
+
+                    foreach (var leerlingenverdeling in reservatieData.Leerlingverdelingen)
+                    {
+                        var leerlingnaam = leerlingenverdeling.Hulpleerling.Leerling.voorNaam + " " +
+                                   leerlingenverdeling.Hulpleerling.Leerling.familieNaam;
+                        var proefwerk = leerlingenverdeling.Examenrooster.Vak.vaknaam;
+                        var vakleerkracht = leerlingenverdeling.Examenrooster.Vak.Leerkracht.voornaam + " " +
+                                            leerlingenverdeling.Examenrooster.Vak.Leerkracht.achternaam;
+                    }
+                }
+            }
+
             return View();
         }
 
-        public IActionResult ExamenPerLeerling()
+        [HttpPost]
+        public async Task<IActionResult> ExamenPerLeerling(long hulpleerlingId)
         {
-            //var data = await _leerlingService.Find();
 
-            //var workbook = new XLWorkbook();
-            //var workSheet = workbook.Worksheets.Add("Examen Per Leerling");
-            //var row = 1;
-            //workSheet.Cell("A" + row).Value = "Voornaam";
-            //workSheet.Cell("B" + row).Value = "Familienaam";
-            //workSheet.Cell("C" + row).Value = "Email";
-            //workSheet.Cell("D" + row).Value = "Sprint";
-            //workSheet.Cell("E" + row).Value = "Typer";
-            //workSheet.Cell("F" + row).Value = "Mklas";
-            //foreach (var leerling in data)
-            //{
-            //    row++;
-            //    workSheet.Cell("A" + row).Value = leerling.voorNaam;
-            //    workSheet.Cell("B" + row).Value = leerling.familieNaam;
-            //    workSheet.Cell("C" + row).Value = leerling.email;
-            //    workSheet.Cell("D" + row).Value = leerling.sprinter;
-            //    workSheet.Cell("E" + row).Value = leerling.typer;
-            //    workSheet.Cell("F" + row).Value = leerling.mklas;
-            //}
+            //Create excel file.
+            var workbook = new XLWorkbook();
+            var workSheet = workbook.Worksheets.Add("Examen Per Leerling");
+            var paginarow = 1;
 
-            //workbook.SaveAs("skibidipapap.xlsx");
+            if (hulpleerlingId == -1)
+            {
 
+                //Oproepen van data.
+                var listData = await _hulpleerlingService.FindOverzicht();
 
+                foreach (var hulpleerling in listData)
+                    if (hulpleerling.Leerlingverdelingen.Any())
+                    {
 
-            return View();
+                        //Declaratie en bijhouden van de rijen en examen.
+                        var row = paginarow;
+                        var beginRow = paginarow + 1;
+                        var endRow = paginarow + 25;
+                        var examenCount = 0;
+
+                        //Klas en naam van leerling
+                        workSheet.Cell($"A{row}").SetValue(hulpleerling.Klas.klasnaam);
+                        workSheet.Cell($"B{row}")
+                            .SetValue($"{hulpleerling.Leerling.voorNaam} {hulpleerling.Leerling.familieNaam}");
+                        workSheet.Range($"B{paginarow}", $"E{paginarow}").Merge();
+                        workSheet.Row(row).Style.Font.SetBold();
+                        workSheet.Row(row).Style.Font.SetUnderline();
+
+                        //Headers voor de tabel
+                        row++;
+                        workSheet.Cell($"A{row}").SetValue("Datum");
+                        workSheet.Cell($"B{row}").SetValue("Uur");
+                        workSheet.Cell($"C{row}").SetValue("Soort");
+                        workSheet.Cell($"D{row}").SetValue("Proefwerk");
+                        workSheet.Cell($"E{row}").SetValue("Lokaal");
+                        workSheet.Range($"A{beginRow}", $"E{beginRow}").Style.Border
+                            .SetBottomBorder(XLBorderStyleValues.Thick);
+                        foreach (var leerlingverdeling in hulpleerling.Leerlingverdelingen)
+                        {
+                            row++;
+                            workSheet.Cell($"A{row}").SetValue(leerlingverdeling.Examenrooster.datum.Date);
+                            workSheet.Cell($"B{row}").SetValue(leerlingverdeling.Examenrooster.tijd);
+                            workSheet.Cell($"C{row}").SetValue(leerlingverdeling.reservatietype);
+                            workSheet.Cell($"D{row}").SetValue(leerlingverdeling.Examenrooster.Vak.vaknaam);
+                            workSheet.Cell($"E{row}")
+                                .SetValue(leerlingverdeling.Sprintlokaalreservatie.Lokaal.naamafkorting);
+
+                            //Counter om te controleren hoeveel examens er zijn.
+                            examenCount += 1;
+                        }
+
+                        //Markup voor de cellen
+                        workSheet.Range($"A{beginRow}", $"A{endRow}").Style.Alignment
+                            .SetHorizontal(XLAlignmentHorizontalValues.Center).Alignment
+                            .SetVertical(XLAlignmentVerticalValues.Center);
+                        workSheet.Range($"B{beginRow}", $"B{endRow}").Style.Alignment
+                            .SetHorizontal(XLAlignmentHorizontalValues.Left).Alignment
+                            .SetVertical(XLAlignmentVerticalValues.Center);
+                        workSheet.Range($"C{beginRow}", $"C{endRow}").Style.Alignment
+                            .SetHorizontal(XLAlignmentHorizontalValues.Left).Alignment
+                            .SetVertical(XLAlignmentVerticalValues.Center);
+                        workSheet.Range($"D{beginRow}", $"D{endRow}").Style.Alignment
+                            .SetHorizontal(XLAlignmentHorizontalValues.Left).Alignment
+                            .SetVertical(XLAlignmentVerticalValues.Center);
+                        workSheet.Range($"E{beginRow}", $"E{endRow}").Style.Alignment
+                            .SetHorizontal(XLAlignmentHorizontalValues.Center).Alignment
+                            .SetVertical(XLAlignmentVerticalValues.Center);
+
+                        //Aantal examens controleren om eventueel extra bladen te voorzien.
+                        if (examenCount > 24)
+                        {
+                            paginarow += 26;
+                            examenCount -= 24;
+                            var aantal = examenCount / 26;
+                            for (var i = 0; i < aantal; i++) paginarow += 26;
+                        }
+
+                        paginarow += 26;
+                    }
+
+                //Max width = 110 voor 1 pagina
+                workSheet.Columns("A").Width = 25;
+                workSheet.Columns("B").Width = 15;
+                workSheet.Columns("C").Width = 20;
+                workSheet.Columns("D").Width = 40;
+                workSheet.Columns("E").Width = 10;
+                workSheet.Rows().Height = 20;
+
+                //Orientation
+                workSheet.PageSetup.PageOrientation = XLPageOrientation.Landscape;
+
+                //Save file
+                workbook.SaveAs("ExamenPerLeerling.xlsx");
+            }
+            else
+            {
+
+                //Oproepen van data.
+                var singleData = await _hulpleerlingService.GetOverzicht(hulpleerlingId);
+
+                //Declaratie en bijhouden van de rijen.
+                var row = paginarow;
+                var beginRow = paginarow + 1;
+                var endRow = paginarow + 25;
+
+                //Klas en naam van leerling
+                workSheet.Cell($"A{row}").SetValue(singleData.Klas.klasnaam);
+                workSheet.Cell($"B{row}")
+                    .SetValue($"{singleData.Leerling.voorNaam} {singleData.Leerling.familieNaam}");
+                workSheet.Range($"B{paginarow}", $"E{paginarow}").Merge();
+                workSheet.Row(row).Style.Font.SetBold();
+                workSheet.Row(row).Style.Font.SetUnderline();
+
+                //Headers voor de tabel
+                row++;
+                workSheet.Cell($"A{row}").SetValue("Datum");
+                workSheet.Cell($"B{row}").SetValue("Uur");
+                workSheet.Cell($"C{row}").SetValue("Soort");
+                workSheet.Cell($"D{row}").SetValue("Proefwerk");
+                workSheet.Cell($"E{row}").SetValue("Lokaal");
+                workSheet.Range($"A{beginRow}", $"E{beginRow}").Style.Border
+                    .SetBottomBorder(XLBorderStyleValues.Thick);
+                foreach (var leerlingverdeling in singleData.Leerlingverdelingen)
+                {
+                    row++;
+                    workSheet.Cell($"A{row}").SetValue(leerlingverdeling.Examenrooster.datum.Date);
+                    workSheet.Cell($"B{row}").SetValue(leerlingverdeling.Examenrooster.tijd);
+                    workSheet.Cell($"C{row}").SetValue(leerlingverdeling.reservatietype);
+                    workSheet.Cell($"D{row}").SetValue(leerlingverdeling.Examenrooster.Vak.vaknaam);
+                    workSheet.Cell($"E{row}")
+                        .SetValue(leerlingverdeling.Sprintlokaalreservatie.Lokaal.naamafkorting);
+                }
+
+                //Markup voor de cellen
+                workSheet.Range($"A{beginRow}", $"A{endRow}").Style.Alignment
+                    .SetHorizontal(XLAlignmentHorizontalValues.Center).Alignment
+                    .SetVertical(XLAlignmentVerticalValues.Center);
+                workSheet.Range($"B{beginRow}", $"B{endRow}").Style.Alignment
+                    .SetHorizontal(XLAlignmentHorizontalValues.Left).Alignment
+                    .SetVertical(XLAlignmentVerticalValues.Center);
+                workSheet.Range($"C{beginRow}", $"C{endRow}").Style.Alignment
+                    .SetHorizontal(XLAlignmentHorizontalValues.Left).Alignment
+                    .SetVertical(XLAlignmentVerticalValues.Center);
+                workSheet.Range($"D{beginRow}", $"D{endRow}").Style.Alignment
+                    .SetHorizontal(XLAlignmentHorizontalValues.Left).Alignment
+                    .SetVertical(XLAlignmentVerticalValues.Center);
+                workSheet.Range($"E{beginRow}", $"E{endRow}").Style.Alignment
+                    .SetHorizontal(XLAlignmentHorizontalValues.Center).Alignment
+                    .SetVertical(XLAlignmentVerticalValues.Center);
+
+                //Max width = 110 voor 1 pagina
+                workSheet.Columns("A").Width = 25;
+                workSheet.Columns("B").Width = 15;
+                workSheet.Columns("C").Width = 20;
+                workSheet.Columns("D").Width = 40;
+                workSheet.Columns("E").Width = 10;
+                workSheet.Rows().Height = 20;
+
+                //Orientation
+                workSheet.PageSetup.PageOrientation = XLPageOrientation.Landscape;
+
+                //Save file
+                workbook.SaveAs("ExamenVoorLeerling.xlsx");
+            }
+
+            return RedirectToAction();
         }
 
         public bool ExistsAsHulpLeerling(long id)
