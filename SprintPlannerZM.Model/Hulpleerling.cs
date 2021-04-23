@@ -14,9 +14,9 @@ namespace SprintPlannerZM.Model
       
         public long hulpleerlingID { get; set; }
         public int klasID { get; set; }
-        public long leerlingID { get; set; }
-        public Klas Klas { get; set; }
+        public long leerlingID { get; set; } 
         public Leerling Leerling { get; set; }
+        public Klas Klas { get; set; }
         public IList<Sprintvakkeuze> Sprintvakkeuzes { get; set; }
         public IList<Leerlingverdeling> Leerlingverdelingen { get; set; }
     }

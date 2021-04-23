@@ -20,11 +20,11 @@
                     <br />
                     @if (@Model.sprintToezichter == false)
                     {
-                        <span>Toezichter : nee</span>
+                        <span>Sprint Toezichter : nee</span>
                     }
                     else
                     {
-                        <span>Toezichter : ja</span>
+                        <span>Sprint Toezichter : ja</span>
                     }
 
                 </div>
@@ -46,7 +46,7 @@
                 <div class="pt-2">
                     @foreach (var vak in @Model.Vakken)
                     {
-                        <span> vak @vak.vaknaam voor klas(id) @vak.klasID </span>
+                        <span> vak @vak.vaknaam voor klas @vak.klas.klasnaam </span>
                         <br />
                     }
                     <br />

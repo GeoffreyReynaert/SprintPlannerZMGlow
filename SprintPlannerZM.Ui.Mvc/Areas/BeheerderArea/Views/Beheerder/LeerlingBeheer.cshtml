@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "LeerlingBeheer";
 }
-
+<div class="left-allignToNav">
 <h2 class="pt-3">Leerlingen Beheer</h2>
 
 <form asp-action="LeerlingBeheer" method="get">
@@ -22,7 +22,6 @@
             <input type="text" name="Search2String" value="@ViewData["klasFilter"]" placeholder="klasnaam" />
             <input type="submit" value="Zoek" class="btn btn-secondary" /> |
             <a asp-action="LeerlingBeheer">Complete lijst</a> |
-            <a asp-action="">Maak nieuwe Leerling</a>
         </p>
     </div>
 </form>
@@ -86,3 +85,4 @@
     Next
 </a>
 <div class=" left-allignToNav  pb-5 mb-5"></div>
+</div>

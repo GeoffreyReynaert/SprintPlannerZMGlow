@@ -4,89 +4,89 @@
 @{
     ViewData["Title"] = "LeerkrachtBeheer";
 }
+<div class="left-allignToNav">
+    <h2 class="pt-3">Leerkrachten Beheer</h2>
 
-<h2 class="pt-3">Leerkrachten Beheer</h2>
+    <form asp-action="LeerkrachtBeheer" method="get">
+        <div class="form-actions no-color">
+            <p>
+                <input type="text" name="SearchString" value="@ViewData["nameFilter"]" placeholder="Familienaam of voornaam" />
+                <input type="submit" value="Zoek" class="btn btn-secondary" /> |
+                <a asp-action="LeerkrachtBeheer">Complete lijst</a> |
+            </p>
+        </div>
+    </form>
 
-<form asp-action="LeerkrachtBeheer" method="get">
-    <div class="form-actions no-color">
-        <p>
-            <input type="text" name="SearchString" value="@ViewData["nameFilter"]"placeholder="Familienaam of voornaam" />
-            <input type="submit" value="Zoek" class="btn btn-secondary"  /> |
-            <a asp-action="LeerkrachtBeheer">Complete lijst</a> |
-            <a asp-action="">Maak nieuwe Leerkracht</a>
-        </p>
-    </div>
-</form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    stamboekNr
+                </th>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                stamboekNr
-            </th>
-            
-            <th>
-                kluis Nummer
-            </th>
-            <th>
-                <a asp-action="LeerkrachtBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Familienaam</a>
-            </th>
-            <th>
-                Voornaam
-            </th>
-            <th>
-                <a asp-action="LeerkrachtBeheer" asp-route-sortOrder="@ViewData["aantal"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">aantal vakken</a>
-            </th>
-            <th>
-                acties
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.leerkrachtID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.kluisNr)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.achternaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.voornaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vakken.Count)
-            </td>
-            <td>
-                <a asp-action="LeerkrachtEdit" asp-route-id="@item.leerkrachtID">Edit</a> |
-                <a asp-action="LeerkrachtDetails" asp-route-id="@item.leerkrachtID">Details</a> |
-            </td>
-        </tr>
+                <th>
+                    kluis Nummer
+                </th>
+                <th>
+                    <a asp-action="LeerkrachtBeheer" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Familienaam</a>
+                </th>
+                <th>
+                    Voornaam
+                </th>
+                <th>
+                    <a asp-action="LeerkrachtBeheer" asp-route-sortOrder="@ViewData["aantal"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">aantal vakken</a>
+                </th>
+                <th>
+                    acties
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.leerkrachtID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.kluisNr)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.achternaam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.voornaam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Vakken.Count)
+                    </td>
+                    <td>
+                        <a asp-action="LeerkrachtEdit" asp-route-id="@item.leerkrachtID">Edit</a> |
+                        <a asp-action="LeerkrachtDetails" asp-route-id="@item.leerkrachtID">Details</a> |
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div></div>
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
     }
-    </tbody>
-</table>
-<div></div>
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
 
-<a asp-action="LeerkrachtBeheer"
-   asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex - 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-primary @prevDisabled">
-    Previous
-</a>
-<a asp-action="LeerkrachtBeheer"
-   asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex + 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-primary @nextDisabled">
-    Next
-</a>
-<div class=" left-allignToNav  pb-5 mb-5"></div>
+    <a asp-action="LeerkrachtBeheer"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-primary @prevDisabled">
+        Previous
+    </a>
+    <a asp-action="LeerkrachtBeheer"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-primary @nextDisabled">
+        Next
+    </a>
+    <div class=" left-allignToNav  pb-5 mb-5"></div>
+</div>

@@ -54,13 +54,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         }
         public IActionResult sendMail()
         {
-            //sendMsgAsync(string accesscode, string userIdentifier, string title, string body, string senderIdentifier, object attachments, int coaccount, bool copyToLVS);
+            MailCreator("geoffrey.reynaert", "Test mail",
+                "<p> Met deze methode testen we het versturen van mails via Soap api Smartschool </p>" +
+                "<p> hier testen we de P </p>" + "<div> met vriendelijke groeten (div)</div>" +
+                "<b>De programmeurs van TIHF (bold) </b>", "geoffrey.reynaert");
 
-            var SoapSSApi = SoapConnection();
-            SoapSSApi.sendMsgAsync(_appSettings.SsApiPassword, "joram.laureyns", "Test mail",
-                "<p> Met deze methode testen we het versturen van mails via Soap api Smartschool </p>"+
-                "<p> hier testen we de P </p>" + "<div> met vriendelijke groeten (div)</div>" + "<b>De programmeurs van TIHF (bold) </b>",
-                "geoffrey.reynaert", null, 0, false);
+
             return View("Index");
         }
 
@@ -74,12 +73,13 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
           !               Titularissen en klassen                 ! 
           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Connectie met Soap Api
           !        klassen, Studenten, leerkrachten, vakken       !
-          !           en de relatie die deze verbind              !  Berichten weergave via partial en ajax call
+          !           en de relatie die deze verbind              ! 
           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
         [HttpGet]
         public async Task<IActionResult> ImportKlasTitularisEnKlas()
         {
+
             var index = 1;
             IList<TitularisEnKlasSoap> titularisenMetKlas = new List<TitularisEnKlasSoap>();
             IList<string> geschrevenResults = new List<string>();
@@ -908,6 +908,21 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             return RedirectToAction("LokaalBeheer");
         }
 
+        
+        [HttpGet]
+        public IActionResult ToevoegenLokaal()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToevoegenLokaal(Lokaal lokaal)
+        {
+            await _lokaalService.CreateAsync(lokaal);
+            return RedirectToAction("lokaalBeheer");
+        }
+
+
 
 
         /*!!!!!!!!!!!!         Extra functies           !!!!!!!!!!!
@@ -951,6 +966,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
             return klasMetTitul;
         }
 
+        public void MailCreator(string userIdentifier, string mailTitle, string mailBody, string senderIdentifier)
+        {
+            var SoapSSApi = SoapConnection();
+            SoapSSApi.sendMsgAsync(_appSettings.SsApiPassword, userIdentifier, mailTitle,
+                mailBody,
+                senderIdentifier, null, 0, false);
+
+        }
 
     }
 

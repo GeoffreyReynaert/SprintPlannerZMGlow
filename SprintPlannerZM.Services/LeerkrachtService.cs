@@ -21,14 +21,9 @@ namespace SprintPlannerZM.Services
         {
             var leerkracht = await _database.Leerkracht
                 .Where(l => l.leerkrachtID == id)
-                .Include(l=>l.Klassen)
                 .Include(l => l.Vakken)
-
-
+                .ThenInclude(v=>v.klas)
                 .SingleOrDefaultAsync();
-            //leerkracht.Klassen = await _database.Klas.Where(k => k.titularisID == leerkracht.leerkrachtID).ToListAsync();
-            //leerkracht.Vakken = await _database.Vak.Where(v => v.leerkrachtID == leerkracht.leerkrachtID).ToListAsync();
-            //leerkracht.Sprintlokalen = await _database.Sprintlokaal.Where(s => s.leerkrachtID == leerkracht.leerkrachtID).ToListAsync();
             return leerkracht;
         }
 

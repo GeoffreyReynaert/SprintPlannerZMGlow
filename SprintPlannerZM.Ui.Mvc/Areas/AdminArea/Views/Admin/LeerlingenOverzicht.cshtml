@@ -46,7 +46,7 @@
 }
 
 <form asp-action="LeerlingenOverzicht" method="get">
-    <div>
+    <div class="pt-2">
         <p>
             Find by name: <input type="text" name="nameString" value="@ViewData["NameFilter"]" />
             <input type="submit" value="Search" class="btn btn-primary mt-md-n2" />
@@ -57,7 +57,7 @@
 <form asp-action="LeerlingenOverzicht" method="get">
     <div>
         <p>
-            Find by klas: <input type="text" name="klasString" value="@ViewData["KlasFilter"]" />
+            Find by klas:  <input type="text" name="klasString" value="@ViewData["KlasFilter"]" />
             <input type="submit" value="Search" class="btn btn-primary mt-md-n2" />
             <a asp-action="LeerlingenOverzicht">Back to Full List</a>
         </p>
