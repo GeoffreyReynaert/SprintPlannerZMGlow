@@ -10,56 +10,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true" />
 </head>
-@*<br/>
-        <div class="pt-3" id="partialViewLeerling">
-            <div class="containerDropdowns left-allignToNav">
-                <form>
-                    <select class="form-control select2 textBoxLayout" id="cmbKlassen">
-                        <option id="klasIndex">---Kies ne klas---</option>
-                        @foreach (var klas in Model){
-                            if (klas.klasnaam != "0")
-                            {
-                                <option value="@klas.klasID">@klas.klasnaam</option>
-                                }
-                            }
-                            </select>
-                </form>
-                <form>
-                    <select class="form-control select2 textBoxLayout" id="cmbLeerlingen">
-                        <option id="leerlingIndex">---Kies ne leerling---</option>
-                        @foreach (var klas in Model)
-                        {
-                            @foreach (var leerling in klas.Leerlingen)
-                            {
-                                <option value="@leerling.leerlingID">@leerling.familieNaam @leerling.voorNaam</option>
-                            }
-                        }
-                    </select>
-                </form>
-            </div>
-        </div>
-
-    <div id="partialView"></div>*@
 
 @{
     var count = 0;
 }
 
 <form asp-action="LeerlingenOverzicht" method="get">
-    <div class="pt-2">
+    <div class="left-allignToNav pt-3">
         <p>
-            Find by name: <input type="text" name="nameString" value="@ViewData["NameFilter"]" />
-            <input type="submit" value="Search" class="btn btn-primary mt-md-n2" />
-            <a asp-action="LeerlingenOverzicht">Back to Full List</a>
+            <input type="text" name="nameString" value="@ViewData["NameFilter"]" placeholder="Zoek op naam" />
+            <input type="submit" value="Zoek" class="btn btn-primary mt-md-n2"  />
         </p>
     </div>
 </form>
 <form asp-action="LeerlingenOverzicht" method="get">
-    <div>
+    <div class="left-allignToNav">
         <p>
-            Find by klas:  <input type="text" name="klasString" value="@ViewData["KlasFilter"]" />
-            <input type="submit" value="Search" class="btn btn-primary mt-md-n2" />
-            <a asp-action="LeerlingenOverzicht">Back to Full List</a>
+            <input type="text" name="klasString" value="@ViewData["KlasFilter"]" placeholder="Zoek op klas" />
+            <input type="submit" value="Zoek" class="btn btn-primary mt-md-n2" />
+            <a asp-action="LeerlingenOverzicht" class="text-white btn btn-primary mt-md-n2">Toon Volledige lijst</a>
         </p>
     </div>
 </form>
@@ -71,8 +40,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["VoornaamSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Voornaam</a></th>
-                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["FamilienaamSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Familienaam</a></th>
+                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["FamilienaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Familienaam</a></th>
+                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["VoornaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Voornaam</a></th>
+                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["KlasnaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Klas</a></th>
                             <th class="h6">Sprint</th>
                             <th class="h6">Typer</th>
                             <th class="h6">Mklas</th>
@@ -94,8 +64,10 @@
                                 <input asp-for="@Model[i].KlasID" type="hidden" />
                                 <input asp-for="@Model[i].hulpleerlingID" type="hidden" />
                                 <input asp-for="@Model[i].KlasID" type="hidden" />
-                                <td>@Html.DisplayFor(model => Model[i].voorNaam)</td>
-                                <td>@Html.DisplayFor(model => Model[i].familieNaam)</td>
+                                <td class="text-left">@Html.DisplayFor(model => Model[i].familieNaam)</td>
+                                <td class="text-left p-lg-2">@Html.DisplayFor(model => Model[i].voorNaam)</td>
+                                <td>@Html.DisplayFor(model => Model[i].Klas.klasnaam)</td>
+
                                 <td>
                                     <input asp-for="@Model[i].sprinter" type="checkbox" class="form-control" />
                                 </td>
@@ -114,7 +86,7 @@
                                 else
                                 {
                                     <td>
-                                        <a>Geen hulpleerling</a>
+                                        <a></a>
                                     </td>
                                 }
                             </tr>
@@ -147,7 +119,7 @@
    class="btn btn-primary mt-md-n2 @nextDisabled">
     Next
 </a>
-<script>
+@*<script>
     $('.select2').select2();
     $(document).ready(function () {
         $("#partialView").load("PartialAlleLeerlingen");
@@ -166,4 +138,4 @@
             $("#partialView").load("PartialAlleLeerlingen");
         }
     });
-</script>
+</script>*@

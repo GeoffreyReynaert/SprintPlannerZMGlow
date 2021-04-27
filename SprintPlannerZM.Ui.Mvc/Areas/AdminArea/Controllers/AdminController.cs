@@ -56,14 +56,25 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             return View("Index");
         }
-
-        /* PAGING*/
+        /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+           !                                                       !
+           !           leerlingenOverzicht      by Geoff           !
+           !        Werkend met paging en viewdata om de           !
+           !              sortering mogelijk te maken              !
+           !                                                       !
+           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
         public async Task<IActionResult> LeerlingenOverzicht(string sortOrder, string currentFilter, string nameString,
             string klasString, int? pageNumber)
         {
+
+            //Sortering uit viewbag om zo de klassering via naam familienaam of klasnaam mogelijk te maken 
+
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["FamilienaamSortParm"] = string.IsNullOrEmpty(sortOrder) ? "familienaam_asc" : "familienaam_desc";
-            ViewData["VoornaamSortParm"] = sortOrder == "voornaam_desc" ? "voornaam_desc" : "";
+            ViewData["FamilienaamSortParam"] = string.IsNullOrEmpty(sortOrder) ? "familienaam_desc" : "";
+            ViewData["VoornaamSortParam"] = sortOrder == "voornaam" ? "voornaam_desc" : "voornaam";
+            ViewData["KlasnaamSortParam"] = sortOrder == "klas" ? "klas_desc" : "klas";
+
+            //Viewdata om te filteren op naam of klas volgens de ingave
 
             if (nameString != null)
             {
@@ -100,15 +111,33 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                 leerlingen = leerlingen.Where(k => k.Klas.klasnaam.ToLower().Contains(klasString.ToLower()));
             }
 
-            leerlingen = sortOrder switch
+
+            // Sortering uit viewbag om zo te kalsseren volgens wat gevraagd word
+
+            switch (sortOrder)
             {
-                "klasnaam_desc" => leerlingen.OrderByDescending(l => l.Klas.klasnaam),
-                "voornaam_desc" => leerlingen.OrderBy(l => l.voorNaam),
-                "familienaam_asc" => leerlingen.OrderBy(l => l.familieNaam),
-                "familienaam_desc" => leerlingen.OrderByDescending(l => l.familieNaam),
-                _ => leerlingen.OrderBy(l => l.voorNaam)
-            };
+                case "familienaam_desc":
+                    leerlingen = leerlingen.OrderByDescending(s => s.familieNaam);
+                    break;
+                case "klas":
+                    leerlingen = leerlingen.OrderBy(s => s.Klas.klasnaam);
+                    break;
+                case "klas_desc":
+                    leerlingen = leerlingen.OrderByDescending(s => s.Klas.klasnaam);
+                    break;
+                case "voornaam":
+                    leerlingen = leerlingen.OrderBy(s => s.voorNaam);
+                    break;
+                case "voornaam_desc":
+                    leerlingen = leerlingen.OrderByDescending(s => s.voorNaam);
+                    break;
+                default:
+                    leerlingen = leerlingen.OrderBy(s => s.familieNaam);
+                    break;
+            }
+
             return View(await PaginatedList<Leerling>.CreateAsync(leerlingen.AsQueryable(), pageNumber ?? 1, 12));
+
         }
 
         public async Task<IActionResult> LeerlingUpdate(Leerling[] model)
@@ -419,7 +448,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             foreach (var examenPerUur in examsUurList)
             {
-                foreach (var hulpleerling in hulpLeerlingen) 
+                foreach (var hulpleerling in hulpLeerlingen)
                 {
                     foreach (var sprintVakKeuzeExamen in hulpleerling.Sprintvakkeuzes)
                     {
@@ -737,22 +766,22 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             var biepDBLokaal = await _lokaalService.GetByNameAsync("biep!");
 
-            if (aantalExams< biepDBLokaal.capaciteit && aantalExams > 0 && lokaalreservaties.Count>0)
+            if (aantalExams < biepDBLokaal.capaciteit && aantalExams > 0 && lokaalreservaties.Count > 0)
             {
                 var BiepRes = new Sprintlokaalreservatie()
                 {
-                   datum = lokaalreservaties[0].datum,
-                   lokaalID = biepDBLokaal.lokaalID,
-                   reservatietype = "Mixed",
-                   tijd = lokaalreservaties[0].tijd,
-                   examenID = lokaalreservaties[0].examenID
+                    datum = lokaalreservaties[0].datum,
+                    lokaalID = biepDBLokaal.lokaalID,
+                    reservatietype = "Mixed",
+                    tijd = lokaalreservaties[0].tijd,
+                    examenID = lokaalreservaties[0].examenID
 
                 };
                 BiepRes = await _sprintlokaalreservatieService.Create(BiepRes);
                 foreach (var leerlingverdeling in leerlingverdelingen)
                 {
-                    leerlingverdeling.sprintlokaalreservatieID= BiepRes.sprintlokaalreservatieID;
-                    await _leerlingverdelingService.Update(leerlingverdeling.leerlingverdelingID,leerlingverdeling);
+                    leerlingverdeling.sprintlokaalreservatieID = BiepRes.sprintlokaalreservatieID;
+                    await _leerlingverdelingService.Update(leerlingverdeling.leerlingverdelingID, leerlingverdeling);
                 }
                 foreach (var lokaalres in lokaalreservaties)
                 {

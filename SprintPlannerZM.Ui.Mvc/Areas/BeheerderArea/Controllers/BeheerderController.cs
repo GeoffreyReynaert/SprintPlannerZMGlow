@@ -6,7 +6,6 @@ using SprintPlannerZM.Services.Abstractions;
 using SprintPlannerZM.Ui.Mvc.Settings;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
