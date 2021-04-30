@@ -1,4 +1,5 @@
-﻿using SprintPlannerZM.Model;
+﻿using System;
+using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
@@ -31,6 +32,23 @@ namespace SprintPlannerZM.Services
                 .SingleOrDefaultAsync();
         }
 
+        public async Task<List<Sprintlokaalreservatie>> GetTime(DateTime datum)
+        {
+            return await _database.Sprintlokaalreservatie
+                .Where(d => d.datum.Date == datum.Date)
+                .ToListAsync();
+        }
+
+        public async Task<List<DateTime>> FindDistinctDatums()
+        {
+            var datums = await _database.Sprintlokaalreservatie
+                .Select(e => e.datum.Date)
+                .Distinct()
+                .OrderBy(e => e.Date)
+                .ToListAsync();
+            return datums;
+        }
+
         public async Task<IList<Sprintlokaalreservatie>> Find()
         {
             return await _database.Sprintlokaalreservatie
@@ -39,10 +57,27 @@ namespace SprintPlannerZM.Services
                 .Include(l=>l.Leerlingverdelingen)
                 .Include(l=>l.Examen)
                 .ThenInclude(e=>e.Vak)
-                .ThenInclude(k=>k.klas)
+                .ThenInclude(l=>l.Leerkracht)
+                .Include(l => l.Examen)
+                .ThenInclude(e => e.Vak)
+                .ThenInclude(k => k.klas)
                 .ToListAsync();
         }
 
+        public async Task<IList<Sprintlokaalreservatie>> FindDul()
+        {
+            return await _database.Sprintlokaalreservatie
+                .Include(l => l.Lokaal)
+                .Include(l => l.Leerkracht)
+                .Include(l => l.Leerlingverdelingen)
+                .Include(l => l.Examen)
+                .ThenInclude(e => e.Vak)
+                .ThenInclude(l => l.Leerkracht)
+                .Include(l => l.Examen)
+                .ThenInclude(e => e.Vak)
+                .ThenInclude(k => k.klas)
+                .ToListAsync();
+        }
 
         public async Task<IList<Sprintlokaalreservatie>> FindAantalBySprintreservatieIdAndType(int reservatieID, string type)
         {
