@@ -494,7 +494,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             //Max width = 130 voor 1 pagina
             workSheet.Columns("A").Width = 15;
-            workSheet.Columns("B").Width = 15;
+            workSheet.Columns("B").Width = 10;
             workSheet.Columns("C").Width = 20;
             workSheet.Columns("D").Width = 30;
             workSheet.Columns("E").Width = 30;
@@ -556,8 +556,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
                                                            sprintlokaalreservaties.datum.Date.Year);
                         workSheet.Cell($"D{row}").SetValue(sprintlokaalreservaties.datum.Hour + "u" +
                                                            sprintlokaalreservaties.datum.Minute);
-
-                        var lokaal = sprintlokaalreservaties.Lokaal.naamafkorting;
 
                         //HulpleerlingId van leerlingverdeling waar sprintlokaalreservatie gelijk is aan sprintlokaalreservatieid van die leerkracht
                         var reservatieData =

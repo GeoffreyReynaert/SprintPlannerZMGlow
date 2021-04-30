@@ -21,14 +21,14 @@ namespace SprintPlannerZM.Services
         {
             return await _database.Sprintlokaalreservatie
                 .Where(s => s.sprintlokaalreservatieID == id)
+                .Include(l => l.Examen)
+                .ThenInclude(e => e.Vak)
                 .Include(l => l.Lokaal)
                 .Include(l => l.Leerkracht)
                 .Include(l => l.Leerlingverdelingen)
                 .ThenInclude(i=>i.Hulpleerling)
                 .ThenInclude(l=>l.Leerling)
                 .ThenInclude(l=>l.Klas)
-                .Include(l=>l.Examen)
-                .ThenInclude(e=>e.Vak)
                 .SingleOrDefaultAsync();
         }
 
