@@ -57,9 +57,11 @@ namespace SprintPlannerZM.Services
             //Objecten aanmaken om lijst van examenroosters weer te geven en geen lijst van datetimes
             foreach (var String in examenRoosters)
             {
+                var leerlingen = await _database.Leerlingverdeling.Where(e => e.Examenrooster.datum.Date.Equals(String.Date)).ToListAsync();
                 var rooster = new Examenrooster()
                 {
-                    datum = String
+                    datum = String,
+                    Leerlingverdelingen = leerlingen
                 };
                 examens.Add(rooster);
             }

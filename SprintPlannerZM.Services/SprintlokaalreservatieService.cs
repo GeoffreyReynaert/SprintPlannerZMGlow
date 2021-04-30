@@ -79,6 +79,18 @@ namespace SprintPlannerZM.Services
                 .ToListAsync();
         }
 
+        public async Task<IList<Sprintlokaalreservatie>> FindByDate(DateTime date)
+        {
+            return await _database.Sprintlokaalreservatie
+                .Where(s => s.datum.Date.Equals(date.Date))
+                .Include(l => l.Lokaal)
+                .Include(l => l.Leerkracht)
+                .Include(l => l.Leerlingverdelingen)
+                .Include(l => l.Examen)
+                .ThenInclude(e => e.Vak)
+                .ThenInclude(k => k.klas)
+                .ToListAsync();
+        }
         public async Task<IList<Sprintlokaalreservatie>> FindAantalBySprintreservatieIdAndType(int reservatieID, string type)
         {
             return await _database.Sprintlokaalreservatie
@@ -126,6 +138,20 @@ namespace SprintPlannerZM.Services
                 }
                 _database.Sprintlokaalreservatie.Remove(dbSprintlokaalreservatie);
                 await _database.SaveChangesAsync();
+                return true;
+            }
+        }
+        public async Task<bool> DeleteAllFromDate(DateTime date)
+        {
+            {
+                var dbSprintlokaalreservatie = await FindByDate(date);
+
+                foreach (var reservatie in dbSprintlokaalreservatie)
+                {
+                    _database.Sprintlokaalreservatie.Remove(reservatie);
+                    await _database.SaveChangesAsync();
+                }
+              
                 return true;
             }
         }

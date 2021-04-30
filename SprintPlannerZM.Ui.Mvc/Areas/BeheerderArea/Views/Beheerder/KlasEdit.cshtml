@@ -1,24 +1,25 @@
 ﻿@model SprintPlannerZM.Model.Klas
-
-<div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
-    <div class="card-header">
-        @Model.klasnaam  @Model.klasID
-    </div>
-</div>
-
-<form method="post">
-    <div class="mngmnt-background-div p-3">
-        <input type="hidden" asp-for="@Model.klasID" />
-        <div class="form-group">
-            <label asp-for="@Model.klasnaam">Klas naam</label>
-            <input asp-for="@Model.klasnaam" class="form-control" />
-            <span asp-validation-for="@Model.klasnaam"></span>
+    <div class="left-allignToNav">
+        <div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
+            <div class="card-header">
+                @Model.klasnaam  @Model.klasID
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="@Model.titularisID">titularis ID</label>
-            <input asp-for="@Model.titularisID" class="form-control" />
-            <span asp-validation-for="@Model.titularisID"></span>
+
+    <form method="post">
+        <div class="mngmnt-background-div p-3">
+            <input type="hidden" asp-for="@Model.klasID" />
+            <div class="form-group">
+                <label asp-for="@Model.klasnaam">Klas naam</label>
+                <input asp-for="@Model.klasnaam" class="form-control" />
+                <span asp-validation-for="@Model.klasnaam"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.titularisID">titularis ID</label>
+                <input asp-for="@Model.titularisID" class="form-control" />
+                <span asp-validation-for="@Model.titularisID"></span>
+            </div>
         </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>

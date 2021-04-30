@@ -1,37 +1,38 @@
 ﻿@model SprintPlannerZM.Model.Lokaal
+    <div class="left-allignToNav">
+        <div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
+            <div class="card-header">
+                @Model.lokaalnaam @Model.naamafkorting
+            </div>
+        </div>
 
-<div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
-    <div class="card-header">
-        @Model.lokaalnaam @Model.naamafkorting
+        <form method="post">
+            <div class="mngmnt-background-div p-3">
+                <input type="hidden" asp-for="@Model.lokaalID" />
+                <div class="form-group">
+                    <label asp-for="@Model.lokaalnaam">Lokaal naam</label>
+                    <input asp-for="@Model.lokaalnaam" class="form-control" />
+                    <span asp-validation-for="@Model.lokaalnaam"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.naamafkorting">naam afkorting</label>
+                    <input asp-for="@Model.naamafkorting" class="form-control" />
+                    <span asp-validation-for="@Model.naamafkorting"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.sprintlokaal">Sprintlokaal</label>
+                    <input type="checkbox" asp-for="@Model.sprintlokaal" class="form-control" />
+                    <span asp-validation-for="@Model.sprintlokaal"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.capaciteit">Capaciteit</label>
+                    <input asp-for="@Model.capaciteit" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.lokaaltype">type sprintlokaal(m-klas, sprint, typer)</label>
+                    <input asp-for="@Model.lokaaltype" class="form-control" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
     </div>
-</div>
-
-<form method="post">
-    <div class="mngmnt-background-div p-3">
-        <input type="hidden" asp-for="@Model.lokaalID" />
-        <div class="form-group">
-            <label asp-for="@Model.lokaalnaam">Lokaal naam</label>
-            <input asp-for="@Model.lokaalnaam" class="form-control" />
-            <span asp-validation-for="@Model.lokaalnaam"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.naamafkorting">naam afkorting</label>
-            <input asp-for="@Model.naamafkorting" class="form-control" />
-            <span asp-validation-for="@Model.naamafkorting"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.sprintlokaal">Sprintlokaal</label>
-            <input type="checkbox" asp-for="@Model.sprintlokaal" class="form-control" />
-            <span asp-validation-for="@Model.sprintlokaal"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.capaciteit">Capaciteit</label>
-            <input asp-for="@Model.capaciteit" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.lokaaltype">type sprintlokaal(m-klas, sprint, typer)</label>
-            <input asp-for="@Model.lokaaltype" class="form-control" />
-        </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>

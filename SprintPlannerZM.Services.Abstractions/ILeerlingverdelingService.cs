@@ -1,4 +1,5 @@
-﻿using SprintPlannerZM.Model;
+﻿using System;
+using SprintPlannerZM.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,6 @@ namespace SprintPlannerZM.Services.Abstractions
         Task<Leerlingverdeling> Create(Leerlingverdeling leerlingverdeling);
         Task<Leerlingverdeling> Update(int id, Leerlingverdeling leerlingverdeling);
         Task<bool> Delete(int id);
+        Task<bool> DeleteAllFromDate(DateTime date);
     }
 }

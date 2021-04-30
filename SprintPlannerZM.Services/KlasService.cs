@@ -71,6 +71,7 @@ namespace SprintPlannerZM.Services
             var klassen = _database.Klas
                 .Include(k => k.Leerkracht)
                 .Include(k => k.Leerlingen)
+                .Include(k=>k.Hulpleerlingen)
                 .Include(k => k.Vakken)
                 .AsQueryable();
 

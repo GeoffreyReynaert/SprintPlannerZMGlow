@@ -19,20 +19,19 @@
 }
 
 <form asp-action="LeerlingenOverzicht" method="get">
-    <div>
+    <div class="left-allignToNav pt-3">
         <p>
-            Find by name: <input type="text" name="nameString" value="@ViewData["NameFilter"]"/>
-            <input type="submit" value="Search" class="btn btn-primary mt-md-n2"/>
-            <a asp-action="LeerlingenOverzicht">Back to Full List</a>
+            <input type="text" name="nameString" value="@ViewData["NameFilter"]" placeholder="Zoek op naam" />
+            <input type="submit" value="Zoek" class="btn btn-primary mt-md-n2"  />
         </p>
     </div>
 </form>
 <form asp-action="LeerlingenOverzicht" method="get">
-    <div>
+    <div class="left-allignToNav">
         <p>
-            Find by klas: <input type="text" name="klasString" value="@ViewData["KlasFilter"]"/>
-            <input type="submit" value="Search" class="btn btn-primary mt-md-n2"/>
-            <a asp-action="LeerlingenOverzicht">Back to Full List</a>
+            <input type="text" name="klasString" value="@ViewData["KlasFilter"]" placeholder="Zoek op klas" />
+            <input type="submit" value="Zoek" class="btn btn-primary mt-md-n2" />
+            <a asp-action="LeerlingenOverzicht" class="text-white btn btn-primary mt-md-n2">Toon Volledige lijst</a>
         </p>
     </div>
 </form>
@@ -40,38 +39,38 @@
 {
     <section class="left-allignToNav pt-3">
         <body>
-        <div class="tbl-header">
-            <table>
-                <thead>
-                <tr>
-                    <th class="h6">
-                        <a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["VoornaamSortParm"]" asp-route-klasString="@ViewData["KlasFilter"]" asp-route-nameString="@ViewData["NameFilter"]">Voornaam</a>
-                    </th>
-                    <th class="h6">
-                        <a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["FamilienaamSortParm"]" asp-route-klasString="@ViewData["KlasFilter"]" asp-route-nameString="@ViewData["NameFilter"]">Familienaam</a>
-                    </th>
-                    <th class="h6">Sprint</th>
-                    <th class="h6">Typer</th>
-                    <th class="h6">Mklas</th>
-                    <th class="h6">Vakken Sprintkeuze</th>
-                </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="tbl-content">
-            <div class="container">
-                <div class="">
-                    <table>
-                        @for (var i = 0; i < Model.Count; i++)
-                        {
+            <div class="tbl-header">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["FamilienaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Familienaam</a></th>
+                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["VoornaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Voornaam</a></th>
+                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["KlasnaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Klas</a></th>
+                            <th class="h6">Sprint</th>
+                            <th class="h6">Typer</th>
+                            <th class="h6">M-klas</th>
+                            <th class="h6">Vakken Sprintkeuze</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <div class="container">
+                    <div class="">
+                        <table>
+                            @for (var i = 0; i < @Model.Count; i++)
+                            {
+                                count++;
                             <tr class="trBordercolor">
-                                <input asp-for="@Model[i].leerlingID" type="hidden"/>
-                                <input asp-for="@Model[i].email" type="hidden"/>
-                                <input asp-for="@Model[i].KlasID" type="hidden"/>
-                                <input asp-for="@Model[i].hulpleerlingID" type="hidden"/>
-                                <input asp-for="@Model[i].KlasID" type="hidden"/>
-                                <td>@Html.DisplayFor(model => Model[i].voorNaam)</td>
-                                <td>@Html.DisplayFor(model => Model[i].familieNaam)</td>
+                                <input asp-for="@Model[i].leerlingID" type="hidden" />
+                                <input asp-for="@Model[i].email" type="hidden" />
+                                <input asp-for="@Model[i].KlasID" type="hidden" />
+                                <input asp-for="@Model[i].hulpleerlingID" type="hidden" />
+                                @*<input asp-for="@Model[i].KlasID" type="hidden" />*@
+                                <td class="text-left">@Html.DisplayFor(model => Model[i].familieNaam)</td>
+                                <td class="text-left p-lg-2">@Html.DisplayFor(model => Model[i].voorNaam)</td>
+                                <td>@Html.DisplayFor(model => Model[i].Klas.klasnaam)</td>
+
                                 <td>
                                     <input asp-for="@Model[i].sprinter" type="checkbox" class="form-control"/>
                                 </td>
@@ -84,13 +83,13 @@
                                 @if (Model[i].hulpleerlingID != null)
                                 {
                                     <td>
-                                        <a asp-action="LeerlingOverzicht" asp-route-hulpleerlingId="@Model[i].hulpleerlingID">Wijzig</a>
+                                        <a asp-action="LeerlingOverzicht" asp-route-hulpleerlingId="@Model[i].hulpleerlingID"><b class="text-white">Vakken kiezen</b></a>
                                     </td>
                                 }
                                 else
                                 {
                                     <td>
-                                        <a>Geen hulpleerling</a>
+                                        <a></a>
                                     </td>
                                 }
                             </tr>

@@ -1,45 +1,46 @@
 ﻿@model SprintPlannerZM.Model.Leerkracht
+    <div class="left-allignToNav">
+        <div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
+            <div class="card-header">
+                @Model.achternaam @Model.voornaam
+            </div>
+        </div>
 
-<div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
-    <div class="card-header">
-        @Model.achternaam @Model.voornaam
+    <form method="post">
+        <div class="p-3">
+            <input type="hidden" asp-for="@Model.leerkrachtID" />
+            <input type="hidden" asp-for="@Model.rol" />
+            <div class="form-group">
+                <label asp-for="@Model.achternaam">familienaam</label>
+                <input asp-for="@Model.achternaam" class="form-control" />
+                <span asp-validation-for="@Model.achternaam"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.voornaam">voornaam </label>
+                <input asp-for="@Model.voornaam" class="form-control" />
+                <span asp-validation-for="@Model.voornaam"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.kluisNr">kluisNr </label>
+                <input asp-for="@Model.kluisNr" class="form-control" />
+                <span asp-validation-for="@Model.kluisNr"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.status">Actief</label>
+                <input asp-for="@Model.status" class="form-control" />
+                <span asp-validation-for="@Model.status"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.email">email</label>
+                <input asp-for="@Model.email" class="form-control" />
+                <span asp-validation-for="@Model.email"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.sprintToezichter">sprintToezichter</label>
+                <input type="checkbox" asp-for="@Model.sprintToezichter" class="form-control" />
+                <span asp-validation-for="@Model.sprintToezichter"></span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
     </div>
-</div>
-
-<form method="post">
-    <div class="p-3">
-        <input type="hidden" asp-for="@Model.leerkrachtID" />
-        <input type="hidden" asp-for="@Model.rol"/>
-        <div class="form-group">
-            <label asp-for="@Model.achternaam">familienaam</label>
-            <input asp-for="@Model.achternaam" class="form-control" />
-            <span asp-validation-for="@Model.achternaam"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.voornaam">voornaam </label>
-            <input asp-for="@Model.voornaam" class="form-control" />
-            <span asp-validation-for="@Model.voornaam"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.kluisNr">kluisNr </label>
-            <input asp-for="@Model.kluisNr" class="form-control" />
-            <span asp-validation-for="@Model.kluisNr"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.status">status (actief=1 of niet=0)</label>
-            <input asp-for="@Model.status" class="form-control" />
-            <span asp-validation-for="@Model.status"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.email">email</label>
-            <input asp-for="@Model.email" class="form-control" />
-            <span asp-validation-for="@Model.email"></span>
-        </div>
-    <div class="form-group">
-            <label asp-for="@Model.sprintToezichter">sprintToezichter</label>
-            <input type="checkbox" asp-for="@Model.sprintToezichter" class="form-control" />
-            <span asp-validation-for="@Model.sprintToezichter"></span>
-        </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>

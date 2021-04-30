@@ -1,10 +1,11 @@
 ﻿@model SprintPlannerZM.Model.Lokaal
 
+<div class="left-allignToNav pt-5 text-align">
+    <h1>Bent u zeker dat u deze wenst te verwijderen ?</h1>
+    <p>Verwijder deze record ? : @Model.lokaalnaam  ?</p>
 
-<h1>Bent u zeker dat u deze wenst te verwijderen ?</h1>
-<p>Verwijder deze record ? : @Model.lokaalnaam  ?</p>
-
-<form method="post">
-    <a class="btn btn-info" asp-action="LokaalBeheer">No</a>
-    <input type="submit" class="btn btn-success" value="Ja" />
-</form>
+    <form method="post">
+        <a class="btn btn-info" asp-action="LokaalBeheer">No</a>
+        <input type="submit" class="btn btn-success" value="Ja" />
+    </form>
+</div>

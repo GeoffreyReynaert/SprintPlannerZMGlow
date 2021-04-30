@@ -1,27 +1,27 @@
 ﻿@model IList<string>
 
-<div class="containerllnoverzicht pt-5">
+<div class="containerllnoverzicht pt-5 left-allignToNav">
     <button id="importTitulEnKlas" class="btn btn-secondary" data-toggle="modal" data-target="#wachttijdModal">Stap1 titularis/klas</button>
     <button id="ImportKlasVakLeerkrLeerlEnRelaties" class="btn btn-secondary" data-toggle="modal" data-target="#wachttijdModal">Stap2 leerl/leerkr/vak</button>
 </div>
-<div class="containerllnoverzicht pt-2">
+<div class="containerllnoverzicht pt-2 left-allignToNav">
     @using (Html.BeginForm("XlsUpload", "Beheerder", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <span>
-            <input class="btn btn-secondary" name="xlsFile" type="file"><button class="btn btn-light" type="submit" data-toggle="modal" data-target="#wachttijdModal">CSV Lokaal verzend</button>
+            <input class="btn btn-secondary" name="xlsFile" type="file"><button class="btn btn-light" type="submit" data-toggle="modal" data-target="#wachttijdModal">XLS Lokaal verzend</button>
         </span>
     }
     @using (Html.BeginForm("ImportExamens", "Beheerder", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <span>
-            <input class="btn btn-secondary" name="csvFile" type="file"><button class="btn btn-light" type="submit" data-toggle="modal" data-target="#wachttijdModal">CSV Examenplanning verzend</button>
+            <input class="btn btn-secondary" name="csvFile" type="file"><button class="btn btn-light" type="submit" data-toggle="modal" data-target="#wachttijdModal">XLS Examenplanning verzend</button>
         </span>
     }
 </div>
 
-<div class="tbl-content mt-5">
+<div class="tbl-content mt-5 left-allignToNav">
     <div class="containerLeerkrachten">
-        <div class=" p-1 m-2">
+        <div class=" p-1 m-2 ">
             <div id="berichtWeergaveDiv">
                 @if (@Model != null)
                 {

@@ -1,4 +1,5 @@
-﻿using SprintPlannerZM.Model;
+﻿using System;
+using SprintPlannerZM.Model;
 using SprintPlannerZM.Repository;
 using SprintPlannerZM.Services.Abstractions;
 using System.Collections.Generic;
@@ -26,6 +27,13 @@ namespace SprintPlannerZM.Services
         public async Task<IList<Leerlingverdeling>> Find()
         {
             return await _database.Leerlingverdeling
+                .ToListAsync();
+        }
+
+        public async Task<IList<Leerlingverdeling>> FindAllByDate(DateTime date )
+        {
+            return await _database.Leerlingverdeling
+                .Where(l=>l.Examenrooster.datum.Date.Equals(date))
                 .ToListAsync();
         }
 
@@ -84,6 +92,18 @@ namespace SprintPlannerZM.Services
                await _database.SaveChangesAsync();
                 return true;
             }
+        }
+
+        public async Task<bool> DeleteAllFromDate(DateTime date)
+        {
+            var dbLeerlingverdeling = await FindAllByDate(date);
+            foreach (var verdeling in dbLeerlingverdeling)
+            {
+                _database.Remove(verdeling);
+               await _database.SaveChangesAsync();
+            }
+
+            return true;
         }
     }
 }
