@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 {
@@ -218,6 +219,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         public async Task<IActionResult> Klasverdeling()
         {
             var examens = await _examenroosterService.FindDistinct();
+
             return View(examens);
         }
 
@@ -279,21 +281,25 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             }
 
             //effectieve methode 
-            if (exams8u.Count < 10 || exams10u.Count < 10 || exams13u.Count < 10 || exams15u.Count < 10)
-            {
 
-
-            }
-            else
-            {
-                await ExamVerdelingPerUur(exams8u, hulpLeerlingen, lokalenVoorSprint, lokalenVoorTyper, lokalenVoorMklas);
-                await ExamVerdelingPerUur(exams10u, hulpLeerlingen, lokalenVoorSprint, lokalenVoorTyper, lokalenVoorMklas);
-                await ExamVerdelingPerUur(exams13u, hulpLeerlingen, lokalenVoorSprint, lokalenVoorTyper, lokalenVoorMklas);
-                await ExamVerdelingPerUur(exams15u, hulpLeerlingen, lokalenVoorSprint, lokalenVoorTyper, lokalenVoorMklas);
-            }
+            await ExamVerdelingPerUur(exams8u, hulpLeerlingen, lokalenVoorSprint, lokalenVoorTyper, lokalenVoorMklas);
+            await ExamVerdelingPerUur(exams10u, hulpLeerlingen, lokalenVoorSprint, lokalenVoorTyper, lokalenVoorMklas);
+            await ExamVerdelingPerUur(exams13u, hulpLeerlingen, lokalenVoorSprint, lokalenVoorTyper, lokalenVoorMklas);
+            await ExamVerdelingPerUur(exams15u, hulpLeerlingen, lokalenVoorSprint, lokalenVoorTyper, lokalenVoorMklas);
 
 
             var examenroosters = await _examenroosterService.FindDistinct();
+            return View("Klasverdeling", examenroosters);
+        }
+
+        public async Task<IActionResult> VerdelingVerwijderen(string date)
+        {
+            var splitPieceDatum = date.Split(" ")[0];
+            await _leerlingverdelingService.DeleteAllFromDate(DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null));
+            await _sprintlokaalreservatieService.DeleteAllFromDate(DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null));
+
+            var examenroosters = await _examenroosterService.FindDistinct();
+
             return View("Klasverdeling", examenroosters);
         }
 
@@ -304,9 +310,10 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return PartialView("PartialComboLeerlingen", leerling);
         }
 
-        public async Task<IActionResult> ConsulterenExamenverdeling()
+        public async Task<IActionResult> ConsulterenExamenverdeling(string date)
         {
-            var gereserveerdeExamens = await _sprintlokaalreservatieService.Find();
+            var splitPieceDatum = date.Split(" ")[0];
+            var gereserveerdeExamens = await _sprintlokaalreservatieService.FindByDate(DateTime.ParseExact(splitPieceDatum, "dd/MM/yyyy", null));
             return View(gereserveerdeExamens);
         }
 

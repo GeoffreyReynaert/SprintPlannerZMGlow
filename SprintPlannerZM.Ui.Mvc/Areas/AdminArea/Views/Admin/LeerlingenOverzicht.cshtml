@@ -45,7 +45,7 @@
                             <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["KlasnaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Klas</a></th>
                             <th class="h6">Sprint</th>
                             <th class="h6">Typer</th>
-                            <th class="h6">Mklas</th>
+                            <th class="h6">M-klas</th>
                             <th class="h6">Vakken Sprintkeuze</th>
                         </tr>
                     </thead>
@@ -63,7 +63,7 @@
                                 <input asp-for="@Model[i].email" type="hidden" />
                                 <input asp-for="@Model[i].KlasID" type="hidden" />
                                 <input asp-for="@Model[i].hulpleerlingID" type="hidden" />
-                                <input asp-for="@Model[i].KlasID" type="hidden" />
+                                @*<input asp-for="@Model[i].KlasID" type="hidden" />*@
                                 <td class="text-left">@Html.DisplayFor(model => Model[i].familieNaam)</td>
                                 <td class="text-left p-lg-2">@Html.DisplayFor(model => Model[i].voorNaam)</td>
                                 <td>@Html.DisplayFor(model => Model[i].Klas.klasnaam)</td>

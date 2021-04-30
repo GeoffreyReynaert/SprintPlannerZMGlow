@@ -229,5 +229,13 @@ input:checked + .slider:before {
     flex-direction: column;
     height: 134px;
     width: 134px;
-    border: rgb(74, 71, 71) 2px solid;
+    border: rgb(74, 71, 71) 3px solid;
 }
+.cardBodyCSSDone {
+    display: flex;
+    flex-direction: column;
+    height: 134px;
+    width: 134px;
+    border: rgb(255, 255, 255) 3px solid;
+}
+
