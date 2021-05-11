@@ -39,6 +39,20 @@ namespace SprintPlannerZM.Services
             return await _database.Leerkracht.OrderBy(l => l.achternaam).ToListAsync();
         }
 
+        public async Task<IList<Leerkracht>> FindToezichters()
+        {
+            var toezichters = await _database.Leerkracht
+                .Where(l => l.sprintToezichter)
+                .Include(l => l.Vakken)
+                .ThenInclude(v => v.klas)
+                .Include(l => l.Sprintlokaalreservaties)
+                .ToListAsync();
+
+            return toezichters;
+        }
+
+
+
         public async Task<IList<Leerkracht>> FindOverzicht()
         {
             var leerkrachten = await _database.Leerkracht

@@ -21,9 +21,9 @@ namespace SprintPlannerZM.Services
         {
             return await _database.Sprintlokaalreservatie
                 .Where(s => s.sprintlokaalreservatieID == id)
+                .Include(l => l.Lokaal)
                 .Include(l => l.Examen)
                 .ThenInclude(e => e.Vak)
-                .Include(l => l.Lokaal)
                 .Include(l => l.Leerkracht)
                 .Include(l => l.Leerlingverdelingen)
                 .ThenInclude(i=>i.Hulpleerling)
@@ -122,6 +122,9 @@ namespace SprintPlannerZM.Services
                 {
                     return sprintlokaalreservatie;
                 }
+
+                dbSprintlokaalreservatie.leerkrachtID = sprintlokaalreservatie.leerkrachtID;
+
                 _database.Sprintlokaalreservatie.Update(dbSprintlokaalreservatie);
                 await _database.SaveChangesAsync();
                 return sprintlokaalreservatie;

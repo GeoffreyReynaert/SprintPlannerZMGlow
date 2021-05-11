@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using SprintPlannerZM.Model;
 using SprintPlannerZM.Services.Abstractions;
+using SprintPlannerZM.Ui.Mvc.Models;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 {
@@ -244,13 +245,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             }
             //tester om te zien wie van de hulpleerlingen examens heeft op de welbepaalde datum
 
-            foreach (var leerling in hulpLeerlingen)
-            foreach (var vak in leerling.Klas.Vakken)
-            foreach (var rooster in examensPerDatum)
-                if (rooster.vakID == vak.vakID)
-                    Console.WriteLine("Deze leerling :" + leerling.Leerling.voorNaam + " heeft het vak " + vak.vaknaam +
-                                      "als examen op" + rooster.datum + "om " + rooster.tijd + " Uur");
-
             //effectieve methode 
 
             await ExamVerdelingPerUur(exams8u, hulpLeerlingen, lokalenVoorSprint, lokalenVoorTyper, lokalenVoorMklas);
@@ -288,13 +282,55 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View(gereserveerdeExamens);
         }
 
+        public async Task<IActionResult> ToezichterToevoegen(int id)
+        {
+            var lokaalres = await _sprintlokaalreservatieService.Get(id);
+            // lokaalres.Toezichters = await _leerkrachtService.Find();
+            ReservatieModel reservatiemodel = new ReservatieModel
+            {
+                reservatie = lokaalres,
+                Toezichters = await _leerkrachtService.FindToezichters()
+            };
+            return View(reservatiemodel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToezichterToevoegen(ReservatieModel reservatieModel)
+        {
+            //if (!ModelState.IsValid)
+            //{
+            //    var toezichters = _leerkrachtService.Find();
+
+            //    var dbArticle = _articleService.Get(article.Id);
+            //    dbArticle.Title = article.Title;
+            //    dbArticle.Description = article.Description;
+            //    dbArticle.Content = article.Content;
+            //    dbArticle.AuthorId = article.AuthorId;
+
+            //    var articleModel = new ArticleModel
+            //    {
+            //        Article = dbArticle,
+            //        Authors = authors
+            //    };
+            //    return View(articleModel);
+            //}
+            var examens = await _examenroosterService.FindDistinct();
+
+            await _sprintlokaalreservatieService.Update(reservatieModel.reservatie.sprintlokaalreservatieID, reservatieModel.reservatie);
+
+            return RedirectToAction("Klasverdeling",examens);
+        }
+
+
+
+
 
         public async Task<IActionResult> DetailsExamen(int id)
         {
             var leerlingverdelingen = await _leerlingverdelingService.FindBySprintLokaalReservatie(id);
             return View(leerlingverdelingen);
         }
-
+         
         //Detail alle leerlingen naar leerling uit lijst
         public async Task<IActionResult> LeerlingOverzicht(long hulpleerlingId)
         {
