@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using SprintPlannerZM.Model;
@@ -137,6 +138,28 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
         }
 
+
+        //Detail alle leerlingen naar een specifieke leerling uit lijst
+        public async Task<IActionResult> LeerlingOverzicht(long hulpleerlingId)
+        {
+            var sprintvakken = await _sprintvakkeuzeService.FindWithHll(hulpleerlingId);
+            return View("LeerlingOverzicht", sprintvakken);
+        }
+
+        public async Task<IActionResult> UpdateVakken(string vakKeuzeLijst)
+        {
+            var keuzeLijst = JArray.Parse(vakKeuzeLijst);
+            var count = 0;
+            foreach (var vakKeuze in keuzeLijst)
+            {
+                count++;
+                var sprintvak = vakKeuze.ToObject<Sprintvakkeuze>();
+                await _sprintvakkeuzeService.UpdateAsync(sprintvak.sprintvakkeuzeID, sprintvak);
+                Console.WriteLine(count);
+            }
+
+            return RedirectToAction();
+        }
         public async Task<IActionResult> LeerlingUpdate(Leerling[] model)
         {
             foreach (var leerling in model)
@@ -215,6 +238,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         }
 
 
+
         //Verdeling generatie
         public async Task<IActionResult> LeerlingVerdeling(string datum)
         {
@@ -268,12 +292,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return View("Klasverdeling", examenroosters);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PartialComboLeerlingen(int leerlingID)
-        {
-            var leerling = await _leerlingService.Get(leerlingID);
-            return PartialView("PartialComboLeerlingen", leerling);
-        }
+
 
         public async Task<IActionResult> ConsulterenExamenverdeling(string date)
         {
@@ -285,7 +304,6 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         public async Task<IActionResult> ToezichterToevoegen(int id)
         {
             var lokaalres = await _sprintlokaalreservatieService.Get(id);
-            // lokaalres.Toezichters = await _leerkrachtService.Find();
             ReservatieModel reservatiemodel = new ReservatieModel
             {
                 reservatie = lokaalres,
@@ -297,23 +315,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         [HttpPost]
         public async Task<IActionResult> ToezichterToevoegen(ReservatieModel reservatieModel)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    var toezichters = _leerkrachtService.Find();
-
-            //    var dbArticle = _articleService.Get(article.Id);
-            //    dbArticle.Title = article.Title;
-            //    dbArticle.Description = article.Description;
-            //    dbArticle.Content = article.Content;
-            //    dbArticle.AuthorId = article.AuthorId;
-
-            //    var articleModel = new ArticleModel
-            //    {
-            //        Article = dbArticle,
-            //        Authors = authors
-            //    };
-            //    return View(articleModel);
-            //}
+      
             var examens = await _examenroosterService.FindDistinct();
 
             await _sprintlokaalreservatieService.Update(reservatieModel.reservatie.sprintlokaalreservatieID, reservatieModel.reservatie);
@@ -322,35 +324,36 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
         }
 
 
+        //Scherm om leerlingen over te zetten naar andere lokalen  
 
-
-
-        public async Task<IActionResult> DetailsExamen(int id)
+        [HttpGet]
+        public async Task<IActionResult> DetailsEnLeerlingWijzigingen(int id)
         {
             var leerlingverdelingen = await _leerlingverdelingService.FindBySprintLokaalReservatie(id);
-            return View(leerlingverdelingen);
-        }
-         
-        //Detail alle leerlingen naar leerling uit lijst
-        public async Task<IActionResult> LeerlingOverzicht(long hulpleerlingId)
-        {
-            var sprintvakken = await _sprintvakkeuzeService.FindWithHll(hulpleerlingId);
-            return View("LeerlingOverzicht", sprintvakken);
-        }
-
-        public async Task<IActionResult> UpdateVakken(string vakKeuzeLijst)
-        {
-            var keuzeLijst = JArray.Parse(vakKeuzeLijst);
-            var count = 0;
-            foreach (var vakKeuze in keuzeLijst)
+            var verdelingsLijst =new List<LeerlingVerdelingWijzegingsModel>();
+            foreach (var leerlingverdeling in leerlingverdelingen)
             {
-                count++;
-                var sprintvak = vakKeuze.ToObject<Sprintvakkeuze>();
-                await _sprintvakkeuzeService.UpdateAsync(sprintvak.sprintvakkeuzeID, sprintvak);
-                Console.WriteLine(count);
+                LeerlingVerdelingWijzegingsModel leerlingverdelingsmodel = new LeerlingVerdelingWijzegingsModel
+                {
+                    leerlingeverdeling = leerlingverdeling,
+                    sprintlokaalreservaties = await _sprintlokaalreservatieService.FindByDateTime(leerlingverdeling.Sprintlokaalreservatie.datum,leerlingverdeling.Sprintlokaalreservatie.tijd)
+                };
+                verdelingsLijst.Add(leerlingverdelingsmodel);
             }
+           
+            return View(verdelingsLijst);
+        }
 
-            return RedirectToAction();
+        [HttpPost]
+        public async Task<IActionResult> DetailsEnLeerlingWijzigingen(LeerlingVerdelingWijzegingsModel model)
+        {
+            var examens = await _examenroosterService.FindDistinct();
+
+         
+                await _leerlingverdelingService.Update(model.leerlingeverdeling.leerlingverdelingID, model.leerlingeverdeling);
+            
+                
+            return RedirectToAction("Klasverdeling", examens);
         }
 
 
@@ -376,6 +379,12 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             return RedirectToAction();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> PartialComboLeerlingen(int leerlingID)
+        {
+            var leerling = await _leerlingService.Get(leerlingID);
+            return PartialView("PartialComboLeerlingen", leerling);
+        }
 
         public async Task<IActionResult> Toezichters()
         {

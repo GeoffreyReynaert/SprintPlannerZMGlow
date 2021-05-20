@@ -15,6 +15,7 @@ namespace SprintPlannerZM.Services.Abstractions
         Task<IList<Sprintlokaalreservatie>> FindByDate(DateTime date);
         Task<IList<Sprintlokaalreservatie>> FindAantalBySprintreservatieIdAndType(int sprintreservatieid, string type);
         Task<IList<Sprintlokaalreservatie>> FindByExamIDAndType(int examID, string type);
+        Task<IList<Sprintlokaalreservatie>> FindByDateTime(DateTime date, string time);
         Task<Sprintlokaalreservatie> Create(Sprintlokaalreservatie sprintlokaalreservatie);
         Task<Sprintlokaalreservatie> Update(int id, Sprintlokaalreservatie sprintlokaalreservatie);
         Task<bool> Delete(int id);

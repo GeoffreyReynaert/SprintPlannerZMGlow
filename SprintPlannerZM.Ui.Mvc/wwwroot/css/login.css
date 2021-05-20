@@ -1,9 +1,8 @@
 ﻿/* Made with love by Mutiullah Samim*/
 
 body {
-    background-image: url('../img/tihf-login.jpg');
-    background-repeat: repeat;
-    background-size: cover;
+    background: #fa975f;
+    background: linear-gradient(0deg, rgba(250, 151, 95,1) 0%, rgba(0,155,168,1) 100%); 
     font-family: 'Trebuchet MS', sans-serif;
     height: 100%;
 }

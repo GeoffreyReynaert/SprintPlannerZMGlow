@@ -1,5 +1,5 @@
 ﻿@model IList<SprintPlannerZM.Model.Sprintlokaalreservatie>
-
+    <h1 class="left-allignToNav"><b>Admin Zone</b></h1>
 
 
 <table class="table">
@@ -62,7 +62,7 @@
                 </td>
                 <td>
                     <a asp-action="ToezichterToevoegen" asp-route-id="@distinctlist.sprintlokaalreservatieID">Toezichter toevoegen</a> |
-                    <a asp-action="DetailsExamen" asp-route-id="@distinctlist.sprintlokaalreservatieID">Details</a> |
+                    <a asp-action="DetailsEnLeerlingWijzigingen" asp-route-id="@distinctlist.sprintlokaalreservatieID">Details</a> |
                 </td>
             </tr>
         }

@@ -1,16 +1,16 @@
 ﻿@model SprintPlannerZM.Ui.Mvc.Models.ReservatieModel
 
 @{
-    var authorId = Model.reservatie.Leerkracht?.leerkrachtID;
+    var toezichterID = Model.reservatie.Leerkracht?.leerkrachtID;
 
-    var authorList = Model.Toezichters.Select(a => 
+    var toezichterLijst = Model.Toezichters.Select(a => 
         new {
             leerkrachtID = a.leerkrachtID,
             Name = $"{a.achternaam} {a.voornaam}"
         }
         );
 
-    var toezichters = new SelectList(authorList, "leerkrachtID", "Name", authorId);
+    var toezichters = new SelectList(toezichterLijst, "leerkrachtID", "Name", toezichterID);
 }
 
 
