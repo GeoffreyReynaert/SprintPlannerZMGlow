@@ -85,4 +85,12 @@ const getKlassen = () => {
     });
 };
 
-
+const getUpload = () => {
+    $.ajax({
+        type: "GET",
+        url: 'LeerkrachtUpload',
+        success: function (response) {
+            $("#beheerWeergave").html(response);
+        }
+    });
+};

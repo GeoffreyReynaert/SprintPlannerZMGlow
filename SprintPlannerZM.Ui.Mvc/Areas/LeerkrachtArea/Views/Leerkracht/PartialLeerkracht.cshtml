@@ -1,0 +1,106 @@
+﻿@model SprintPlannerZM.Model.Leerkracht
+@{
+    var count = 0;
+}
+@*<div class="tbl-content">
+    <table>
+        <tbody>
+        <div class="tbl-header">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="h6">Examen indienen voor @Model.voornaam @Model.achternaam (@Model.kluisNr)</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                @foreach (var sprintvakkeuze in Model)
+                {
+                    @if (sprintvakkeuze.Vak.sprint)
+                    {
+                        count++;
+                        <div class="trBordercolor container">
+                            <div class="">
+                                <div class="pt-2 containerllnoverzicht">
+                                    <input id="vakId{@count}" value="@sprintvakkeuze.sprintvakkeuzeID" type="hidden"/>
+                                    <input id="leerlingId{@count}" value="@sprintvakkeuze.hulpleerlingID" type="hidden"/>
+                                    <h6 class="w-20" id="vaknaam{@count}"> @sprintvakkeuze.Vak.vaknaam</h6>
+                                    <span> Sprint </span>
+                                    <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.sprint) ? "checked='checked'" : string.Empty)>
+                                    <span> Typer </span>
+                                    <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.typer) ? "checked='checked'" : string.Empty)>
+                                    <span> M-Klas </span>
+                                    <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.mklas) ? "checked='checked'" : string.Empty)>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </tbody>
+    </table>
+</div>
+<div class="containerDropdowns tableFixFooter">Totaal: @count</div>*@
+
+<script>
+    var anysprint = $("#anySprint").val();
+
+    $("#btnUpdate").click(function() {
+        if (anysprint === "true") {
+            console.log(true);
+            $(this).load("UpdateLeerlingen", { vakKeuzeLijst: JSON.stringify(lijst()), anySprint: true });
+        } else {
+            console.log(false);
+            $(this).load("UpdateLeerlingen", { vakKeuzeLijst: JSON.stringify(lijst()), anySprint: false });
+        }
+    });
+
+    function lijst() {
+        const leerlingLijst = [];
+        for (let count = 1; count <= @count; count++) {
+            const vakId = $(`input[id="vakId{${count}}"]`).val();
+            const vakSprint = $(`input[id="vakSprint{${count}}"]`).is(':checked');
+            const vakTyper = $(`input[id="vakTyper{${count}}"]`).is(':checked');
+            const vakMklas = $(`input[id="vakMklas{${count}}"]`).is(':checked');
+            const leerlingId = $(`input[id="leerlingId{${count}}"]`).val();
+            const leerlingInfo = {};
+            if (anysprint === "false") {
+                leerlingInfo["vakId"] = vakId;
+            } else {
+                leerlingInfo["sprintvakkeuzeId"] = vakId;
+            }
+            leerlingInfo["sprint"] = vakSprint;
+            leerlingInfo["typer"] = vakTyper;
+            leerlingInfo["mklas"] = vakMklas;
+            leerlingInfo["hulpleerlingId"] = leerlingId;
+            leerlingLijst.push(leerlingInfo);
+        }
+        return leerlingLijst;
+    }
+</script>
+
+<style>
+    .cards {
+        display: grid;
+        grid-auto-rows: auto;
+        grid-gap: 1rem;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .card {
+        border: 2px solid grey;
+        border-radius: 4px;
+        margin: 4px;
+    }
+
+    .bg-header { background-color: #fa975f }
+
+    .bg-body { }
+
+    .bg-body-text { color: grey }
+
+    .bg-footer-text { color: #009ba8; }
+
+    .display-line { margin-left: 10px; }
+</style>

@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.IO;
+using System.Net.Mime;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SprintPlannerZM.Services.Abstractions;
 
 namespace SprintPlannerZM.Ui.Mvc.Areas.LeerkrachtArea.Controllers
@@ -52,9 +57,79 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.LeerkrachtArea.Controllers
         {
             return View();
         }
-        public IActionResult Uploadzone()
+
+        public async Task<IActionResult> Uploadzone()
         {
-            return View();
+            var leerkrachten = await _leerkrachtService.FindBasic();
+            return View(leerkrachten);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LeerkrachtUpload(long leerkrachtId)
+        {
+            var leerkracht = await _leerkrachtService.Get(leerkrachtId);
+            return PartialView("LeerkrachtUpload", leerkracht);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PartialAlleVakken(long leerkrachtId)
+        {
+            var examenvakken = await _examenroosterService.GetByLeerkracht(leerkrachtId);
+            Console.WriteLine(examenvakken.ToString());
+            return PartialView("PartialAlleVakken", examenvakken);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PartialNietIngediend(long leerkrachtId)
+        {
+            var leerkracht = await _leerkrachtService.Get(leerkrachtId);
+            return PartialView("PartialNietIngediend", leerkracht);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PartialIngediend(long leerkrachtId)
+        {
+            var leerkracht = await _leerkrachtService.Get(leerkrachtId);
+            return PartialView("PartialIngediend", leerkracht);
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Indienen(IFormFile pdfSend)
+        //{
+        //    var examenrooster = await _examenroosterService.Get(7373);
+        //    Console.WriteLine(pdfSend);
+        //    if (pdfSend.Length <= 0) return RedirectToAction("Uploadzone");
+        //    await using (var target = new MemoryStream())
+        //    {
+        //        await pdfSend.CopyToAsync(target);
+        //        examenrooster.examendoc = target.ToArray();
+        //    }
+
+        //    await _examenroosterService.UpdateDocument(7373, examenrooster);
+        //    return RedirectToAction("Uploadzone");
+        //}
+
+        public async Task<IActionResult> Download()
+        {
+            var examenrooster = await _examenroosterService.Get(7373);
+            var pdfDownload = examenrooster.examendoc;
+            return File(pdfDownload, MediaTypeNames.Application.Octet, "7373.pdf");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Indienen(string pdfSend, long[] examenId)
+        {
+            var examenrooster = await _examenroosterService.Get(7373);
+            Console.WriteLine(pdfSend);
+            //if (pdfSend.Length <= 0) return RedirectToAction("Uploadzone");
+            //await using (var target = new MemoryStream())
+            //{
+            //    await pdfSend.CopyToAsync(target);
+            //    examenrooster.examendoc = target.ToArray();
+            //}
+
+            await _examenroosterService.UpdateDocument(7373, examenrooster);
+            return RedirectToAction("Uploadzone");
         }
     }
 }

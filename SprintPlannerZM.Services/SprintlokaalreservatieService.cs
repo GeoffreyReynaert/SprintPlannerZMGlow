@@ -21,14 +21,15 @@ namespace SprintPlannerZM.Services
         {
             return await _database.Sprintlokaalreservatie
                 .Where(s => s.sprintlokaalreservatieID == id)
-                .Include(l => l.Examen)
-                .ThenInclude(e => e.Vak)
                 .Include(l => l.Lokaal)
                 .Include(l => l.Leerkracht)
                 .Include(l => l.Leerlingverdelingen)
                 .ThenInclude(i=>i.Hulpleerling)
                 .ThenInclude(l=>l.Leerling)
                 .ThenInclude(l=>l.Klas)
+                .Include(l => l.Leerlingverdelingen)
+                .ThenInclude(l => l.Examenrooster)
+                .ThenInclude(l => l.Vak)
                 .SingleOrDefaultAsync();
         }
 
@@ -86,11 +87,16 @@ namespace SprintPlannerZM.Services
                 .Include(l => l.Lokaal)
                 .Include(l => l.Leerkracht)
                 .Include(l => l.Leerlingverdelingen)
-                .Include(l => l.Examen)
-                .ThenInclude(e => e.Vak)
-                .ThenInclude(k => k.klas)
                 .ToListAsync();
         }
+
+        public async Task<IList<Sprintlokaalreservatie>> FindByDateOnly(DateTime date)
+        {
+            return await _database.Sprintlokaalreservatie
+                .Where(s => s.datum.Date.Equals(date.Date))
+                .ToListAsync();
+        }
+
         public async Task<IList<Sprintlokaalreservatie>> FindAantalBySprintreservatieIdAndType(int reservatieID, string type)
         {
             return await _database.Sprintlokaalreservatie
@@ -116,8 +122,7 @@ namespace SprintPlannerZM.Services
 
         public async Task<Sprintlokaalreservatie> Update(int id, Sprintlokaalreservatie sprintlokaalreservatie)
         {
-            {
-                var dbSprintlokaalreservatie = await Get(id);
+            var dbSprintlokaalreservatie = await Get(id);
                 if (dbSprintlokaalreservatie == null)
                 {
                     return sprintlokaalreservatie;
@@ -125,13 +130,11 @@ namespace SprintPlannerZM.Services
                 _database.Sprintlokaalreservatie.Update(dbSprintlokaalreservatie);
                 await _database.SaveChangesAsync();
                 return sprintlokaalreservatie;
-            }
         }
 
         public async Task<bool> Delete(int id)
         {
-            {
-                var dbSprintlokaalreservatie = await Get(id);
+            var dbSprintlokaalreservatie = await Get(id);
                 if (dbSprintlokaalreservatie == null)
                 {
                     return false;
@@ -139,12 +142,10 @@ namespace SprintPlannerZM.Services
                 _database.Sprintlokaalreservatie.Remove(dbSprintlokaalreservatie);
                 await _database.SaveChangesAsync();
                 return true;
-            }
         }
         public async Task<bool> DeleteAllFromDate(DateTime date)
         {
-            {
-                var dbSprintlokaalreservatie = await FindByDate(date);
+            var dbSprintlokaalreservatie = await FindByDateOnly(date);
 
                 foreach (var reservatie in dbSprintlokaalreservatie)
                 {
@@ -153,7 +154,6 @@ namespace SprintPlannerZM.Services
                 }
               
                 return true;
-            }
         }
     }
 }

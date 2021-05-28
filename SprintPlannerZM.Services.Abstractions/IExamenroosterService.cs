@@ -8,11 +8,13 @@ namespace SprintPlannerZM.Services.Abstractions
     public interface IExamenroosterService
     {
         Task<Examenrooster> Get(int id);
+        Task<IList<Examenrooster>> GetByLeerkracht(long id);
         Task<IList<Examenrooster>> Find();
         Task<IList<Examenrooster>> FindByDatum(DateTime date);
         Task<IList<Examenrooster>> FindDistinct();
         Task<Examenrooster> Create(Examenrooster examenrooster);
         Task<Examenrooster> Update(int id, Examenrooster examenrooster);
+        Task<Examenrooster> UpdateDocument(int id, Examenrooster examenrooster);
         Task<bool> Delete(int id);
     }
 }

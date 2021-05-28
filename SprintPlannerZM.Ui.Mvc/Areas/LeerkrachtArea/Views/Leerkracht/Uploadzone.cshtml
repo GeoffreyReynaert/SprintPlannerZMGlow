@@ -1,5 +1,52 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model IList<SprintPlannerZM.Model.Leerkracht>
+
+<head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true"/>
+    <script src="~/js/site.js"></script>
+
+</head>
+
+<section class="left-allignToNav pt-3">
+    <div class="tbl-header">
+        <table>
+            <thead>
+            <tr>
+                <th class="h6" rowspan="4">
+                    <div class="containerDropdowns ">
+                        <form class="col-4">
+                            <select class="form-control select2" id="cmbLeerlingen">
+                                <option id="index">---Kies leerkracht---</option>
+                                @foreach (var leerkracht in Model)
+                                {
+                                    <option value="@leerkracht.leerkrachtID">@leerkracht.achternaam @leerkracht.voornaam</option>
+                                }
+                            </select>
+                        </form>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="partialView"></div>
+</section>
+
+<script>
+    $(".select2").select2();
+
+    //$('.select2').change(function() {
+    //    const url = $('.select2').find(":selected").data('url');
+    //    console.log(url);
+    //    document.location = url;
+    //});
+
+    $("#cmbLeerlingen").change(function() {
+        if ($(this).children(":selected").attr("id") !== "index") {
+            console.log($(this).find('option:selected').val());
+            $("#partialView").load("LeerkrachtUpload", { leerkrachtID: $(this).find('option:selected').val() });
+        }
+    });
+</script>

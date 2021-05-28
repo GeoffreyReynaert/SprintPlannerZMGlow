@@ -23,8 +23,15 @@ namespace SprintPlannerZM.Services
                 .Where(l => l.leerkrachtID == id)
                 .Include(l => l.Vakken)
                 .ThenInclude(v=>v.klas)
+                .Include(v=>v.Vakken)
+                .ThenInclude(e=>e.Examenroosters)
                 .SingleOrDefaultAsync();
             return leerkracht;
+        }
+
+        public async Task<Leerkracht> GetBasic(long id)
+        {
+            return await _database.Leerkracht.Where(l => l.leerkrachtID == id).SingleOrDefaultAsync();
         }
 
         public async Task<IList<Leerkracht>> Find()
@@ -37,6 +44,11 @@ namespace SprintPlannerZM.Services
                 leerkracht.Sprintlokaalreservaties =await _database.Sprintlokaalreservatie.Where(s => s.leerkrachtID == leerkracht.leerkrachtID).ToListAsync();
             }
             return await _database.Leerkracht.OrderBy(l => l.achternaam).ToListAsync();
+        }
+
+        public async Task<IList<Leerkracht>> FindBasic()
+        {
+            return await _database.Leerkracht.OrderBy(l=>l.achternaam).ToListAsync();
         }
 
         public async Task<IList<Leerkracht>> FindOverzicht()

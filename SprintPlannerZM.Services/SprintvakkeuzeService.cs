@@ -75,6 +75,7 @@ namespace SprintPlannerZM.Services
                 .Where(h=> h.hulpleerlingID == hulpleerlingId)
                 .Include(s => s.Vak)
                 .Include(s => s.Hulpleerling)
+                .ThenInclude(l=>l.Leerling)
                 .ToListAsync();
 
             return sprintvakkeuzes;
@@ -90,8 +91,7 @@ namespace SprintPlannerZM.Services
 
         public async Task<Sprintvakkeuze> UpdateAsync(int id, Sprintvakkeuze sprintvakkeuze)
         {
-            {
-                var sprintvakToUpd = await _database.Sprintvakkeuze.SingleOrDefaultAsync(s => s.sprintvakkeuzeID == id);
+            var sprintvakToUpd = await _database.Sprintvakkeuze.SingleOrDefaultAsync(s => s.sprintvakkeuzeID == id);
                 sprintvakToUpd.sprint = sprintvakkeuze.sprint;
                 sprintvakToUpd.typer = sprintvakkeuze.typer;
                 sprintvakToUpd.mklas = sprintvakkeuze.mklas;
@@ -99,7 +99,6 @@ namespace SprintPlannerZM.Services
                 await _database.SaveChangesAsync();
 
                 return sprintvakkeuze;
-            }
         }
 
         public async Task<bool> DeleteAsync(int id)

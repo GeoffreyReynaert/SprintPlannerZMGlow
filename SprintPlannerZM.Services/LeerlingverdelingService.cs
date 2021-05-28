@@ -30,7 +30,7 @@ namespace SprintPlannerZM.Services
                 .ToListAsync();
         }
 
-        public async Task<IList<Leerlingverdeling>> FindAllByDate(DateTime date )
+        private async Task<IList<Leerlingverdeling>> FindAllByDate(DateTime date )
         {
             return await _database.Leerlingverdeling
                 .Where(l=>l.Examenrooster.datum.Date.Equals(date))
@@ -82,8 +82,7 @@ namespace SprintPlannerZM.Services
 
         public async Task<bool> Delete(int id)
         {
-            {
-                var dbLeerlingverdeling = await Get(id);
+            var dbLeerlingverdeling = await Get(id);
                 if (dbLeerlingverdeling == null)
                 {
                     return false;
@@ -91,7 +90,6 @@ namespace SprintPlannerZM.Services
                 _database.Leerlingverdeling.Remove(dbLeerlingverdeling);
                await _database.SaveChangesAsync();
                 return true;
-            }
         }
 
         public async Task<bool> DeleteAllFromDate(DateTime date)

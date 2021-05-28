@@ -1,0 +1,145 @@
+﻿@model IList<SprintPlannerZM.Model.Examenrooster>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    var count = 0;
+}
+@foreach (var examen in Model)
+{
+    count++;
+    <div class="trBordercolor container">
+        <div class="">
+            <div class="pt-2 containerllnoverzicht">
+                <input id="examenId{@count}" value="@examen.examenID" type="hidden"/>
+                <input id="vakId{@count}" value="@examen.vakID" type="hidden"/>
+                <h6 class="w-20" id="vaknaam{@count}"> @examen.Vak.vaknaam</h6>
+                <input id="klasId{@count}" value="@examen.Vak.klasID" type="hidden"/>
+                <h6 class="w-20" id="vaknaam{@count}"> @examen.Vak.klas.klasnaam</h6>
+                <input id="leerkrachtId{@count}" value="@examen.Vak.leerkrachtID" type="hidden"/>
+                <h6 class="w-20" id="groep{@count}"> @examen.groep</h6>
+                <input id="sprint{@count}" value="@examen.Vak.sprint" type="hidden"/>
+                <input id="inclusief{@count}" type="checkbox" class="ml-lg-n5 mt-1">
+                @if ((examen.examendoc ?? Array.Empty<byte>()).Any())
+                {
+                    <h6 class="w-20" id="doc{@count}"> OK</h6>
+                    <h6 class="w-20" id="vuilbak{@count}"> vuilbakje</h6>
+                }
+                else
+                {
+                    <h6 class="w-20" id="doc{@count}"> NOK</h6>
+                    <h6 class="w-20" id="vuilbak{@count}"> leeg</h6>
+                }
+            </div>
+        </div>
+    </div>
+}
+<script>
+
+    $('#dienIn').click(function() {
+        const inclusief = [];
+        var count;
+        var examenId;
+        $("input[id*='inclusief']").each(function() {
+            if ($(this).is(':checked')) {
+                count = $(this).attr('id').split(/[{}]/)[1];
+                $("input[id*='examenId']").each(function() {
+                    if ($(this).attr('id').split(/[{}]/)[1] === count) {
+                        examenId = $(this).val();
+                        inclusief.push(examenId);
+                    }
+                });
+            }
+        });
+        console.log(inclusief);
+        //const fileUpload = $("#filePdf").get(0);  
+        //const files = fileUpload.files; 
+        const fileToUpload = $('#files').prop('files')[0];
+        //const fileData = new FormData;
+        //for (let i = 0; i < files.length; i++)
+        //    fileData.append(files[i].name, files[i]);
+
+        var base64String;
+
+        // Check for the File API support.
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            console.log('ja1');
+            document.getElementById('dienIn').addEventListener('click', handleFileSelect, false);
+        } else {
+            console.log('nee1');
+            alert('The File APIs are not fully supported in this browser.');
+        }
+
+        function handleFileSelect(evt) {
+            const f = evt.target.files[0]; // FileList object
+            console.log(f);
+            const reader = new FileReader();
+            // Closure to capture the file information.
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    const binaryData = e.target.result;
+                    console.log(binaryData);
+                     //Converting Binary Data to base 64
+                    base64String = window.btoa(binaryData);
+                    console.log(base64String);
+                    //showing file converted to base64
+                    //document.getElementById('base64').value = base64String;
+                    alert('File converted to base64 successfuly!\nCheck in Textarea');
+                };
+            })(f);
+            // Read in the image file as a data URL.
+            reader.readAsBinaryString(f);
+        }
+
+        console.log(base64String);
+        console.log(fileToUpload);
+        //console.log(fileData);
+        //$(this).load("Indienen", { pdfSend: $(this).val(), examenId: $('#filePdf').prop('files')[0]});
+        $.ajax({
+            type: "POST",
+            url: 'Indienen',
+            data: {
+                pdfSend: base64String,
+                examenIds: inclusief
+            },
+            processData: false,
+            contentType: false
+        });
+    });
+
+    //$("#image").on("change", function(e) {
+    //    const name = $("#af_rpta_propertyland_filename").val()
+    //        , file = e.target.files[0]
+    //        , filename = name.length > 1 ? name + ".pdf" : file.name
+    //        , filetype = file.type
+    //        , filesize = file.size
+    //        , data = {
+    //              "filename":filename,
+    //              "filetype":filetype,
+    //              "filesize":filesize
+    //          }
+    //        , reader = new FileReader();
+    //    reader.onload = function(e) {
+    //        data.file_base64 = e.target.result.split(/,/)[1];
+    //        $.post("fileupload.php", {file:data}, "json")
+    //            .then(function(data) {
+    //                // parse `json` string `data`
+    //                var filedata = JSON.parse(data)
+    //                    // do stuff with `data` (`file`) object
+    //                    , results = $("<a />", {
+    //                          "href": "data:" + filedata.filetype 
+    //                              + ";base64," + filedata.file_base64,
+    //                          "download": filedata.filename,
+    //                          "target": "_blank",
+    //                          "text": filedata.filename
+    //                      });
+    //                $("body").append("<br>download:", results[0]);
+    //            }, function(jqxhr, textStatus, errorThrown) {
+    //                console.log(textStatus, errorThrown)
+    //            })
+    //    };
+    //    reader.readAsDataURL(file)
+    //});
+
+</script>

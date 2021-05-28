@@ -12,7 +12,7 @@
                             @if (leerkracht.sprintToezichter == true)
                             {
                                 count++;
-                                    <div class=" card p-1 m-2" style="width: 15rem;">
+                                <div class=" card p-1 m-2" style="width: 15rem;">
                                     <div>
                                         @leerkracht.achternaam @leerkracht.voornaam
                                         <label class="switch float-right">
@@ -22,6 +22,14 @@
                                     </div>
                                 </div>
                             }
+                        }
+                        @if (count % 3 != 0)
+                        {
+                            @if (count % 3 == 1)
+                            {
+                                <div class=" card p-1 m-2" style="width: 15rem; visibility: hidden"></div>
+                            }
+                            <div class=" card p-1 m-2" style="width: 15rem; visibility: hidden"></div>
                         }
                     </div>
                 </div>

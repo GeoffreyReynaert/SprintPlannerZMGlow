@@ -1,0 +1,68 @@
+﻿@model SprintPlannerZM.Model.Leerkracht
+
+
+@using (Html.BeginForm("Indienen", "Leerkracht", FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+    <span>
+        <input class="btn btn-secondary" name="pdfSend" type="file"/><button class="btn btn-light" type="submit">Dien in</button>
+    </span>
+}
+@using (Html.BeginForm("Download", "Leerkracht", FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+    <span>
+        <button class="btn btn-light" type="submit">Download</button>
+    </span>
+}
+
+<span>
+    <input id="files" class="btn btn-secondary" name="pdfSend" type="file"/><button id="dienIn" class="btn btn-light" type="submit">Dien in</button>
+</span>
+
+<span>
+    <button class="btn btn-light" type="submit">Download</button>
+</span>
+
+<div class="containerRadioButton">
+    <input checked class="mt-1" id="isAlles" name="keuzeToez" type="radio" value="False">
+    <label class="ml-n5 text-color-white" for="isAlles">Toon alles</label>
+    <input class="mt-1" id="isNietIngediend" name="keuzeToez" type="radio" value="False">
+    <label class="ml-n5 text-color-white" for="isNietIngediend">Niet ingediend</label><br>
+    <input class="mt-1" id="isIngediend" name="keuzeToez" type="radio" value="False">
+    <label class="ml-n5 text-color-white" for="isIngediend">Ingediend</label><br>
+</div>
+
+<section class="pt-3">
+    <input id="leerkrachtID" value="@Model.leerkrachtID" type="hidden"/>
+    <div class="tbl-header">
+        <table>
+            <thead>
+            <tr>
+                <th class="h6">Vak</th>
+                <th class="h6">Klas</th>
+                <th class="h6">Groep</th>
+                <th class="h6">Inclusief</th>
+                <th class="h6">Nazien</th>
+                <th class="h6">Delete</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tbl-content">
+        <div id="partialViewSoort"></div>
+    </div>
+</section>
+
+<script>
+
+    $("#partialViewSoort").load("PartialAlleVakken", { leerkrachtID: $("#leerkrachtID").val() });
+
+    $('.mt-1').change(function() {
+        if ($(this).attr('id') == 'isAlles') {
+            $("#partialViewSoort").load("PartialAlleVakken", { leerkrachtID: $("#leerkrachtID").val() });
+        } else if ($(this).attr('id') == 'isNietIngediend') {
+            $("#partialViewSoort").load("PartialNietIngediend", { leerkrachtID: $("#leerkrachtID").val() });
+        } else if ($(this).attr('id') == 'isIngediend') {
+            $("#partialViewSoort").load("PartialIngediend", { leerkrachtID: $("#leerkrachtID").val() });
+        }
+    });
+</script>

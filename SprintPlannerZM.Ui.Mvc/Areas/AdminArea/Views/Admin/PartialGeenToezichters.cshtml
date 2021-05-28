@@ -7,22 +7,30 @@
                         @{
                             var count = 0;
                         }
-                            @foreach (var leerkracht in Model)
+                        @foreach (var leerkracht in Model)
+                        {
+                            @if (leerkracht.sprintToezichter == false)
                             {
-                                @if (leerkracht.sprintToezichter == false)
-                                {
-                                    count++;
-                                    <div class=" card p-1 m-2" style="width: 15rem;">
-                                        <div>
-                                            @leerkracht.achternaam @leerkracht.voornaam
-                                            <label class="switch float-right">
-                                                <input id="chboxLeerkracht{@count}" value="@leerkracht.leerkrachtID" type="checkbox" @(Convert.ToBoolean(leerkracht.sprintToezichter) == true ? "checked='checked'" : string.Empty)>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
+                                count++;
+                                <div class=" card p-1 m-2" style="width: 15rem;">
+                                    <div>
+                                        @leerkracht.achternaam @leerkracht.voornaam
+                                        <label class="switch float-right">
+                                            <input id="chboxLeerkracht{@count}" value="@leerkracht.leerkrachtID" type="checkbox" @(Convert.ToBoolean(leerkracht.sprintToezichter) == true ? "checked='checked'" : string.Empty)>
+                                            <span class="slider round"></span>
+                                        </label>
                                     </div>
-                                }
+                                </div>
                             }
+                        }
+                        @if (count % 3 != 0)
+                        {
+                            @if (count % 3 == 1)
+                            {
+                                <div class=" card p-1 m-2" style="width: 15rem; visibility: hidden"></div>
+                            }
+                            <div class=" card p-1 m-2" style="width: 15rem; visibility: hidden"></div>
+                        }
                     </div>
                 </div>
             </section>
