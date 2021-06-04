@@ -2,8 +2,17 @@
 
 
 @{
-    ViewData["Title"] ="VakBeheer";
+    ViewData["Title"] = "VakBeheer";
 }
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var currentpage = Model.PageIndex;
+    var totalpage = Model.TotalPages != 0 ? Model.TotalPages : 1;
+    var count = Model.ListCount;
+}
+
 <div class="left-allignToNav">
     <h2 class="pt-3">Vakken Beheer</h2>
 
@@ -12,7 +21,7 @@
             <p>
                 <input type="text" name="SearchString" value="@ViewData["nameFilter"]" placeholder="Vaknaam" />
                 <input type="submit" value="Search" class="btn btn-secondary" /> |
-                <a asp-action="VakBeheer">Complete lijst</a>
+                <a asp-action="VakBeheer">Volledige lijst</a>
             </p>
         </div>
     </form>
@@ -21,7 +30,7 @@
             <p>
                 <input type="text" name="Search2String" value="@ViewData["klasFilter"]" placeholder="Klasnaam" />
                 <input type="submit" value="Search" class="btn btn-secondary" /> |
-                <a asp-action="VakBeheer">Complete lijst</a> |
+                <a asp-action="VakBeheer">Volledige lijst</a> |
             </p>
         </div>
     </form>
@@ -46,6 +55,7 @@
         <tbody>
             @foreach (var item in Model)
             {
+                count++;
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.vaknaam)
@@ -65,10 +75,10 @@
         </tbody>
     </table>
     <div id="ModalDetails"></div>
-    @{
-        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-    }
+    <span class="left-allign">Totaal: @count</span>
+    <a>
+        @currentpage / @totalpage
+    </a>
 
     <a asp-action="VakBeheer"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
@@ -84,5 +94,5 @@
        class="btn btn-primary @nextDisabled">
         Volgende
     </a>
-<div class=" left-allignToNav  pb-5 mb-5"></div>
+    <div class=" left-allignToNav  pb-5 mb-5"></div>
 </div>
