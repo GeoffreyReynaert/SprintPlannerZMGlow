@@ -53,7 +53,10 @@
                 </div>
                 <div class="card-footer">
                     <div class="form-group position-relative">
-                        <a id="login" type="submit" name="" value="Login" class="btn btn-center login_btn"> Login </a>
+                        <a id="leerling" type="submit" name="" value="Leerling" class="btn btn-center login_btn"> Leerling </a>
+                        <a id="leerkracht" type="submit" name="" value="Leerkracht" class="btn btn-center login_btn"> Leerkracht </a>
+                        <a id="beheerder" type="submit" name="" value="Beheerder" class="btn btn-center login_btn"> Beheerder </a>
+                        <a id="admin" type="submit" name="" value="Admin" class="btn btn-center login_btn"> Admin </a>
                     </div>
                 </div>
             </div>
@@ -63,12 +66,33 @@
 </html>
 
 <script>
-    $("#login").click(function () {
+    @*$("#login").click(function () {
         //if ($("#password").val() !== 'dora123') {
         //    $("#change").replaceWith(`<iframe width="1920" height="1000" src="https://www.youtube.com/embed/z0O32YA4Ibs?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
         //} else {
             var wrkURL = '@Url.Action("AdminIndex")';
             location.replace(wrkURL, "_blank");
         //}
-    });
+    });*@
+        $('#leerling').click(function () {
+            var wrkURL = '@Url.Action("LeerlingIndex")';
+            console.log(wrkURL);
+            location.replace(wrkURL, "_blank");
+        });
+            $('#leerkracht').click(function () {
+            var wrkURL = '@Url.Action("LeerkrachtIndex")';
+            console.log(wrkURL);
+            location.replace(wrkURL, "_blank");
+            });
+    $('#beheerder').click(function () {
+            var wrkURL = '@Url.Action("BeheerderIndex")';
+            console.log(wrkURL);
+            location.replace(wrkURL, "_blank");
+            });
+    $('#admin').click(function () {
+            var wrkURL = '@Url.Action("AdminIndex")';
+            console.log(wrkURL);
+            location.replace(wrkURL, "_blank");
+        });
+
 </script>

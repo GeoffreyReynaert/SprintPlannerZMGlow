@@ -65,7 +65,7 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
            !              sortering mogelijk te maken              !
            !                                                       !
            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-        public async Task<IActionResult> LeerlingenOverzicht(string sortOrder, string currentFilter, string nameString,
+        public async Task<IActionResult> LeerlingenOverzicht(string sortOrder, string nameString,
             string klasString, int? pageNumber, bool buttonPress)
         {
             //Sortering uit viewbag om zo de klassering via naam familienaam of klasnaam mogelijk te maken 
@@ -78,24 +78,14 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
             //Viewdata om te filteren op naam of klas volgens de ingave
 
             if (nameString != null)
-            {
-                if (buttonPress == false) pageNumber = 1;
-            }
-            else
-            {
-                nameString = currentFilter;
-            }
+                if (buttonPress == false)
+                    pageNumber = 1;
 
             ViewData["NameFilter"] = nameString;
 
             if (klasString != null)
-            {
-                if (buttonPress == false) pageNumber = 1;
-            }
-            else
-            {
-                klasString = currentFilter;
-            }
+                if (buttonPress == false)
+                    pageNumber = 1;
 
             ViewData["KlasFilter"] = klasString;
 
@@ -111,27 +101,15 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.AdminArea.Controllers
 
             // Sortering uit viewbag om zo te kalsseren volgens wat gevraagd word
 
-            switch (sortOrder)
-            {
-                case "familienaam_desc":
-                    leerlingen = leerlingen.OrderByDescending(s => s.familieNaam);
-                    break;
-                case "klas":
-                    leerlingen = leerlingen.OrderBy(s => s.Klas.klasnaam);
-                    break;
-                case "klas_desc":
-                    leerlingen = leerlingen.OrderByDescending(s => s.Klas.klasnaam);
-                    break;
-                case "voornaam":
-                    leerlingen = leerlingen.OrderBy(s => s.voorNaam);
-                    break;
-                case "voornaam_desc":
-                    leerlingen = leerlingen.OrderByDescending(s => s.voorNaam);
-                    break;
-                default:
-                    leerlingen = leerlingen.OrderBy(s => s.familieNaam);
-                    break;
-            }
+                leerlingen = sortOrder switch
+                {
+                    "familienaam_desc" => leerlingen.OrderByDescending(s => s.familieNaam),
+                    "klas" => leerlingen.OrderBy(s => s.Klas.klasnaam),
+                    "klas_desc" => leerlingen.OrderByDescending(s => s.Klas.klasnaam),
+                    "voornaam" => leerlingen.OrderBy(s => s.voorNaam),
+                    "voornaam_desc" => leerlingen.OrderByDescending(s => s.voorNaam),
+                    _ => leerlingen.OrderBy(s => s.familieNaam)
+                };
 
             return View(await PaginatedList<Leerling>.CreateAsync(leerlingen.AsQueryable(), pageNumber ?? 1, 12));
         }

@@ -417,8 +417,8 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
                                                 reader.GetValue(column).ToString().Contains("IO5") ||
                                                 reader.GetValue(column).ToString().Contains("IO6"):
                                     {
-                                        if (klas.klasID != 1
-                                        ) // laatste van de input io opvangen die geen vak heeft nog klas
+                                        if (klas.klasID != 1) 
+                                            // laatste van de input io opvangen die geen vak heeft nog klas
                                         {
                                             rooster.Vak =
                                                 await _vakService.GetBySubString("integrale opdr", klas.klasID);
@@ -511,38 +511,47 @@ namespace SprintPlannerZM.Ui.Mvc.Areas.BeheerderArea.Controllers
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
 
-        public async Task<IActionResult> LeerlingBeheer(string sortOrder, string currentFilter, string searchString,
-            string search2String, int? pageNumber)
+        public async Task<IActionResult> LeerlingBeheer(string sortOrder, string nameString,
+            string klasString, int? pageNumber, bool buttonPress)
         {
+
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["KlasSortParm"] = sortOrder == "klas" ? "klas_desc" : "klas";
+            ViewData["FamilienaamSortParam"] = string.IsNullOrEmpty(sortOrder) ? "familienaam_desc" : "";
+            ViewData["VoornaamSortParam"] = sortOrder == "voornaam" ? "voornaam_desc" : "voornaam";
+            ViewData["KlasnaamSortParam"] = sortOrder == "klas" ? "klas_desc" : "klas";
 
-            if (searchString != null)
-                pageNumber = 1;
-            else
-                searchString = currentFilter;
-            ViewData["nameFilter"] = searchString;
-            ViewData["klasFilter"] = search2String;
+            if (nameString != null)
+                if (buttonPress == false)
+                    pageNumber = 1;
 
-            var students = _leerlingService.FindAsyncPagingQueryable();
+            ViewData["NameFilter"] = nameString;
 
-            if (!string.IsNullOrEmpty(searchString))
-                students = students.Where(s => s.familieNaam.ToLower().Contains(searchString.ToLower())
-                                               || s.voorNaam.ToLower().Contains(searchString.ToLower()));
+            if (klasString != null)
+                if (buttonPress == false)
+                    pageNumber = 1;
 
-            if (!string.IsNullOrEmpty(search2String))
-                students = students.Where(s => s.Klas.klasnaam.ToLower().Contains(search2String.ToLower()));
+            ViewData["KlasFilter"] = klasString;
 
-            students = sortOrder switch
+            var leerlingen = _leerlingService.FindAsyncPagingQueryable();
+
+            if (!string.IsNullOrEmpty(nameString))
+                leerlingen = leerlingen.Where(l => l.voorNaam.ToLower().Contains(nameString.ToLower())
+                                                   || l.familieNaam.ToLower().Contains(nameString.ToLower()));
+
+            if (!string.IsNullOrEmpty(klasString))
+                leerlingen = leerlingen.Where(k => k.Klas.klasnaam.ToLower().Contains(klasString.ToLower()));
+
+            leerlingen = sortOrder switch
             {
-                "name_desc" => students.OrderByDescending(s => s.familieNaam),
-                "klas" => students.OrderBy(s => s.Klas.klasnaam),
-                "klas_desc" => students.OrderByDescending(s => s.Klas.klasnaam),
-                _ => students.OrderBy(s => s.familieNaam)
+                "familienaam_desc" => leerlingen.OrderByDescending(s => s.familieNaam),
+                "klas" => leerlingen.OrderBy(s => s.Klas.klasnaam),
+                "klas_desc" => leerlingen.OrderByDescending(s => s.Klas.klasnaam),
+                "voornaam" => leerlingen.OrderBy(s => s.voorNaam),
+                "voornaam_desc" => leerlingen.OrderByDescending(s => s.voorNaam),
+                _ => leerlingen.OrderBy(s => s.familieNaam)
             };
 
-            return View(await PaginatedList<Leerling>.CreateAsync(students.AsQueryable(), pageNumber ?? 1, 12));
+            return View(await PaginatedList<Leerling>.CreateAsync(leerlingen.AsQueryable(), pageNumber ?? 1, 12));
         }
 
 

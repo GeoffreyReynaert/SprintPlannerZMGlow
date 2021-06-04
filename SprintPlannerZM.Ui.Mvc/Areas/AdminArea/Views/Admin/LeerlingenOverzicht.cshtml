@@ -6,9 +6,9 @@
 
 <head>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/css/bootstrap-extensions.css" rel="stylesheet" asp-append-version="true" />
 </head>
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
@@ -22,7 +22,7 @@
     <div class="left-allignToNav pt-3">
         <p>
             <input type="text" name="nameString" value="@ViewData["NameFilter"]" placeholder="Zoek op naam" />
-            <input type="submit" value="Zoek" class="btn btn-primary mt-md-n2"  />
+            <input type="submit" value="Zoek" class="btn btn-primary mt-md-n2" />
         </p>
     </div>
 </form>
@@ -31,7 +31,7 @@
         <p>
             <input type="text" name="klasString" value="@ViewData["KlasFilter"]" placeholder="Zoek op klas" />
             <input type="submit" value="Zoek" class="btn btn-primary mt-md-n2" />
-            <a asp-action="LeerlingenOverzicht" class="text-white btn btn-primary mt-md-n2">Toon Volledige lijst</a>
+            <a asp-action="LeerlingenOverzicht" class="text-white btn btn-primary mt-md-n2">Toon volledige lijst</a>
         </p>
     </div>
 </form>
@@ -43,9 +43,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["FamilienaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Familienaam</a></th>
-                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["VoornaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Voornaam</a></th>
-                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["KlasnaamSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-white">Klas</a></th>
+                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["FamilienaamSortParam"]" class="text-white">Familienaam</a></th>
+                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["VoornaamSortParam"]" class="text-white">Voornaam</a></th>
+                            <th class="h6"><a asp-action="LeerlingenOverzicht" asp-route-sortOrder="@ViewData["KlasnaamSortParam"]" class="text-white">Klas</a></th>
                             <th class="h6">Sprint</th>
                             <th class="h6">Typer</th>
                             <th class="h6">M-klas</th>
@@ -61,43 +61,43 @@
                             @for (var i = 0; i < @Model.Count; i++)
                             {
                                 count++;
-                            <tr class="trBordercolor">
-                                <input asp-for="@Model[i].leerlingID" type="hidden" />
-                                <input asp-for="@Model[i].email" type="hidden" />
-                                <input asp-for="@Model[i].KlasID" type="hidden" />
-                                <input asp-for="@Model[i].hulpleerlingID" type="hidden" />
-                                @*<input asp-for="@Model[i].KlasID" type="hidden" />*@
-                                <td class="text-left">@Html.DisplayFor(model => Model[i].familieNaam)</td>
-                                <td class="text-left p-lg-2">@Html.DisplayFor(model => Model[i].voorNaam)</td>
-                                <td>@Html.DisplayFor(model => Model[i].Klas.klasnaam)</td>
+                                <tr class="trBordercolor">
+                                    <input asp-for="@Model[i].leerlingID" type="hidden" />
+                                    <input asp-for="@Model[i].email" type="hidden" />
+                                    <input asp-for="@Model[i].KlasID" type="hidden" />
+                                    <input asp-for="@Model[i].hulpleerlingID" type="hidden" />
+                                    <td class="text-left">@Html.DisplayFor(model => Model[i].familieNaam)</td>
+                                    <td class="text-left p-lg-2">@Html.DisplayFor(model => Model[i].voorNaam)</td>
+                                    <td>@Html.DisplayFor(model => Model[i].Klas.klasnaam)</td>
 
-                                <td>
-                                    <input asp-for="@Model[i].sprinter" type="checkbox" class="form-control"/>
-                                </td>
-                                <td>
-                                    <input asp-for="@Model[i].typer" type="checkbox" class="form-control"/>
-                                </td>
-                                <td>
-                                    <input asp-for="@Model[i].mklas" type="checkbox" class="form-control"/>
-                                </td>
-                                @if (Model[i].hulpleerlingID != null)
-                                {
                                     <td>
-                                        <a asp-action="LeerlingOverzicht" asp-route-hulpleerlingId="@Model[i].hulpleerlingID"><b class="text-white">Vakken kiezen</b></a>
+                                        <input asp-for="@Model[i].sprinter" type="checkbox" class="form-control" />
                                     </td>
-                                }
-                                else
-                                {
                                     <td>
-                                        <a></a>
+                                        <input asp-for="@Model[i].typer" type="checkbox" class="form-control" />
                                     </td>
-                                }
-                            </tr>
-                        }
-                    </table>
+                                    <td>
+                                        <input asp-for="@Model[i].mklas" type="checkbox" class="form-control" />
+                                    </td>
+                                    @if (Model[i].hulpleerlingID != null)
+                                    {
+                                        <td>
+                                            <a asp-action="LeerlingOverzicht" asp-route-hulpleerlingId="@Model[i].hulpleerlingID"><b class="text-white">Vakken kiezen</b></a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <a></a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
         </body>
     </section>
     <div class="left-allignToNav tableFixFooter flex-display">
@@ -113,7 +113,7 @@
                asp-route-klasString="@ViewData["KlasFilter"]"
                asp-route-buttonPress="true"
                class="btn btn-primary right-allign @nextDisabled">
-                Next
+                Volgende
             </a>
             <a asp-action="LeerlingenOverzicht"
                asp-route-sortOrder="@ViewData["CurrentSort"]"
@@ -122,7 +122,7 @@
                asp-route-klasString="@ViewData["KlasFilter"]"
                asp-route-buttonPress="true"
                class="btn btn-primary right-allign @prevDisabled">
-                Previous
+                Vorige
             </a>
         </div>
     </div>
@@ -130,17 +130,17 @@
 }
 <script>
     $('.select2').select2();
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#partialView").load("PartialAlleLeerlingen");
     });
-    $("#cmbKlassen").change(function() {
+    $("#cmbKlassen").change(function () {
         if ($(this).children(":selected").attr("id") !== "klasIndex") {
             $("#partialView").load("PartialLeerlingenByKlas", { klasID: $(this).find('option:selected').val() });
         } else {
             $("#partialView").load("PartialAlleLeerlingen");
         }
     });
-    $("#cmbLeerlingen").change(function() {
+    $("#cmbLeerlingen").change(function () {
         if ($(this).children(":selected").attr("id") !== "leerlingIndex") {
             $("#partialView").load("PartialComboLeerlingen", { leerlingID: $(this).find('option:selected').val() });
         } else {
@@ -152,11 +152,13 @@
 <style>
     .left-allign {
         float: left;
-        }
-    .flex-display{
+    }
+
+    .flex-display {
         display: flex;
-        }
-    .margin-auto{
+    }
+
+    .margin-auto {
         margin-left: auto;
-        }
+    }
 </style>

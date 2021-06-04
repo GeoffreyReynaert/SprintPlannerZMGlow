@@ -29,5 +29,17 @@ namespace SprintPlannerZM.Ui.Mvc.Controllers
         {
             return RedirectToAction("Index", "Admin", new { area = "AdminArea" });
         }
+        public IActionResult BeheerderIndex()
+        {
+            return RedirectToAction("Index", "Beheerder", new { area = "BeheerderArea" });
+        }
+        public IActionResult LeerkrachtIndex()
+        {
+            return RedirectToAction("Index", "Leerkracht", new { area = "LeerkrachtArea" });
+        }
+        public IActionResult LeerlingIndex()
+        {
+            return RedirectToAction("Index", "Leerling", new { area = "LeerlingArea" });
+        }
     }
 }
