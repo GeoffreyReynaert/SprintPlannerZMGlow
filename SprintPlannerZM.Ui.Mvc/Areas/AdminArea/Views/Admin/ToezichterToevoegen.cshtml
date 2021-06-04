@@ -1,0 +1,42 @@
+﻿@model SprintPlannerZM.Ui.Mvc.Models.ReservatieModel
+
+@{
+    var toezichterID = Model.reservatie.Leerkracht?.leerkrachtID;
+
+    var toezichterLijst = Model.Toezichters.Select(a => 
+        new {
+            leerkrachtID = a.leerkrachtID,
+            Name = $"{a.achternaam} {a.voornaam}"
+        }
+        );
+
+    var toezichters = new SelectList(toezichterLijst, "leerkrachtID", "Name", toezichterID);
+}
+
+
+
+<div class="left-allignToNav">
+    <div class=" card text-black-50 p-1 m-2" style="width: 14rem;">
+        <div class="card-header">
+            @Model.reservatie.datum @Model.reservatie.Lokaal.lokaalnaam
+        </div>
+    </div>
+
+    <form method="post">
+        <div class="p-3">
+            <input type="hidden" asp-for="reservatie.sprintlokaalreservatieID" />
+            <input type="hidden" asp-for="reservatie.tijd" />
+            <input type="hidden" asp-for="reservatie.datum" />
+            <input type="hidden" asp-for="reservatie.examenID" />
+            <input type="hidden" asp-for="reservatie.lokaalID" />
+            <div class="form-group">
+                <label asp-for="reservatie.leerkrachtID">Auteur</label>
+                <select asp-for="reservatie.leerkrachtID" asp-items="@toezichters" class="form-control">
+                    <option>Please select an toezichter</option>
+                </select>
+                <span asp-validation-for="reservatie.leerkrachtID"></span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>

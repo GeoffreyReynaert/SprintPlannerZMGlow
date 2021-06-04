@@ -1,0 +1,40 @@
+﻿@model SprintPlannerZM.Ui.Mvc.Models.LeerlingVerdelingWijzegingsModel
+
+
+@{
+    var sprintReservaties = Model.sprintlokaalreservaties;
+
+
+    var toezichterID = Model.leerlingeverdeling.sprintlokaalreservatieID;
+
+    var reservatielijst = Model.sprintlokaalreservaties.Select(a =>
+        new
+        {
+            sprintlokaalreservatieID = a.sprintlokaalreservatieID,
+            Name = $"{a.Lokaal.lokaalnaam}"
+        }
+        );
+
+    var lokaalreservaties = new SelectList(reservatielijst, "sprintlokaalreservatieID", "Name", toezichterID);
+}
+
+
+<div class="left-allignToNav">
+    <form method="post">
+        <div class="p-3">
+            <input type="hidden" asp-for="@Model.leerlingeverdeling.leerlingverdelingID" />
+            <input type="hidden" asp-for="@Model.leerlingeverdeling.hulpleerlingID"/>
+            <input type="hidden" asp-for="@Model.leerlingeverdeling.examenID"/>
+            <input type="hidden" asp-for="@Model.leerlingeverdeling.reservatietype"/>
+            <div class="form-group">
+                <label asp-for="@Model.leerlingeverdeling.sprintlokaalreservatieID">Lokaal</label>
+                <select asp-for="@Model.leerlingeverdeling.sprintlokaalreservatieID" asp-items="@lokaalreservaties" class="form-control">
+                    <option>Please select an toezichter</option>
+                </select>
+                <span asp-validation-for="@Model.leerlingeverdeling.sprintlokaalreservatieID"></span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" >Save</button>
+    </form>
+</div>
+

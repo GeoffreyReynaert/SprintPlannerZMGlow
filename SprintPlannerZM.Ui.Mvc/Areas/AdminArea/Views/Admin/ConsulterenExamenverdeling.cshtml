@@ -1,5 +1,5 @@
 ﻿@model IList<SprintPlannerZM.Model.Sprintlokaalreservatie>
-
+    <h1 class="left-allignToNav"><b>Admin Zone</b></h1>
 
 
 <table class="table">
@@ -21,6 +21,9 @@
                 type
             </th>
             <th>
+                toezichter
+            </th>
+            <th>
                 acties
             </th>
         </tr>
@@ -37,7 +40,7 @@
                     @distinctlist.tijd
                 </td>
                 <td>
-                    @distinctlist.Leerlingverdelingen.Count
+                     @distinctlist.Leerlingverdelingen.Count
                 </td>
                 <td>
                     @distinctlist.Lokaal.lokaalnaam
@@ -46,8 +49,20 @@
                     @distinctlist.reservatietype
                 </td>
                 <td>
-                    <a asp-action="" asp-route-id="">Edit</a> |
-                    <a asp-action="DetailsExamen" asp-route-id="@distinctlist.sprintlokaalreservatieID">Details</a> |
+                    @if (distinctlist.leerkrachtID == null)
+                    {
+                        <span class="text-danger">GEEN TOEZICHTER </span>
+                    }
+                    else
+                    {
+                        <span>
+                            @distinctlist.Leerkracht.achternaam @distinctlist.Leerkracht.voornaam
+                    </span>
+                }
+                </td>
+                <td>
+                    <a asp-action="ToezichterToevoegen" asp-route-id="@distinctlist.sprintlokaalreservatieID">Toezichter toevoegen</a> |
+                    <a asp-action="DetailsEnLeerlingWijzigingen" asp-route-id="@distinctlist.sprintlokaalreservatieID">Details</a> |
                 </td>
             </tr>
         }

@@ -87,6 +87,19 @@ namespace SprintPlannerZM.Services
                 .Include(l => l.Lokaal)
                 .Include(l => l.Leerkracht)
                 .Include(l => l.Leerlingverdelingen)
+                .Include(l => l.Examen)
+                .ThenInclude(e => e.Vak)
+                .ThenInclude(k => k.klas)
+                .ToListAsync();
+        }
+        public async Task<IList<Sprintlokaalreservatie>> FindByDateTime(DateTime date, string time)
+        {
+            return await _database.Sprintlokaalreservatie
+                .Where(s => s.datum.Date.Equals(date.Date))
+                .Where(s => s.tijd.Equals(time))
+                .Include(l => l.Lokaal)
+                .Include(l => l.Leerkracht)
+                .Include(l => l.Leerlingverdelingen)
                 .ToListAsync();
         }
 
@@ -127,6 +140,9 @@ namespace SprintPlannerZM.Services
                 {
                     return sprintlokaalreservatie;
                 }
+
+                dbSprintlokaalreservatie.leerkrachtID = sprintlokaalreservatie.leerkrachtID;
+
                 _database.Sprintlokaalreservatie.Update(dbSprintlokaalreservatie);
                 await _database.SaveChangesAsync();
                 return sprintlokaalreservatie;

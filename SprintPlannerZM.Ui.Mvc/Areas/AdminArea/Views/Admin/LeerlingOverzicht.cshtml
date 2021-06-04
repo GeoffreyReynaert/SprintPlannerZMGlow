@@ -5,7 +5,7 @@
         <table>
             <thead>
             <tr>
-                <th class="h6">Keuze sprint/typer/m-klas voor @Model[0].Hulpleerling.Leerling.voorNaam @Model[0].Hulpleerling.Leerling.familieNaam uit klas @Model[0].Hulpleerling.Klas.klasnaam </th>
+                <th class="h6">Keuze vakken @Model[0].Hulpleerling.Leerling.voorNaam  @Model[0].Hulpleerling.Leerling.familieNaam</th>
             </tr>
             </thead>
         </table>
@@ -22,15 +22,25 @@
                 <div class="trBordercolor container">
                     <div class="">
                         <div class="pt-2 containerllnoverzicht">
-                            <input id="vakId{@count}" value="@sprintvakkeuze.sprintvakkeuzeID" type="hidden"/>
-                            <input id="leerlingId{@count}" value="@sprintvakkeuze.hulpleerlingID" type="hidden"/>
-                            <h6 class="w-20" id="vaknaam{@count}"> @sprintvakkeuze.Vak.vaknaam</h6>
-                            <span> Sprint </span>
-                            <input id="vakSprint{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.sprint) ? "checked='checked'" : string.Empty)>
-                            <span> Typer </span>
-                            <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.typer) ? "checked='checked'" : string.Empty)>
-                            <span> M-Klas </span>
-                            <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.mklas) ? "checked='checked'" : string.Empty)>
+                            <input id="vakId{@count}" value="@sprintvakkeuze.sprintvakkeuzeID" type="hidden" />
+                            <input id="leerlingId{@count}" value="@sprintvakkeuze.hulpleerlingID" type="hidden" />
+                            <h6 class="w-20" id="vaknaam{@count}"><b> @sprintvakkeuze.Vak.vaknaam</b></h6>
+                            @if (@Model[0].Hulpleerling.Leerling.sprinter)
+                            {
+                                <span> Sprint </span>
+                                <input id="vakSprint{@count}" type="checkbox"  @(Convert.ToBoolean(sprintvakkeuze.sprint) ? "checked='checked'" : string.Empty)>
+                            }
+                            @if (@Model[0].Hulpleerling.Leerling.typer)
+                            {
+                                <span> Typer </span>
+                                <input id="vakTyper{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.typer) ? "checked='checked'" : string.Empty)>
+                            }
+                            @if (@Model[0].Hulpleerling.Leerling.mklas)
+                            {
+                                <span> M-Klas </span>
+                                <input id="vakMklas{@count}" type="checkbox" class="ml-lg-n5 mt-1" @(Convert.ToBoolean(sprintvakkeuze.mklas) ? "checked='checked'" : string.Empty)>
+                            }
+                            
                         </div>
                     </div>
                 </div>

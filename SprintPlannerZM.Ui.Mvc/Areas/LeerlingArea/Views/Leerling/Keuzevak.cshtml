@@ -13,21 +13,29 @@
     <div class="tbl-header">
         <table>
             <thead>
-            <tr>
-                <th class="h6" rowspan="4">
-                    <div class="containerDropdowns ">
-                        <form class="col-4">
-                            <select class="form-control select2" id="cmbLeerlingen">
-                                <option id="index">---Kies leerling---</option>
-                                @foreach (var hulpleerling in Model)
-                                {
-                                    <option value="@hulpleerling.hulpleerlingID">@hulpleerling.Leerling.familieNaam @hulpleerling.Leerling.voorNaam</option>
-                                }
-                            </select>
-                        </form>
-                    </div>
-                </th>
-            </tr>
+                <tr>
+                    <th class="h6" rowspan="4">
+                        <div class="containerDropdowns ">
+                            <form class="col-4">
+                                <select class="form-control select2" id="cmbLeerlingen">
+                                    <option id="index">---Kies leerling---</option>
+                                    @foreach (var hulpleerling in Model)
+                                    {
+                                        if (hulpleerling.Leerling == null)
+                                        {
+
+                                        }
+                                        else
+                                        {
+                                            <option value="@hulpleerling.hulpleerlingID">@hulpleerling.Leerling.familieNaam @hulpleerling.Leerling.voorNaam</option>
+                                        }
+
+                                    }
+                                </select>
+                            </form>
+                        </div>
+                    </th>
+                </tr>
             </thead>
         </table>
     </div>
@@ -36,7 +44,7 @@
 
 <script>
     $(".select2").select2();
-    $("#cmbLeerlingen").change(function() {
+    $("#cmbLeerlingen").change(function () {
         if ($(this).children(":selected").attr("id") !== "index") {
             $("#partialView").load("PartialComboLeerlingen", { hulpleerlingID: $(this).find('option:selected').val() });
         }

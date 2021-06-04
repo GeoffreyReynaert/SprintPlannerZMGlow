@@ -39,6 +39,11 @@ $(function () {
     $("#beherenKlassen").on("click", getKlassen);
     $("#beherenVakken").on("click", getVakken);
 
+
+
+
+
+
     //bij laden van de index
     //  $(document).ready(getPlayerInfo);
 });

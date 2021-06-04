@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SprintPlannerZM.Services
 {
-    public class LeerlingverdelingService: ILeerlingverdelingService
+    public class LeerlingverdelingService : ILeerlingverdelingService
     {
         private readonly TihfDbContext _database;
 
@@ -30,10 +30,10 @@ namespace SprintPlannerZM.Services
                 .ToListAsync();
         }
 
-        private async Task<IList<Leerlingverdeling>> FindAllByDate(DateTime date )
+        public async Task<IList<Leerlingverdeling>> FindAllByDate(DateTime date)
         {
             return await _database.Leerlingverdeling
-                .Where(l=>l.Examenrooster.datum.Date.Equals(date))
+                .Where(l => l.Examenrooster.datum.Date.Equals(date))
                 .ToListAsync();
         }
 
@@ -45,11 +45,11 @@ namespace SprintPlannerZM.Services
                 .ThenInclude(l => l.Klas)
                 .Include(l => l.Examenrooster)
                 .ThenInclude(e => e.Vak)
-                .Where(l=>l.sprintlokaalreservatieID== sprintlokaalreservatieId)
+                .Where(l => l.sprintlokaalreservatieID == sprintlokaalreservatieId)
                 .ToListAsync();
         }
 
-        public async Task<IList<Leerlingverdeling>> FindAantalBySprintLokaalId(int sprintlokaalreservatieId ,string type)
+        public async Task<IList<Leerlingverdeling>> FindAantalBySprintLokaalId(int sprintlokaalreservatieId, string type)
         {
             return await _database.Leerlingverdeling
                 .Where(l => l.sprintlokaalreservatieID == sprintlokaalreservatieId)
@@ -61,23 +61,23 @@ namespace SprintPlannerZM.Services
 
         public async Task<Leerlingverdeling> Create(Leerlingverdeling leerlingverdeling)
         {
-           await _database.Leerlingverdeling.AddAsync(leerlingverdeling);
-           await _database.SaveChangesAsync();
+            await _database.Leerlingverdeling.AddAsync(leerlingverdeling);
+            await _database.SaveChangesAsync();
             return leerlingverdeling;
         }
 
         public async Task<Leerlingverdeling> Update(int id, Leerlingverdeling leerlingverdeling)
         {
-            {
-                var dbLeerlingverdeling = await Get(id);
-                if (dbLeerlingverdeling == null)
-                {
-                    return leerlingverdeling;
-                }
-                _database.Leerlingverdeling.Update(dbLeerlingverdeling);
-               await _database.SaveChangesAsync();
-                return leerlingverdeling;
-            }
+
+            var dbLeerlingverdeling = await _database.Leerlingverdeling.SingleOrDefaultAsync(l => l.leerlingverdelingID == id);
+            dbLeerlingverdeling.examenID = leerlingverdeling.examenID;
+            dbLeerlingverdeling.sprintlokaalreservatieID = leerlingverdeling.sprintlokaalreservatieID;
+            dbLeerlingverdeling.reservatietype = leerlingverdeling.reservatietype;
+            dbLeerlingverdeling.hulpleerlingID = leerlingverdeling.hulpleerlingID;
+            _database.Leerlingverdeling.Update(dbLeerlingverdeling);
+            await _database.SaveChangesAsync();
+            return dbLeerlingverdeling;
+
         }
 
         public async Task<bool> Delete(int id)
@@ -88,7 +88,7 @@ namespace SprintPlannerZM.Services
                     return false;
                 }
                 _database.Leerlingverdeling.Remove(dbLeerlingverdeling);
-               await _database.SaveChangesAsync();
+                await _database.SaveChangesAsync();
                 return true;
         }
 
@@ -98,7 +98,7 @@ namespace SprintPlannerZM.Services
             foreach (var verdeling in dbLeerlingverdeling)
             {
                 _database.Remove(verdeling);
-               await _database.SaveChangesAsync();
+                await _database.SaveChangesAsync();
             }
 
             return true;

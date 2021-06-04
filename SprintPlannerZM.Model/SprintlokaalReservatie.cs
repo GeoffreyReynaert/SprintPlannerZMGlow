@@ -22,6 +22,7 @@ namespace SprintPlannerZM.Model
         public Examenrooster Examen { get; set; }
         public Leerkracht Leerkracht { get; set; }
         public IList<Leerlingverdeling> Leerlingverdelingen { get; set; }
+     
     }
 }
 
