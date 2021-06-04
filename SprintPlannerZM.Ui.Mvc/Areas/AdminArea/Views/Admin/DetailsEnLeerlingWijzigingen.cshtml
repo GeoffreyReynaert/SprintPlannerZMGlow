@@ -35,31 +35,69 @@
                 <div class="pt-2">
                     @foreach (var leerlingverdeling in Model)
                     {
-                        <span>
-                            leerling :@leerlingverdeling.leerlingeverdeling.Hulpleerling.Leerling.familieNaam @leerlingverdeling.leerlingeverdeling.Hulpleerling.Leerling.voorNaam <br />
-                            klas @leerlingverdeling.leerlingeverdeling.Hulpleerling.Leerling.Klas.klasnaam <br />
-                            vak @leerlingverdeling.leerlingeverdeling.Examenrooster.Vak.vaknaam <br />
-                        </span>
                         <br />
-                        <div class="left-allignToNav">
-                            <form method="post">
-                                <div class="p-3">
-                                    <input type="hidden" asp-for="@leerlingverdeling.leerlingeverdeling.leerlingverdelingID" />
-                                    <input type="hidden" asp-for="@leerlingverdeling.leerlingeverdeling.hulpleerlingID"/>
-                                    <input type="hidden" asp-for="@leerlingverdeling.leerlingeverdeling.examenID"/>
-                                    <input type="hidden" asp-for="@leerlingverdeling.leerlingeverdeling.reservatietype"/>
-                                    <div class="form-group">
-                                        <label asp-for="@leerlingverdeling.leerlingeverdeling.sprintlokaalreservatieID">Lokaal</label>
-                                        <select asp-for="@leerlingverdeling.leerlingeverdeling.sprintlokaalreservatieID" asp-items="@toezichters" class="form-control">
-                                            <option>Please select an toezichter</option>
-                                        </select>
-                                        <span asp-validation-for="@leerlingverdeling.leerlingeverdeling.sprintlokaalreservatieID"></span>
+                        @*
+                            <div class="left-allignToNav">
+                                <form method="post">
+                                    <div class="p-3">
+                                        <input type="hidden" asp-for="@leerlingverdeling.leerlingeverdeling.leerlingverdelingID" />
+                                        <input type="hidden" asp-for="@leerlingverdeling.leerlingeverdeling.hulpleerlingID"/>
+                                        <input type="hidden" asp-for="@leerlingverdeling.leerlingeverdeling.examenID"/>
+                                        <input type="hidden" asp-for="@leerlingverdeling.leerlingeverdeling.reservatietype"/>
+                                        <div class="form-group">
+                                            <label asp-for="@leerlingverdeling.leerlingeverdeling.sprintlokaalreservatieID">Lokaal</label>
+                                            <select asp-for="@leerlingverdeling.leerlingeverdeling.sprintlokaalreservatieID" asp-items="@toezichters" class="form-control">
+                                                <option>Please select an toezichter</option>
+                                            </select>
+                                            <span asp-validation-for="@leerlingverdeling.leerlingeverdeling.sprintlokaalreservatieID"></span>
+                                        </div>
                                     </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary" >Save</button>
-                            </form>
-                        </div>
+                                    <button type="submit" class="btn btn-primary" >Save</button>
+                                </form>
+                            </div>*@
                     }
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    leerling
+                                </th>
+
+                                <th>
+                                    klas
+                                </th>
+                                <th>
+                                    vak
+                                </th>
+                                <th>
+                                    acties
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var leerlingverdeling in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => leerlingverdeling.leerlingeverdeling.Hulpleerling.Leerling.familieNaam)
+                                    @Html.DisplayFor(modelItem => leerlingverdeling.leerlingeverdeling.Hulpleerling.Leerling.voorNaam)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => leerlingverdeling.leerlingeverdeling.Hulpleerling.Leerling.Klas.klasnaam)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => leerlingverdeling.leerlingeverdeling.Examenrooster.Vak.vaknaam)
+                                </td>
+                                <td>
+                                    <a asp-action="LokaalWijziging" asp-route-id="@leerlingverdeling.leerlingeverdeling.leerlingverdelingID">lokaalwijziging</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                    
+
                 </div>
             </div>
         </div>
