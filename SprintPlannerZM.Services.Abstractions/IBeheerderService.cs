@@ -8,6 +8,7 @@ namespace SprintPlannerZM.Services.Abstractions
     {
         Task<Beheerder> GetAsync(int id);
         Task<IList<Beheerder>> FindAsync();
+        Task<bool> FindMail(string mail);
         Task<Beheerder> CreateAsync(Beheerder beheerder);
         Task<Beheerder> UpdateAsync(int id, Beheerder beheerder);
         Task<bool> DeleteAsync(int id);

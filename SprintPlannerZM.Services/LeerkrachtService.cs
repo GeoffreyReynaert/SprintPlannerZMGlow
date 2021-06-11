@@ -58,7 +58,14 @@ namespace SprintPlannerZM.Services
             return toezichters;
         }
 
+        public async Task<bool> FindMail(string mail)
+        {
+            var leerling = await _database.Leerkracht
+                .Where(l => l.email == mail)
+                .SingleOrDefaultAsync();
 
+            return leerling != null;
+        }
 
         public async Task<IList<Leerkracht>> FindBasic()
         {

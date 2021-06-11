@@ -26,6 +26,15 @@ namespace SprintPlannerZM.Services
             return await _database.Beheerder.ToListAsync();
         }
 
+        public async Task<bool> FindMail(string mail)
+        {
+            var leerling = await _database.Beheerder
+                .Where(b => b.email == mail)
+                .SingleOrDefaultAsync();
+
+            return leerling != null;
+        }
+
         public async Task<Beheerder> CreateAsync(Beheerder beheerder)
         {
            await _database.Beheerder.AddAsync(beheerder);

@@ -3,7 +3,7 @@
 }
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<link href="~/css/bootstrap-extensions.css" rel="stylesheet" />
+<link href="~/css/bootstrap-extensions.css" rel="stylesheet"/>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <!------ Include the above in your HEAD tag ---------->
 <!DOCTYPE html>
@@ -19,49 +19,55 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="~/css/login.css" asp-append-version="true">
-    <script src="~/js/google.js"></script>
+    <script src="~/js/google.js" asp-append-version="true"></script>
 </head>
 
 <body>
 
-    <div id="change" class="container">
-        <div class="d-flex justify-content-center h-100">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Sign In</h3>
-                    <div class="d-flex justify-content-end social_icon">
-                        <meta name="google-signin-client_id" content="300704695807-qqhvmrt48k8v91lbob96g0u277c5clei.apps.googleusercontent.com">
-                        <span><i id="googleSignup" class="fab fa-google-plus-square"></i></span>
-                    </div>
+<div id="change" class="container">
+    <div class="d-flex justify-content-center h-100">
+        <div class="card">
+            <div class="card-header">
+                <h3>Sign In</h3>
+                <div class="d-flex justify-content-end social_icon">
+                    <meta name="google-signin-client_id" content="300704695807-qqhvmrt48k8v91lbob96g0u277c5clei.apps.googleusercontent.com">
+                    <span>
+                        <i id="googleSignup" class="fab fa-google-plus-square"></i>
+                    </span>
                 </div>
-                <div class="card-body">
-                    <form action="HomeController/LoginCheck" method="post">
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            </div>
-                            <input id="email" type="text" class="form-control" placeholder="E-mail">
+            </div>
+            <div class="card-body">
+                <form action="HomeController/LoginCheck" method="post">
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                        <input id="email" type="text" class="form-control" placeholder="E-mail">
 
-                        </div>
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            </div>
-                            <input id="password" type="password" class="form-control" placeholder="password">
-                        </div>
-                    </form>
-                </div>
-                <div class="card-footer">
-                    <div class="form-group position-relative">
-                        <a id="leerling" type="submit" name="" value="Leerling" class="btn btn-center login_btn"> Leerling </a>
-                        <a id="leerkracht" type="submit" name="" value="Leerkracht" class="btn btn-center login_btn"> Leerkracht </a>
-                        <a id="beheerder" type="submit" name="" value="Beheerder" class="btn btn-center login_btn"> Beheerder </a>
-                        <a id="admin" type="submit" name="" value="Admin" class="btn btn-center login_btn"> Admin </a>
                     </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fas fa-key"></i>
+                            </span>
+                        </div>
+                        <input id="password" type="password" class="form-control" placeholder="password">
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="form-group position-relative">
+                    <a id="leerling" type="submit" name="" value="Leerling" class="btn btn-center login_btn"> Leerling </a>
+                    <a id="leerkracht" type="submit" name="" value="Leerkracht" class="btn btn-center login_btn"> Leerkracht </a>
+                    <a id="beheerder" type="submit" name="" value="Beheerder" class="btn btn-center login_btn"> Beheerder </a>
+                    <a id="admin" type="submit" name="" value="Admin" class="btn btn-center login_btn"> Admin </a>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
 
@@ -74,25 +80,66 @@
             location.replace(wrkURL, "_blank");
         //}
     });*@
-        $('#leerling').click(function () {
-            var wrkURL = '@Url.Action("LeerlingIndex")';
-            console.log(wrkURL);
-            location.replace(wrkURL, "_blank");
-        });
-            $('#leerkracht').click(function () {
-            var wrkURL = '@Url.Action("LeerkrachtIndex")';
-            console.log(wrkURL);
-            location.replace(wrkURL, "_blank");
-            });
-    $('#beheerder').click(function () {
-            var wrkURL = '@Url.Action("BeheerderIndex")';
-            console.log(wrkURL);
-            location.replace(wrkURL, "_blank");
-            });
-    $('#admin').click(function () {
-            var wrkURL = '@Url.Action("AdminIndex")';
-            console.log(wrkURL);
-            location.replace(wrkURL, "_blank");
-        });
+    $('#leerling').click(function() {
+        const wrkURL = '@Url.Action("LeerlingIndex")';
+        console.log(wrkURL);
+        location.replace(wrkURL, "_blank");
+    });
+    $('#leerkracht').click(function() {
+        const wrkURL = '@Url.Action("LeerkrachtIndex")';
+        console.log(wrkURL);
+        location.replace(wrkURL, "_blank");
+    });
+    $('#beheerder').click(function() {
+        const wrkURL = '@Url.Action("BeheerderIndex")';
+        console.log(wrkURL);
+        location.replace(wrkURL, "_blank");
+    });
+    $('#admin').click(function() {
+        const wrkURL = '@Url.Action("AdminIndex")';
+        console.log(wrkURL);
+        location.replace(wrkURL, "_blank");
+    });
 
+    window.onload = function() {
+        const GoogleUser = {};
+        gapi.load("auth2",
+            function() {
+                const auth2 = gapi.auth2.init({
+                    client_id: "300704695807-qqhvmrt48k8v91lbob96g0u277c5clei.apps.googleusercontent.com",
+                    cookiepolicy: "single_host_origin",
+                    scope: "profile"
+                });
+
+                auth2.attachClickHandler(document.getElementById("googleSignup"),
+                    {},
+                    function(googleUser) {
+                        const profile = googleUser.getBasicProfile();
+                        console.log(`ID: ${profile.getId()}`);
+                        console.log(`Full Name: ${profile.getName()}`);
+                        console.log(`Given Name: ${profile.getGivenName()}`);
+                        console.log(`Family Name: ${profile.getFamilyName()}`);
+                        console.log(`Image URL: ${profile.getImageUrl()}`);
+                        console.log(`Email: ${profile.getEmail()}`);
+                        const mail = profile.getEmail();
+
+                        const id_token = googleUser.getAuthResponse().id_token;
+                        console.log(`ID Token: ${id_token}`);
+
+                        @*const wrkURL = "@Url.Action("Redirecting")"+"?email=" + mail;
+                            console.log(wrkURL);
+                            location.replace(wrkURL, "_blank");*@
+
+                        $.ajax(
+                            {
+                                type: 'POST',
+                                dataType: 'text',
+                                url: '/Home/Redirecting',
+                                data: { mail: mail }
+                            }
+                        );
+                    }
+                );
+            });
+    };
 </script>

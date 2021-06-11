@@ -76,6 +76,16 @@ namespace SprintPlannerZM.Services
             return leerlingen;
         }
 
+        public async Task<Leerling> FindMail(string mail)
+        {
+            var leerling = await _database.Leerling
+                .Include(h => h.hulpleerling)
+                .Where(l => l.email == mail)
+                .SingleOrDefaultAsync();
+
+            return leerling;
+        }
+
         //Voor Paging Queryable Leerling beheer
         public IQueryable<Leerling> FindAsyncPagingQueryable()
         {

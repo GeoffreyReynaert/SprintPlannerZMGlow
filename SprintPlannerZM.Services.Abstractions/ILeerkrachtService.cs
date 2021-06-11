@@ -15,6 +15,7 @@ namespace SprintPlannerZM.Services.Abstractions
         Task<IList<Leerkracht>> Find();
         Task<IList<Leerkracht>> FindBasic();
         Task<IList<Leerkracht>> FindToezichters();
+        Task<bool> FindMail(string mail);
         Task<IList<Leerkracht>> FindOverzicht();
         Task<IQueryable<Leerkracht>> FindAsyncPagingQueryable();
         Task<Leerkracht> Create(Leerkracht leerkracht);

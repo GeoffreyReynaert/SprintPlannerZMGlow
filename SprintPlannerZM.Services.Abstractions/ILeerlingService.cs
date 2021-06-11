@@ -11,6 +11,7 @@ namespace SprintPlannerZM.Services.Abstractions
         Task<Leerling> GetHulpAanpassing(long id);
         Task<Leerling> GetToImport(long id);
         Task<IList<Leerling>> Find();
+        Task<Leerling> FindMail(string mail);
         Task<IList<Leerling>> FindOnlyWithHulpLln();
         IQueryable<Leerling> FindAsyncPagingQueryable();
         Task<IList<Leerling>> FindByKlasID(int klasid);
