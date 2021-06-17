@@ -30,6 +30,18 @@ namespace SprintPlannerZM.Services
                 .ToListAsync();
         }
 
+        public async Task<List<Leerlingverdeling>> FindByLeerling(int id)
+        {
+            var verdeling = await _database.Leerlingverdeling
+                .Where(l => l.hulpleerlingID == id)
+                .Include(e=>e.Examenrooster)
+                .ThenInclude(v=>v.Vak)
+                .Include(s=>s.Sprintlokaalreservatie)
+                .ThenInclude(l=>l.Lokaal)
+                .ToListAsync();
+            return verdeling;
+        }
+
         public async Task<IList<Leerlingverdeling>> FindAllByDate(DateTime date)
         {
             return await _database.Leerlingverdeling

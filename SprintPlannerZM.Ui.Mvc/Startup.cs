@@ -1,4 +1,5 @@
 
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,9 @@ namespace SprintPlannerZM.Ui.Mvc
             Configuration.Bind("AppSettings", appSettings);
             services.AddSingleton(appSettings);
 
+            services.AddControllersWithViews()
+                .AddJsonOptions(o => o.JsonSerializerOptions
+                    .ReferenceHandler = ReferenceHandler.Preserve);
 
             services.AddControllersWithViews();
 
